@@ -16,7 +16,8 @@
     column-gap: 10px;
 }
 
-h1 {
+h1,
+h2 {
     margin: 0;
 }
 
@@ -54,4 +55,8 @@ h1 {
 .Statistics__Item .Item__Bot {
     margin-top: auto;
     flex-shrink: 0;
+}
+
+.Title__Section {
+    margin: 10px;
 }
