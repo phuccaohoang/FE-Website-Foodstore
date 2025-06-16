@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Table, Button, Row, Col, Tooltip, Select } from "antd"
 import { PlusOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -26,6 +27,7 @@ const styleButton = {
 }
 
 export const ListCoupons = () => {
+    const navigate = useNavigate()
     return (
         <>
             <div className="Filter__Table">
@@ -122,7 +124,11 @@ export const ListCoupons = () => {
             <div className="Title__Page">
 
                 <h1>Danh sach phieu giam gia</h1>
-                <Button style={styleButton} color="blue" variant="solid">
+                <Button style={styleButton} color="blue" variant="solid"
+                    onClick={() => {
+                        navigate('/admin/coupons/add')
+                    }}
+                >
                     <PlusOutlined style={{ fontSize: '20px' }} />
                 </Button>
             </div>

@@ -65,7 +65,7 @@ export const AdminLayout = () => {
                     collapsed={collapsed}
                     onCollapse={value => setCollapsed(value)}>
                     <div className="Logo__Web__Admin">
-                        <img src={logo} alt="" srcset="" />
+                        <img src={logo} alt="" srcSet="" />
                     </div>
                     <Menu
 

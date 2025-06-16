@@ -11,6 +11,8 @@ import { StatisticsOrders } from './pages/admins/statistics/StatisticsOrders'
 import { StatisticsFoods } from './pages/admins/statistics/StatisticsFoods'
 import { StatisticsCustomers } from './pages/admins/statistics/StatisticsCustomers'
 import { Dashboard } from './pages/admins/Dashboard'
+import { AddFood } from './pages/admins/foods/AddFood';
+import { AddCoupon } from './pages/admins/coupons/AddCoupon';
 
 function App() {
     return (
@@ -24,9 +26,11 @@ function App() {
                     </Route>
                     <Route path='foods'>
                         <Route index element={<ListFoods />} />
+                        <Route path='add' element={<AddFood />} />
                     </Route>
                     <Route path='coupons'>
                         <Route index element={<ListCoupons />} />
+                        <Route path='add' element={<AddCoupon />} />
                     </Route>
                     <Route path='orders'>
                         <Route index element={<ListOrders />} />
