@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Table, Button } from "antd"
+import { Table, Button, Row, Col, Input, Tooltip, Select } from "antd"
 
 
 
@@ -25,7 +25,44 @@ const styleButton = {
 export const ListAccounts = () => {
     return (
         <>
-            <h1>Danh sach tai khoan khach hang</h1>
+            <div className="Filter__Table">
+                <Row>
+                    <h1>Bo loc</h1>
+                </Row>
+
+                <Row justify='left' align='middle' gutter={[16, 16]}>
+                    <Col span={24}>
+                        <Input placeholder="Tu khoa" />
+                    </Col>
+                    <Col>
+                        <Tooltip placement="top" title="trang thai tai khoan">
+
+                            <Select
+                                defaultValue="0"
+                                style={{ width: 120 }}
+
+                                options={[
+                                    { value: '0', label: 'Tat ca' },
+                                    { value: '1', label: 'Hoat dong' },
+                                    { value: '2', label: 'Dang khoa' },
+
+                                ]}
+                            />
+                        </Tooltip>
+                    </Col>
+
+                    <Col style={{ marginLeft: 'auto' }}>
+                        <Button color="blue" variant="dashed" style={{ marginRight: 10 }}>Reset</Button>
+                        <Button color="lime" variant="solid">Tim kiem</Button>
+                    </Col>
+
+                </Row>
+            </div >
+            <div className="Title__Page">
+                <h1>Danh sach tai khoan khach hang</h1>
+
+
+            </div>
             <Table
                 rowSelection={{
 
@@ -48,7 +85,8 @@ export const ListAccounts = () => {
                     return (
                         <>
                             <div className="Footer__Table">
-                                <Button style={styleButton} type="primary">Them</Button>
+                                <Button style={styleButton} color="lime" variant="solid">Mo khoa</Button>
+                                <Button style={styleButton} color="danger" variant="solid">Khoa</Button>
                             </div>
                         </>
                     )

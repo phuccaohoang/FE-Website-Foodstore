@@ -23,7 +23,9 @@ const styleButton = {
 export const StatisticsRevenue = () => {
     return (
         <>
-            <h1>Thong ke doanh thu</h1>
+            <div className="Title__Page">
+                <h1>Thong ke doanh thu</h1>
+            </div>
             <Table
                 rowSelection={{
 

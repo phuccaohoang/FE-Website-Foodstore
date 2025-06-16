@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Table, Button } from "antd"
+import { Table, Button, Select, Tooltip, Radio, Input, Row, Col } from "antd"
 
 
 
@@ -7,21 +7,36 @@ import { Table, Button } from "antd"
 const columns = [
     { title: 'STT', dataIndex: 'stt' },
     { title: 'Ten khach hang', dataIndex: 'fullname' },
-    { title: 'SDT', dataIndex: 'email' },
-    { title: 'Dia chi nhan hang', dataIndex: 'fullname' },
-    { title: 'Tong don hang', dataIndex: 'fullname' },
-    { title: 'So luong mon an', dataIndex: 'fullname' },
-    { title: 'Gia van chuyen', dataIndex: 'fullname' },
-    { title: 'Giam gia', dataIndex: 'fullname' },
-    { title: 'Tong tien phai tra', dataIndex: 'fullname' },
-    { title: 'Trang thai', dataIndex: 'fullname' },
+    { title: 'SDT', dataIndex: 'phone' },
+    { title: 'Dia chi nhan hang', dataIndex: 'address' },
+    { title: 'Tong don hang', dataIndex: 'total_amount' },
+    { title: 'So luong mon an', dataIndex: 'quantity' },
+    { title: 'Gia van chuyen', dataIndex: '' },
+    { title: 'Giam gia', dataIndex: '' },
+    { title: 'Tong tien phai tra', dataIndex: '' },
+    { title: 'Trang thai', dataIndex: 'status' },
+    {
+        title: 'Chuc nang', dataIndex: 'func',
+        render: (item) => {
+            return (
+                <>
+                    <Button color="geekblue" variant="dashed">
+                        Xem chi tiet
+                    </Button>
+                </>
+            )
+        }
+    },
 ];
-// const dataSource = Array.from({ length: 10 }).map((_, i) => ({
-//     key: i,
-//     name: `Edward King ${i}`,
-//     age: 32,
-//     address: `London, Park Lane no. ${i}`,
-// }));
+const dataSource = Array.from({ length: 10 }).map((_, i) => ({
+    key: i,
+    stt: i,
+    fullname: `Edward King ${i}`,
+    phone: '0123456789',
+    address: `London, Park Lane no. ${i}`,
+    quantity: { i },
+    func: { i }
+}));
 
 const styleButton = {
     padding: '10px 15px',
@@ -30,7 +45,61 @@ const styleButton = {
 export const ListOrders = () => {
     return (
         <>
-            <h1>Danh sach cac don hang</h1>
+            <div className="Filter__Table">
+                <Row>
+                    <h1>Bo loc</h1>
+                </Row>
+
+                <Row justify='left' align='middle' gutter={[16, 16]}>
+                    <Col span={24}>
+                        <Input placeholder="Tu khoa" />
+                    </Col>
+
+                    <Col offset={0}>
+                        <Tooltip placement="top" title="sap xep theo tong don hang">
+                            <Select
+                                defaultValue="1"
+                                style={{ width: 220 }}
+
+                                options={[
+                                    { value: '1', label: 'Tong don hang giam dan' },
+                                    { value: '2', label: 'Tong don hang tang dan' },
+                                ]}
+                            />
+
+                        </Tooltip>
+                    </Col>
+
+                    <Col offset={1}>
+                        <Tooltip placement="top" title="trang thai don hang">
+
+                            <Select
+                                defaultValue="0"
+                                style={{ width: 120 }}
+
+                                options={[
+                                    { value: '0', label: 'Tat ca' },
+                                    { value: '1', label: 'Chua duyet' },
+                                    { value: '2', label: 'Da duyet' },
+                                    { value: '3', label: 'Dang giao' },
+                                    { value: '4', label: 'Da giao' },
+                                    { value: '5', label: 'Da huy' },
+
+                                ]}
+                            />
+                        </Tooltip>
+                    </Col>
+                    <Col style={{ marginLeft: 'auto' }}>
+                        <Button color="blue" variant="dashed" style={{ marginRight: 10 }}>Reset</Button>
+                        <Button color="lime" variant="solid">Tim kiem</Button>
+                    </Col>
+
+                </Row>
+            </div >
+
+            <div className="Title__Page">
+                <h1>Danh sach cac don hang</h1>
+            </div>
             <Table
                 rowSelection={{
 
@@ -39,7 +108,7 @@ export const ListOrders = () => {
                     }
                 }}
                 columns={columns}
-                dataSource={[]}
+                dataSource={dataSource}
                 pagination={{
                     defaultCurrent: 1,
                     total: 50,
@@ -53,7 +122,8 @@ export const ListOrders = () => {
                     return (
                         <>
                             <div className="Footer__Table">
-                                <Button style={styleButton} type="primary">Them</Button>
+                                <Button style={styleButton} color="gold" variant="solid">Cap nhat trang thai</Button>
+                                <Button style={styleButton} color="red" variant="solid">Huy don</Button>
                             </div>
                         </>
                     )

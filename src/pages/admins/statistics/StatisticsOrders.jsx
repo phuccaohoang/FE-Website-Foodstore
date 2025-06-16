@@ -23,7 +23,9 @@ const styleButton = {
 export const StatisticsOrders = () => {
     return (
         <>
-            <h1>Thong ke don hang</h1>
+            <div className="Title__Page">
+                <h1>Thong ke don hang</h1>
+            </div>
             <Table
                 rowSelection={{
 

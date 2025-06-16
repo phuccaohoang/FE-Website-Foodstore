@@ -10,6 +10,7 @@ import { StatisticsRevenue } from './pages/admins/statistics/StatisticsRevenue'
 import { StatisticsOrders } from './pages/admins/statistics/StatisticsOrders'
 import { StatisticsFoods } from './pages/admins/statistics/StatisticsFoods'
 import { StatisticsCustomers } from './pages/admins/statistics/StatisticsCustomers'
+import { Dashboard } from './pages/admins/Dashboard'
 
 function App() {
     return (
@@ -17,7 +18,7 @@ function App() {
             <Routes>
                 {/* admin routes */}
                 <Route path='admin' element={<AdminLayout />}>
-                    <Route index element={'Dashboard'} />
+                    <Route index element={<Dashboard />} />
                     <Route path='accounts'>
                         <Route index element={<ListAccounts />} />
                     </Route>

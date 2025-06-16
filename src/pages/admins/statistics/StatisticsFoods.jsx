@@ -23,7 +23,9 @@ const styleButton = {
 export const StatisticsFoods = () => {
     return (
         <>
-            <h1>Thong ke mon an</h1>
+            <div className="Title__Page">
+                <h1>Thong ke mon an</h1>
+            </div>
             <Table
                 rowSelection={{
 
