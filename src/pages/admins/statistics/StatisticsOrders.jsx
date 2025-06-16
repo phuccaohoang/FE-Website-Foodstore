@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Table, Button } from "antd"
-
+import { Table, Button, Row, Col, DatePicker } from "antd"
+const { RangePicker } = DatePicker
 
 
 
@@ -26,7 +26,18 @@ export const StatisticsOrders = () => {
             <div className="Title__Page">
                 <h1>Thong ke don hang</h1>
             </div>
+
+            <Row style={{ marginTop: '20px' }} gutter={[16, 16]}>
+                <Col>
+                    <RangePicker />
+                </Col>
+                <Col span={8} offset={1}>
+                    <Button color="blue" variant="dashed">Tai lai</Button>
+                </Col>
+            </Row>
+
             <Table
+                style={{ marginTop: '20px' }}
                 rowSelection={{
 
                     onChange: (items) => {
@@ -44,15 +55,15 @@ export const StatisticsOrders = () => {
                     }
                 }}
 
-                footer={() => {
-                    return (
-                        <>
-                            <div className="Footer__Table">
-                                <Button style={styleButton} type="primary">Them</Button>
-                            </div>
-                        </>
-                    )
-                }}
+            // footer={() => {
+            //     return (
+            //         <>
+            //             <div className="Footer__Table">
+            //                 <Button style={styleButton} type="primary">Them</Button>
+            //             </div>
+            //         </>
+            //     )
+            // }}
             />
         </>
     )

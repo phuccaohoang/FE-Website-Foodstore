@@ -244,7 +244,7 @@ export const Dashboard = () => {
 
             <Row gutter={[16, 16]} style={{ marginTop: '20px' }}>
                 <Col span={16}>
-                    <h2 style={{ marginTop: '20px' }}>Thong ke khach hang da mua</h2>
+                    <h2 style={{ marginTop: '20px' }}>Thong ke khach mua hang</h2>
 
                     <Table
                         bordered={true}
