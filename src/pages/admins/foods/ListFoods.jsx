@@ -3,7 +3,7 @@ import { Table, Button, Row, Input, Radio, Col, Tag, Tooltip, Select } from "ant
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
-
+import { ModalUpdateFoods } from "../../../components/modals/modal-update-foods/ModalUpdateFoods";
 
 
 const columns = [
@@ -30,6 +30,7 @@ const styleButton = {
 }
 
 export const ListFoods = () => {
+    const [openUpdate, setOpenUpdate] = useState(false)
 
     const navigate = useNavigate()
     return (
@@ -160,12 +161,29 @@ export const ListFoods = () => {
                     return (
                         <>
                             <div className="Footer__Table">
-                                <Button style={styleButton} color="gold" variant="solid">Chinh sua</Button>
+                                <Button style={styleButton} color="gold" variant="solid"
+                                    onClick={() => {
+                                        setOpenUpdate(true)
+                                    }}
+                                >
+                                    Chinh sua
+                                </Button>
                                 <Button style={styleButton} color="lime" variant="solid">Hien thi</Button>
                                 <Button style={styleButton} color="danger" variant="solid">An</Button>
                             </div>
                         </>
                     )
+                }}
+            />
+
+
+
+
+            <ModalUpdateFoods
+                foods={[1, 2]}
+                open={openUpdate}
+                onCancel={() => {
+                    setOpenUpdate(false)
                 }}
             />
         </>

@@ -1,29 +1,10 @@
 import { useState } from "react";
 import { Table, Button, Row, Col, Input, Tooltip, Select } from "antd"
 
+import { ModalAddFeedback } from "../../../components/modals/modal-add-feedback/ModalAddFeedback";
 
 
 
-const columns = [
-    { title: 'STT', dataIndex: 'stt' },
-    { title: 'Ten khach hang', dataIndex: 'fullname' },
-    { title: 'Mon an', dataIndex: 'food' },
-    { title: 'Diem danh gia', dataIndex: 'point' },
-    { title: 'Noi dung', dataIndex: 'text' },
-    { title: 'Trang thai', dataIndex: 'status' },
-    {
-        title: 'Chuc nang', dataIndex: 'func',
-        render: (item) => {
-            return (
-                item.is_feedback ? <>
-                    <Button style={styleButton} color="red" variant="dashed">Xoa phan hoi</Button>
-                </> : <>
-                    <Button style={styleButton} color="lime" variant="dashed">Phan hoi</Button>
-                </>
-            )
-        }
-    },
-];
 const dataSource = Array.from({ length: 10 }).map((_, i) => ({
     key: i,
     stt: i,
@@ -42,6 +23,8 @@ const styleButton = {
 }
 
 export const ListReviews = () => {
+
+    const [openModal, setOpenModal] = useState(false)
     return (
         <>
             <div className="Filter__Table">
@@ -114,7 +97,32 @@ export const ListReviews = () => {
                         console.log('list', items)
                     }
                 }}
-                columns={columns}
+                columns={[
+                    { title: 'STT', dataIndex: 'stt' },
+                    { title: 'Ten khach hang', dataIndex: 'fullname' },
+                    { title: 'Mon an', dataIndex: 'food' },
+                    { title: 'Diem danh gia', dataIndex: 'point' },
+                    { title: 'Noi dung', dataIndex: 'text' },
+                    { title: 'Trang thai', dataIndex: 'status' },
+                    {
+                        title: 'Chuc nang', dataIndex: 'func',
+                        render: (item) => {
+                            return (
+                                item.is_feedback ? <>
+                                    <Button style={styleButton} color="red" variant="dashed">Xoa phan hoi</Button>
+                                </> : <>
+                                    <Button style={styleButton} color="lime" variant="dashed"
+                                        onClick={() => {
+                                            setOpenModal(true)
+                                        }}
+                                    >
+                                        Phan hoi
+                                    </Button>
+                                </>
+                            )
+                        }
+                    },
+                ]}
                 expandable={{
                     expandedRowOffset: 3,
                     expandedRowRender: item => {
@@ -147,6 +155,8 @@ export const ListReviews = () => {
                     )
                 }}
             />
+
+            <ModalAddFeedback open={openModal} onCancel={() => { setOpenModal(false) }} />
         </>
     )
 }

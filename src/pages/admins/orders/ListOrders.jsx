@@ -1,33 +1,10 @@
 import { useState } from "react";
 import { Table, Button, Select, Tooltip, Radio, Input, Row, Col } from "antd"
+import { ModalUpdateOrder } from "../../../components/modals/modal-update-orders/ModalUpdateOrders";
 
+import { ModalOrderDetail } from "../../../components/modals/modal-order-detail/ModalOrderDetail";
+import { ModalCancelOrder } from "../../../components/modals/modal-cancel-orders/ModalCancelOrders";
 
-
-
-const columns = [
-    { title: 'STT', dataIndex: 'stt' },
-    { title: 'Ten khach hang', dataIndex: 'fullname' },
-    { title: 'SDT', dataIndex: 'phone' },
-    { title: 'Dia chi nhan hang', dataIndex: 'address' },
-    { title: 'Tong don hang', dataIndex: 'total_amount' },
-    { title: 'So luong mon an', dataIndex: 'quantity' },
-    { title: 'Gia van chuyen', dataIndex: '' },
-    { title: 'Giam gia', dataIndex: '' },
-    { title: 'Tong tien phai tra', dataIndex: '' },
-    { title: 'Trang thai', dataIndex: 'status' },
-    {
-        title: 'Chuc nang', dataIndex: 'func',
-        render: (item) => {
-            return (
-                <>
-                    <Button color="geekblue" variant="dashed">
-                        Xem chi tiet
-                    </Button>
-                </>
-            )
-        }
-    },
-];
 const dataSource = Array.from({ length: 10 }).map((_, i) => ({
     key: i,
     stt: i,
@@ -43,6 +20,11 @@ const styleButton = {
 }
 
 export const ListOrders = () => {
+
+    const [openUpdate, setOpenUpdate] = useState(false)
+    const [openCancel, setOpenCancel] = useState(false)
+    const [openOrderDetail, setOpenOrderDetail] = useState(false)
+
     return (
         <>
             <div className="Filter__Table">
@@ -107,7 +89,30 @@ export const ListOrders = () => {
                         console.log('list', items)
                     }
                 }}
-                columns={columns}
+                columns={[
+                    { title: 'STT', dataIndex: 'stt' },
+                    { title: 'Ten khach hang', dataIndex: 'fullname' },
+                    { title: 'SDT', dataIndex: 'phone' },
+                    { title: 'Dia chi nhan hang', dataIndex: 'address' },
+                    { title: 'Tong don hang', dataIndex: 'total_amount' },
+                    { title: 'So luong mon an', dataIndex: 'quantity' },
+                    { title: 'Gia van chuyen', dataIndex: '' },
+                    { title: 'Giam gia', dataIndex: '' },
+                    { title: 'Tong tien phai tra', dataIndex: '' },
+                    { title: 'Trang thai', dataIndex: 'status' },
+                    {
+                        title: 'Chuc nang', dataIndex: 'func',
+                        render: (item) => {
+                            return (
+                                <>
+                                    <Button color="geekblue" variant="dashed" onClick={() => setOpenOrderDetail(true)}>
+                                        Xem chi tiet
+                                    </Button>
+                                </>
+                            )
+                        }
+                    },
+                ]}
                 dataSource={dataSource}
                 pagination={{
                     defaultCurrent: 1,
@@ -122,13 +127,38 @@ export const ListOrders = () => {
                     return (
                         <>
                             <div className="Footer__Table">
-                                <Button style={styleButton} color="gold" variant="solid">Cap nhat trang thai</Button>
-                                <Button style={styleButton} color="red" variant="solid">Huy don</Button>
+                                <Button style={styleButton} color="gold" variant="solid"
+                                    onClick={() => {
+                                        setOpenUpdate(true)
+                                    }}
+                                >
+                                    Cap nhat trang thai
+                                </Button>
+                                <Button style={styleButton} color="red" variant="solid"
+                                    onClick={() =>
+                                        setOpenCancel(true)
+                                    }
+                                >
+                                    Huy don
+                                </Button>
                             </div>
                         </>
                     )
                 }}
             />
+
+            <ModalUpdateOrder open={openUpdate} onCancel={() => {
+                setOpenUpdate(false)
+            }}
+                orders={[]}
+            />
+
+            <ModalOrderDetail open={openOrderDetail} onCancel={() => {
+                setOpenOrderDetail(false)
+            }}
+            />
+
+            <ModalCancelOrder open={openCancel} onCancel={() => setOpenCancel(false)} />
         </>
     )
 }
