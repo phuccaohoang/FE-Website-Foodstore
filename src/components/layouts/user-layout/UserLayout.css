@@ -1,0 +1,55 @@
+/* headercss */
+.nav-link {
+    color: white;
+    font-size: 16px;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.nav-link:hover {
+    background-color: hwb(232 4% 47% / 0.389);
+    height: 70px;
+    color: #4fa6f1;
+
+
+}
+
+.cart-icon-link {
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.Right__Header div {
+
+    padding: 0 20px;
+
+}
+
+.Right__Header div:hover {
+    background-color: hwb(232 4% 47% / 0.389);
+
+}
+
+
+/* footercss */
+html,
+body,
+#root {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+
+}
+
+#root>* {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}

@@ -13,11 +13,26 @@ import { StatisticsCustomers } from './pages/admins/statistics/StatisticsCustome
 import { Dashboard } from './pages/admins/Dashboard'
 import { AddFood } from './pages/admins/foods/AddFood';
 import { AddCoupon } from './pages/admins/coupons/AddCoupon';
-
+// USER
+import { UserLayout } from './components/layouts/user-layout/UserLayout';
+import { Home } from './pages/users/home/Home';
+import { AboutUs } from './pages/users/about-us/aboutus';
+import { Cart } from './pages/users/cart/Cart';
+import { Login } from './pages/users/login/Login';
+import { ForgotPassword } from './pages/users/forgot-password/forgotpassword';
+import { Register } from './pages/users/register/Register';
+import { Account } from './pages/users/account/Account';
+import { Order } from './pages/users/order/Order';
+import { Explore } from './pages/users/explore/Explore';
+import { Payment } from './pages/users/payment/Payment';
+import { FoodDetail } from './pages/users/food/fooddetail';
 function App() {
     return (
         <>
             <Routes>
+                <Route path='login' element={<Login />} />
+                <Route path='register' element={<Register />} />
+                <Route path='forgot-password' element={<ForgotPassword />} />
                 {/* admin routes */}
                 <Route path='admin' element={<AdminLayout />}>
                     <Route index element={<Dashboard />} />
@@ -45,6 +60,19 @@ function App() {
                         <Route path='customers' element={<StatisticsCustomers />} />
                     </Route>
                 </Route>
+                {/* user-routes */}
+                <Route element={<UserLayout />}>
+                    <Route index element={<Home />} />
+                    <Route path='about-us' element={<AboutUs />} />
+                    <Route path='my-cart' element={<Cart />} />
+                    <Route path='my-order' element={<Order />} />
+                    <Route path='explore' element={<Explore />} />
+                    <Route path='my-account' element={<Account />} />
+                    {/* <Route path='foods' element={<FoodDetail />} /> */}
+                    <Route path='payment' element={<Payment />} />
+
+                </Route>
+
             </Routes>
         </>
     )
