@@ -32,24 +32,3 @@
     background-color: hwb(232 4% 47% / 0.389);
 
 }
-
-
-/* footercss */
-html,
-body,
-#root {
-    height: 100%;
-    margin: 0;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-
-}
-
-#root>* {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
