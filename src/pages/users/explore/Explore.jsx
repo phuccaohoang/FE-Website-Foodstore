@@ -103,7 +103,7 @@ export const Explore = () => {
         <>
             {/* FIlter */}
             <div style={{
-                width: '65%', margin: '10px auto', userSelect: 'none',
+                width: '1380px', margin: '10px auto', userSelect: 'none',
                 WebkitUserSelect: 'none',
                 MozUserSelect: 'none',
                 msUserSelect: 'none'
@@ -150,7 +150,7 @@ export const Explore = () => {
 
             </div >
             {/* food lisT */}
-            <Title level={5} style={{ margin: '5px 325px', fontSize: '30px' }}>Danh sách</Title>
+            <Title level={5} style={{ margin: '5px 250px', fontSize: '30px' }}>Danh sách</Title>
             <Row
                 style={{ margin: '0 auto', width: '1400px' }}
                 wrap={true}

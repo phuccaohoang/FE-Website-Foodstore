@@ -112,7 +112,7 @@ export const Home = () => {
         <>
             {/* Banner */}
             <div className='Slides'>
-                <Carousel autoplay style={{ padding: '0 10%' }} >
+                <Carousel autoplay style={{ padding: '0 10%', width: '1750px', margin: '0 auto ' }} >
                     <div>
                         <img style={slidesStyle} src={bannerimg} />
                     </div>
@@ -128,7 +128,7 @@ export const Home = () => {
 
                 </Carousel>
             </div>
-            <Title level={5} style={{ margin: '5px 325px', fontSize: '30px' }}>Được ưu thích nhất</Title>
+            <Title level={5} style={{ margin: '5px 250px', fontSize: '30px' }}>Được ưu thích nhất</Title>
             {/* Danh sach */}
             <Row
                 style={{ margin: '0 auto', width: '1400px' }}
@@ -189,7 +189,7 @@ export const Home = () => {
                 </Col>
             </Row>
 
-            <Title level={5} style={{ margin: '5px 325px', fontSize: '30px' }}>Có thể bạn sẽ thích</Title>
+            <Title level={5} style={{ margin: '5px 250px', fontSize: '30px' }}>Có thể bạn sẽ thích</Title>
             <Row
                 style={{ margin: '0 auto', width: '1400px' }}
                 wrap={true}

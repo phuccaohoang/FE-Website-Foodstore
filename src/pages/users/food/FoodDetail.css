@@ -1,3 +1,4 @@
+/* food css */
 .food-detail-container {
     display: flex;
     flex-wrap: wrap;
@@ -74,4 +75,23 @@
     background-color: #0f24c4;
     box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
     transform: translateY(-2px);
+}
+
+/* danh sach css */
+
+
+.ant-card-actions>li {
+
+    margin: 0 !important;
+}
+
+.ant-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+
+.Image__Food__Item:hover {
+    scale: 1.2;
 }
