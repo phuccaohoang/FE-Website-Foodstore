@@ -1,19 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, Button, Select, Tooltip, Radio, Input, Row, Col } from "antd"
 import { ModalUpdateOrder } from "../../../components/modals/modal-update-orders/ModalUpdateOrders";
 
 import { ModalOrderDetail } from "../../../components/modals/modal-order-detail/ModalOrderDetail";
 import { ModalCancelOrder } from "../../../components/modals/modal-cancel-orders/ModalCancelOrders";
+import orderService from "../../../services/orderService";
 
-const dataSource = Array.from({ length: 10 }).map((_, i) => ({
-    key: i,
-    stt: i,
-    fullname: `Edward King ${i}`,
-    phone: '0123456789',
-    address: `London, Park Lane no. ${i}`,
-    quantity: { i },
-    func: { i }
-}));
+
 
 const styleButton = {
     padding: '10px 15px',
@@ -24,6 +17,30 @@ export const ListOrders = () => {
     const [openUpdate, setOpenUpdate] = useState(false)
     const [openCancel, setOpenCancel] = useState(false)
     const [openOrderDetail, setOpenOrderDetail] = useState(false)
+
+    const [orders, setOrders] = useState([])
+
+    useEffect(() => {
+        const loadOrders = async () => {
+            const response = await orderService.getOrders()
+            if (response.status) {
+                setOrders(response.data.map((item, idx) => {
+                    let discount = item.coupon ? item.coupon.discount : 0;
+                    return {
+                        ...item,
+                        key: idx,
+                        stt: idx + 1,
+                        fullname: item.customer.fullname,
+                        status: item.order_status.name,
+                        discount: discount,
+                        total_money: Number(item.total_amount) - Number(discount)
+                    }
+                }))
+            }
+        }
+        //
+        loadOrders()
+    }, [])
 
     return (
         <>
@@ -96,9 +113,9 @@ export const ListOrders = () => {
                     { title: 'Dia chi nhan hang', dataIndex: 'address' },
                     { title: 'Tong don hang', dataIndex: 'total_amount' },
                     { title: 'So luong mon an', dataIndex: 'quantity' },
-                    { title: 'Gia van chuyen', dataIndex: '' },
-                    { title: 'Giam gia', dataIndex: '' },
-                    { title: 'Tong tien phai tra', dataIndex: '' },
+                    { title: 'Gia van chuyen', dataIndex: 'delivery_cost' },
+                    { title: 'Giam gia', dataIndex: 'discount' },
+                    { title: 'Tong tien phai tra', dataIndex: 'total_money' },
                     { title: 'Trang thai', dataIndex: 'status' },
                     {
                         title: 'Chuc nang', dataIndex: 'func',
@@ -113,7 +130,7 @@ export const ListOrders = () => {
                         }
                     },
                 ]}
-                dataSource={dataSource}
+                dataSource={orders}
                 pagination={{
                     defaultCurrent: 1,
                     total: 50,

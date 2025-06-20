@@ -1,22 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, Button, Row, Input, Radio, Col, Tag, Tooltip, Select } from "antd"
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 import { ModalUpdateFoods } from "../../../components/modals/modal-update-foods/ModalUpdateFoods";
-
+//
+import foodService from "../../../services/foodService";
 
 const columns = [
     { title: 'STT', dataIndex: 'stt' },
-    { title: 'Anh', dataIndex: 'fullname' },
-    { title: 'Ten', dataIndex: 'email' },
-    { title: 'Loai', dataIndex: 'fullname' },
-    { title: 'Mo ta', dataIndex: 'fullname' },
-    { title: 'Gia', dataIndex: 'fullname' },
-    { title: 'Giam gia (%)', dataIndex: 'fullname' },
-    { title: 'Da ban', dataIndex: 'fullname' },
-    { title: 'Diem danh gia', dataIndex: 'fullname' },
-    { title: 'Trang thai', dataIndex: 'fullname' },
+    { title: 'Anh', dataIndex: 'images' },
+    { title: 'Ten', dataIndex: 'name' },
+    { title: 'Loai', dataIndex: 'category' },
+    { title: 'Mo ta', dataIndex: 'description' },
+    { title: 'Gia', dataIndex: 'price' },
+    { title: 'Giam gia (%)', dataIndex: 'discount' },
+    { title: 'Da ban', dataIndex: 'sold' },
+    { title: 'Diem danh gia', dataIndex: 'rating' },
+    { title: 'Trang thai', dataIndex: 'status' },
 ];
 // const dataSource = Array.from({ length: 10 }).map((_, i) => ({
 //     key: i,
@@ -33,6 +34,33 @@ export const ListFoods = () => {
     const [openUpdate, setOpenUpdate] = useState(false)
 
     const navigate = useNavigate()
+    const [foods, setFoods] = useState([])
+
+
+
+    useEffect(() => {
+        const loadFoods = async () => {
+
+            const response = await foodService.getFoods();
+            if (response.status) {
+                setFoods(response.data.map((item, idx) => {
+                    return {
+                        ...item,
+                        key: idx,
+                        stt: idx + 1,
+                        category: item.category.name,
+                        status: item.status === 1 ? 'On' : 'Off',
+                    }
+                }))
+            }
+
+        }
+
+        //
+        loadFoods()
+    }, []);
+
+
     return (
         <>
             <div className="Filter__Table">
@@ -147,7 +175,7 @@ export const ListFoods = () => {
                     }
                 }}
                 columns={columns}
-                dataSource={[]}
+                dataSource={foods}
                 pagination={{
                     defaultCurrent: 1,
                     total: 50,

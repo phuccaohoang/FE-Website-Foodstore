@@ -1,0 +1,7 @@
+.Food__Card .ant-card-body {
+    padding: 5px 15px;
+}
+
+.Food__Card .ant-card-cover {
+    overflow: hidden;
+}

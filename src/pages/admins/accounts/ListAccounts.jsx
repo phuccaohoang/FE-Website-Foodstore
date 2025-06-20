@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, Button, Row, Col, Input, Tooltip, Select } from "antd"
+import accountService from "../../../services/accountService";
 
 
 
 
 const columns = [
     { title: 'STT', dataIndex: 'stt' },
-    { title: 'Anh dai dien', dataIndex: 'fullname' },
+    { title: 'Anh dai dien', dataIndex: 'avatar' },
     { title: 'Email', dataIndex: 'email' },
     { title: 'Ho ten', dataIndex: 'fullname' },
-    { title: 'Trang thai', dataIndex: 'fullname' },
+    { title: 'Trang thai', dataIndex: 'status' },
 ];
 // const dataSource = Array.from({ length: 10 }).map((_, i) => ({
 //     key: i,
@@ -23,6 +24,28 @@ const styleButton = {
 }
 
 export const ListAccounts = () => {
+
+    const [accounts, setAccounts] = useState([])
+
+    useEffect(() => {
+        const loadAccounts = async () => {
+            const response = await accountService.getAccounts();
+            if (response.status) {
+                setAccounts(response.data.map((item, idx) => {
+                    return {
+                        ...item,
+                        key: idx,
+                        stt: idx + 1,
+                        fullname: item.customers[0].fullname,
+                        status: item.status === 1 ? 'On' : 'Off',
+                    }
+                }))
+            }
+        }
+        //
+        loadAccounts()
+    }, [])
+
     return (
         <>
             <div className="Filter__Table">
@@ -71,7 +94,7 @@ export const ListAccounts = () => {
                     }
                 }}
                 columns={columns}
-                dataSource={[]}
+                dataSource={accounts}
                 pagination={{
                     defaultCurrent: 1,
                     total: 50,

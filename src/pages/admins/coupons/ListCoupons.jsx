@@ -1,19 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, Button, Row, Col, Tooltip, Select } from "antd"
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import couponService from "../../../services/couponService";
 
 
 
 const columns = [
     { title: 'STT', dataIndex: 'stt' },
-    { title: 'Mo ta', dataIndex: 'fullname' },
-    { title: 'Don hang toi thieu', dataIndex: 'email' },
-    { title: 'Giam gia (vnd)', dataIndex: 'fullname' },
-    { title: 'So luong', dataIndex: 'fullname' },
-    { title: 'Ngay het han', dataIndex: 'fullname' },
-    { title: 'Khach hang ap dung', dataIndex: 'fullname' },
-    { title: 'Trang thai', dataIndex: 'fullname' },
+    { title: 'Ten', dataIndex: 'name' },
+    { title: 'Mo ta', dataIndex: 'description' },
+    { title: 'Don hang toi thieu', dataIndex: 'min_order_value' },
+    { title: 'Giam gia (vnd)', dataIndex: 'discount' },
+    { title: 'So luong', dataIndex: 'quantity' },
+    { title: 'Ngay het han', dataIndex: 'expire_date' },
+    { title: 'Khach hang ap dung', dataIndex: 'is_public' },
+    { title: 'Trang thai', dataIndex: 'status' },
 ];
 // const dataSource = Array.from({ length: 10 }).map((_, i) => ({
 //     key: i,
@@ -28,6 +30,29 @@ const styleButton = {
 
 export const ListCoupons = () => {
     const navigate = useNavigate()
+
+    const [coupons, setCoupons] = useState([])
+
+    useEffect(() => {
+        const loadCoupons = async () => {
+            const response = await couponService.getCoupons()
+
+            if (response.status) {
+                setCoupons(response.data.map((item, idx) => {
+                    return {
+                        ...item,
+                        key: idx,
+                        stt: idx + 1,
+                        is_public: item.is_public === 1 ? 'All' : 'Limit',
+                        status: item.status === 1 ? 'On' : 'Off'
+                    }
+                }))
+            }
+        }
+        //
+        loadCoupons()
+    }, [])
+
     return (
         <>
             <div className="Filter__Table">
@@ -140,7 +165,7 @@ export const ListCoupons = () => {
                     }
                 }}
                 columns={columns}
-                dataSource={[]}
+                dataSource={coupons}
                 pagination={{
                     defaultCurrent: 1,
                     total: 50,
