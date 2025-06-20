@@ -1,4 +1,4 @@
-import { Button, Card, Col, Rate } from "antd"
+import { Button, Card, Col, Rate, Tag } from "antd"
 import bannerimg from '../../assets/mon1.png'
 import { useNavigate } from "react-router-dom"
 
@@ -39,7 +39,8 @@ export const FoodCart = ({ food }) => {
                         </Button>
                     ]}
                 >
-                    <strong style={{ fontSize: '25px' }}>{food.name}</strong>
+                    <p style={{ fontSize: '25px' }}>{food.name}</p>
+                    <span style={{ fontSize: '18px' }}> <Tag color="cyan">{food.category.name}</Tag></span>
                     <div style={{ marginTop: 8, fontWeight: 'bold' }}>{food.price}</div>
                     <div
                         style={{

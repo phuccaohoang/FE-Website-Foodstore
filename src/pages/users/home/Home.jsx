@@ -47,7 +47,15 @@ export const Home = () => {
         <>
             {/* Banner */}
             <div className='Slides'>
-                <Carousel autoplay style={{ padding: '0 10%', width: '1750px', margin: '0 auto ' }} >
+                <Carousel autoplay style={{
+                    padding: '0 10%',
+                    width: '1750px',
+                    margin: '0 auto ',
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    msUserSelect: 'none',
+                }} >
                     <div>
                         <img style={slidesStyle} src={bannerimg} />
                     </div>
