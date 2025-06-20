@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ModalUpdateFoods } from "../../../components/modals/modal-update-foods/ModalUpdateFoods";
 //
 import foodService from "../../../services/foodService";
+import { useSession } from "../../../context/SessionContext";
 
 const columns = [
     { title: 'STT', dataIndex: 'stt' },
@@ -35,8 +36,10 @@ export const ListFoods = () => {
 
     const navigate = useNavigate()
     const [foods, setFoods] = useState([])
+    const [selectedRows, setselectedRows] = useState([])
 
-
+    //
+    const { refresh, setRefresh } = useSession();
 
     useEffect(() => {
         const loadFoods = async () => {
@@ -46,7 +49,7 @@ export const ListFoods = () => {
                 setFoods(response.data.map((item, idx) => {
                     return {
                         ...item,
-                        key: idx,
+                        key: item.id,
                         stt: idx + 1,
                         category: item.category.name,
                         status: item.status === 1 ? 'On' : 'Off',
@@ -55,10 +58,17 @@ export const ListFoods = () => {
             }
 
         }
+        console.log(refresh)
 
         //
         loadFoods()
-    }, []);
+    }, [refresh]);
+
+    const notifications = (response) => {
+        alert(response.message)
+        setRefresh(!refresh)
+        setselectedRows([])
+    }
 
 
     return (
@@ -103,34 +113,7 @@ export const ListFoods = () => {
 
                         </Tooltip>
                     </Col>
-                    <Col offset={1}>
-                        <Tooltip placement="top" title="sap xep theo so luong da ban">
-                            <Select
-                                defaultValue="1"
-                                style={{ width: 170 }}
 
-                                options={[
-                                    { value: '1', label: 'Da ban giam dan' },
-                                    { value: '2', label: 'Da ban tang dan' },
-                                ]}
-                            />
-
-                        </Tooltip>
-                    </Col>
-                    <Col offset={1}>
-                        <Tooltip placement="top" title="sap xep theo diem danh gia">
-                            <Select
-                                defaultValue="1"
-                                style={{ width: 150 }}
-
-                                options={[
-                                    { value: '1', label: 'Diem giam dan' },
-                                    { value: '2', label: 'Diem tang dan' },
-                                ]}
-                            />
-
-                        </Tooltip>
-                    </Col>
                     <Col offset={1}>
                         <Tooltip placement="top" title="trang thai mon an">
 
@@ -169,9 +152,9 @@ export const ListFoods = () => {
 
             <Table
                 rowSelection={{
-
+                    selectedRowKeys: selectedRows,
                     onChange: (items) => {
-                        console.log('list', items)
+                        setselectedRows(items)
                     }
                 }}
                 columns={columns}
@@ -196,8 +179,32 @@ export const ListFoods = () => {
                                 >
                                     Chinh sua
                                 </Button>
-                                <Button style={styleButton} color="lime" variant="solid">Hien thi</Button>
-                                <Button style={styleButton} color="danger" variant="solid">An</Button>
+                                <Button style={styleButton} color="lime" variant="solid"
+                                    onClick={async () => {
+                                        if (selectedRows.length === 0) alert('0 row selected.')
+                                        else {
+                                            const response = await foodService.updateFoodStatus(selectedRows, 1);
+                                            if (response.status) {
+                                                notifications(response)
+                                            }
+                                        }
+                                    }}
+                                >
+                                    Hien thi
+                                </Button>
+                                <Button style={styleButton} color="danger" variant="solid"
+                                    onClick={async () => {
+                                        if (selectedRows.length === 0) alert('0 row selected.')
+                                        else {
+                                            const response = await foodService.updateFoodStatus(selectedRows, 0);
+                                            if (response.status) {
+                                                notifications(response)
+                                            }
+                                        }
+                                    }}
+                                >
+                                    An
+                                </Button>
                             </div>
                         </>
                     )

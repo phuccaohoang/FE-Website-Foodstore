@@ -1,22 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, Button, Row, Col, Input, Tooltip, Select } from "antd"
 
 import { ModalAddFeedback } from "../../../components/modals/modal-add-feedback/ModalAddFeedback";
+import reviewService from "../../../services/reviewService";
 
 
 
-const dataSource = Array.from({ length: 10 }).map((_, i) => ({
-    key: i,
-    stt: i,
-    fullname: `Edward King ${i}`,
-    food: `food ${i}`,
-    text: `London, Park Lane no. ${i}`,
-    feedback: null,
-    point: i,
-    func: {
-        is_feedback: false,
-    }
-}));
+
 
 const styleButton = {
     padding: '10px 15px',
@@ -25,6 +15,28 @@ const styleButton = {
 export const ListReviews = () => {
 
     const [openModal, setOpenModal] = useState(false)
+    const [reviews, setReviews] = useState([])
+
+    useEffect(() => {
+        const loadReviews = async () => {
+            const response = await reviewService.getReviews();
+            if (response.status) {
+                setReviews(response.data.map((item, idx) => {
+                    return {
+                        ...item,
+                        key: item.id,
+                        stt: idx + 1,
+                        fullname: item.customer.fullname,
+                        food: item.food.name,
+                        status: item.status === 1 ? 'On' : 'Off',
+                    }
+                }))
+            }
+        }
+        loadReviews()
+    }, [])
+
+
     return (
         <>
             <div className="Filter__Table">
@@ -101,14 +113,14 @@ export const ListReviews = () => {
                     { title: 'STT', dataIndex: 'stt' },
                     { title: 'Ten khach hang', dataIndex: 'fullname' },
                     { title: 'Mon an', dataIndex: 'food' },
-                    { title: 'Diem danh gia', dataIndex: 'point' },
+                    { title: 'Diem danh gia', dataIndex: 'rating' },
                     { title: 'Noi dung', dataIndex: 'text' },
                     { title: 'Trang thai', dataIndex: 'status' },
                     {
-                        title: 'Chuc nang', dataIndex: 'func',
+                        title: 'Chuc nang', dataIndex: 'feedbacks',
                         render: (item) => {
                             return (
-                                item.is_feedback ? <>
+                                item.length !== 0 ? <>
                                     <Button style={styleButton} color="red" variant="dashed">Xoa phan hoi</Button>
                                 </> : <>
                                     <Button style={styleButton} color="lime" variant="dashed"
@@ -128,13 +140,13 @@ export const ListReviews = () => {
                     expandedRowRender: item => {
                         return (
                             <>
-                                <p><strong>Phan hoi:</strong> {item.feedback ? item.feedback : "chua co phan hoi."} </p>
+                                <p><strong>Phan hoi:</strong> {item.feedbacks.length !== 0 ? item.feedbacks[0].text : "chua co phan hoi."} </p>
                             </>
                         )
                     },
                     defaultExpandAllRows: true
                 }}
-                dataSource={dataSource}
+                dataSource={reviews}
                 pagination={{
                     defaultCurrent: 1,
                     total: 50,

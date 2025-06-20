@@ -19,6 +19,7 @@ export const ListOrders = () => {
     const [openOrderDetail, setOpenOrderDetail] = useState(false)
 
     const [orders, setOrders] = useState([])
+    const [order, setOrder] = useState([])
 
     useEffect(() => {
         const loadOrders = async () => {
@@ -118,11 +119,14 @@ export const ListOrders = () => {
                     { title: 'Tong tien phai tra', dataIndex: 'total_money' },
                     { title: 'Trang thai', dataIndex: 'status' },
                     {
-                        title: 'Chuc nang', dataIndex: 'func',
-                        render: (item) => {
+                        title: 'Chuc nang', dataIndex: 'id',
+                        render: (item, record) => {
                             return (
                                 <>
-                                    <Button color="geekblue" variant="dashed" onClick={() => setOpenOrderDetail(true)}>
+                                    <Button color="geekblue" variant="dashed" onClick={() => {
+                                        setOrder(record)
+                                        setOpenOrderDetail(true)
+                                    }}>
                                         Xem chi tiet
                                     </Button>
                                 </>
@@ -170,8 +174,9 @@ export const ListOrders = () => {
                 orders={[]}
             />
 
-            <ModalOrderDetail open={openOrderDetail} onCancel={() => {
+            <ModalOrderDetail order={order} open={openOrderDetail} onCancel={() => {
                 setOpenOrderDetail(false)
+                setOrder([])
             }}
             />
 

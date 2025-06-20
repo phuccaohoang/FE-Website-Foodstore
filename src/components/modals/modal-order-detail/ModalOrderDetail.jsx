@@ -19,10 +19,23 @@ const dataSource = Array.from({ length: 10 }).map((_, i) => ({
 }));
 
 
-export const ModalOrderDetail = ({ open, onCancel }) => {
+export const ModalOrderDetail = ({ order, open, onCancel }) => {
 
     const [openUpdate, setOpenUpdate] = useState(false)
     const [openCancel, setOpenCancel] = useState(false)
+
+    const list = order.order_details;
+    let order_details = list ? list.map((item, idx) => {
+        return {
+            ...item,
+            name: item.food.name,
+            stt: idx + 1,
+            total_money: (1 - (Number(item.discount) / 100)) * item.price * item.quantity
+
+        }
+    }) : [];
+
+
     return (
         <>
             <Modal
@@ -47,25 +60,25 @@ export const ModalOrderDetail = ({ open, onCancel }) => {
                         <Col span={24}>
                             <Row gutter={[10, 10]}>
                                 <Col span={8}>
-                                    <Text strong>Ten khach hang</Text>
+                                    <Text strong>{order.customer ? order.customer.fullname : null}</Text>
                                 </Col>
                                 <Col span={8}>
-                                    <Text strong>SDT: 0123456789</Text>
+                                    <Text strong>SDT: {order.phone}</Text>
                                 </Col>
                                 <Col span={8}>
-                                    <Text strong>Dia chi: Lorem ipsum ...</Text>
+                                    <Text strong>Dia chi: {order.address}</Text>
                                 </Col>
 
                             </Row>
                             <Row gutter={[10, 10]} style={{ marginTop: '10px' }}>
                                 <Col span={8}>
-                                    <Text strong>Tong don hang: 9</Text>
+                                    <Text strong>Tong don hang: {order.quantity}</Text>
                                 </Col>
                                 <Col span={8}>
-                                    <Text strong>Giam gia don hang: 200.000 vnd</Text>
+                                    <Text strong>Giam gia don hang: {order.coupon ? order.coupon.discount : '0.00'} vnd</Text>
                                 </Col>
                                 <Col span={8}>
-                                    <Text strong>Gia van chuyen: 30.000 vnd</Text>
+                                    <Text strong>Gia van chuyen: {order.delivery_cost} vnd</Text>
                                 </Col>
                             </Row>
                         </Col>
@@ -75,13 +88,13 @@ export const ModalOrderDetail = ({ open, onCancel }) => {
                                 style={{ width: '100%' }}
                                 columns={[
                                     { title: 'STT', dataIndex: 'stt' },
-                                    { title: 'Mon an', dataIndex: 'fullname' },
+                                    { title: 'Mon an', dataIndex: 'name' },
                                     { title: 'So luong mon an', dataIndex: 'quantity' },
-                                    { title: 'Gia tien', dataIndex: '' },
-                                    { title: 'Giam gia', dataIndex: '' },
-                                    { title: 'Tong tien', dataIndex: '' },
+                                    { title: 'Gia tien (VND)', dataIndex: 'price' },
+                                    { title: 'Giam gia (%)', dataIndex: 'discount' },
+                                    { title: 'Tong tien (VND)', dataIndex: 'total_money' },
                                 ]}
-                                dataSource={dataSource}
+                                dataSource={order_details}
                                 pagination={false}
                                 bordered
                                 scroll={{ y: 55 * 5 }}

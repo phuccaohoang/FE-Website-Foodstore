@@ -3,6 +3,7 @@ import { Table, Button, Row, Col, Tooltip, Select } from "antd"
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import couponService from "../../../services/couponService";
+import { useSession } from "../../../context/SessionContext";
 
 
 
@@ -33,6 +34,9 @@ export const ListCoupons = () => {
 
     const [coupons, setCoupons] = useState([])
 
+    const [selectedRows, setSelectedRows] = useState([])
+    const { refresh, setRefresh } = useSession()
+
     useEffect(() => {
         const loadCoupons = async () => {
             const response = await couponService.getCoupons()
@@ -41,7 +45,7 @@ export const ListCoupons = () => {
                 setCoupons(response.data.map((item, idx) => {
                     return {
                         ...item,
-                        key: idx,
+                        key: item.id,
                         stt: idx + 1,
                         is_public: item.is_public === 1 ? 'All' : 'Limit',
                         status: item.status === 1 ? 'On' : 'Off'
@@ -51,7 +55,7 @@ export const ListCoupons = () => {
         }
         //
         loadCoupons()
-    }, [])
+    }, [refresh])
 
     return (
         <>
@@ -76,46 +80,18 @@ export const ListCoupons = () => {
                             />
                         </Tooltip>
                     </Col>
+
                     <Col offset={1}>
-                        <Tooltip placement="top" title="sap xep theo giam gia">
+                        <Tooltip placement="top" title="Khach hang ap dung">
 
                             <Select
-                                defaultValue="1"
-                                style={{ width: 170 }}
+                                defaultValue="0"
+                                style={{ width: 120 }}
 
                                 options={[
-                                    { value: '1', label: 'Giam gia tang dan' },
-                                    { value: '2', label: 'Giam gia giam dan' },
-
-                                ]}
-                            />
-                        </Tooltip>
-                    </Col>
-                    <Col offset={1}>
-                        <Tooltip placement="top" title="sap xep theo so luong">
-
-                            <Select
-                                defaultValue="1"
-                                style={{ width: 170 }}
-
-                                options={[
-                                    { value: '1', label: 'So luong tang dan' },
-                                    { value: '2', label: 'So luong giam dan' },
-
-                                ]}
-                            />
-                        </Tooltip>
-                    </Col>
-                    <Col offset={1}>
-                        <Tooltip placement="top" title="sap xep theo ngay het han">
-
-                            <Select
-                                defaultValue="1"
-                                style={{ width: 170 }}
-
-                                options={[
-                                    { value: '1', label: 'Ngay het han tang dan' },
-                                    { value: '2', label: 'Ngay het han giam dan' },
+                                    { value: '0', label: 'Tat ca' },
+                                    { value: '1', label: 'Moi nguoi' },
+                                    { value: '2', label: 'Gioi han' },
 
                                 ]}
                             />
@@ -159,9 +135,10 @@ export const ListCoupons = () => {
             </div>
             <Table
                 rowSelection={{
-
+                    selectedRowKeys: selectedRows,
                     onChange: (items) => {
                         console.log('list', items)
+                        setSelectedRows(items)
                     }
                 }}
                 columns={columns}
@@ -180,7 +157,21 @@ export const ListCoupons = () => {
                         <>
                             <div className="Footer__Table">
 
-                                <Button style={styleButton} color="danger" variant="solid">Khoa</Button>
+                                <Button style={styleButton} color="danger" variant="solid"
+                                    onClick={async () => {
+                                        if (selectedRows.length === 0) alert('0 row selected.')
+                                        else {
+                                            const response = await couponService.updateCouponStatus(selectedRows);
+                                            if (response.status) {
+                                                setSelectedRows([])
+                                                setRefresh(!refresh)
+                                                alert(response.message)
+                                            }
+                                        }
+                                    }}
+                                >
+                                    Khoa
+                                </Button>
                             </div>
                         </>
                     )

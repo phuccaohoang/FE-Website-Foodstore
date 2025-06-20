@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Table, Button, Row, Col, Input, Tooltip, Select } from "antd"
 import accountService from "../../../services/accountService";
+import { useSession } from "../../../context/SessionContext";
 
 
 
@@ -27,6 +28,10 @@ export const ListAccounts = () => {
 
     const [accounts, setAccounts] = useState([])
 
+    const [selectedRows, setSelectedRows] = useState([])
+
+    const { refresh, setRefresh } = useSession()
+
     useEffect(() => {
         const loadAccounts = async () => {
             const response = await accountService.getAccounts();
@@ -34,7 +39,7 @@ export const ListAccounts = () => {
                 setAccounts(response.data.map((item, idx) => {
                     return {
                         ...item,
-                        key: idx,
+                        key: item.id,
                         stt: idx + 1,
                         fullname: item.customers[0].fullname,
                         status: item.status === 1 ? 'On' : 'Off',
@@ -44,7 +49,15 @@ export const ListAccounts = () => {
         }
         //
         loadAccounts()
-    }, [])
+        //
+
+    }, [refresh])
+
+    const notifications = (response) => {
+        setSelectedRows([])
+        setRefresh(!refresh)
+        alert(response.message)
+    }
 
     return (
         <>
@@ -88,9 +101,10 @@ export const ListAccounts = () => {
             </div>
             <Table
                 rowSelection={{
-
+                    selectedRowKeys: selectedRows,
                     onChange: (items) => {
                         console.log('list', items)
+                        setSelectedRows(items)
                     }
                 }}
                 columns={columns}
@@ -108,8 +122,32 @@ export const ListAccounts = () => {
                     return (
                         <>
                             <div className="Footer__Table">
-                                <Button style={styleButton} color="lime" variant="solid">Mo khoa</Button>
-                                <Button style={styleButton} color="danger" variant="solid">Khoa</Button>
+                                <Button style={styleButton} color="lime" variant="solid"
+                                    onClick={async () => {
+                                        if (selectedRows.length === 0) alert('0 row selected.')
+                                        else {
+                                            const response = await accountService.updateAccountStatus(selectedRows, 1)
+                                            if (response.status) {
+                                                notifications(response)
+                                            }
+                                        }
+                                    }}
+                                >
+                                    Mo khoa
+                                </Button>
+                                <Button style={styleButton} color="danger" variant="solid"
+                                    onClick={async () => {
+                                        if (selectedRows.length === 0) alert('0 row selected.')
+                                        else {
+                                            const response = await accountService.updateAccountStatus(selectedRows, 0)
+                                            if (response.status) {
+                                                notifications(response)
+                                            }
+                                        }
+                                    }}
+                                >
+                                    Khoa
+                                </Button>
                             </div>
                         </>
                     )
