@@ -1,5 +1,7 @@
 import './payment.css'
 import { Form, Input, Radio, Button, Typography, Divider, Row, Col, Card, Image, Select, Space } from 'antd';
+const { TextArea } = Input;
+
 
 const { Title, Text } = Typography;
 import bannerimg from '../../../assets/mon1.png'
@@ -47,6 +49,12 @@ export const Payment = () => {
                             </Form.Item>
                             <Form.Item label="Phí giao hàng*" name="adress" rules={[{ required: true }]}>
                                 <Title level={5}> 15000 Đồng</Title>
+                            </Form.Item>
+                            <Form.Item label="Ghi chú khách hàng" name="note" >
+                                <TextArea
+                                    placeholder="Nhập ghi chú (nếu có)."
+                                    autoSize={{ minRows: 2, maxRows: 8 }}
+                                />
                             </Form.Item>
                         </Form>
                     </Card>
