@@ -1,8 +1,9 @@
 import './order.css'
-import { Table, Tag, Button, Card, Typography, Image, Popconfirm } from "antd";
+import { Table, Tag, Button, Card, Typography, Image, Popconfirm, Select, Space, message } from "antd";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useState } from 'react';
 import mon from '../../../assets/mon2.jpg'
+const { Option } = Select;
 
 const { Title } = Typography;
 
@@ -22,6 +23,7 @@ const getStatusTag = (status) => {
 
 
 export const Order = () => {
+    const [filterStatus, setFilterStatus] = useState("Tất cả");
 
     const [orders, setOrders] = useState([
         {
@@ -46,11 +48,16 @@ export const Order = () => {
             image: { mon },
         },
     ]);
+    // loc trang thai
+    const filteredOrders = filterStatus === "Tất cả"
+        ? orders
+        : orders.filter(order => order.status === filterStatus);
 
+    // xem chi tiet
     const handleViewDetail = (order) => {
         message.info(`Xem chi tiết đơn: ${order.id}`);
     };
-
+    // xoa don
     const handleCancelOrder = (orderToCancel) => {
         setOrders((prev) =>
             prev.map((o) =>
@@ -140,11 +147,25 @@ export const Order = () => {
         <Card style={{
             margin: '4px auto', width: '65%', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.05)', backgroundColor: '#f9fafc'
         }}>
-            < Title level={3} > Đơn hàng của bạn</Title>
+            <Space style={{ justifyContent: 'space-between', display: 'flex' }}>
+                < Title level={3} > Đơn hàng của bạn</Title>
+                <Select
+                    value={filterStatus}
+                    onChange={value => setFilterStatus(value)}
+                    style={{ width: 135 }}
+                >
+                    <Option value="Tất cả">Tất cả</Option>
+                    <Option value="Đã giao">Đã giao</Option>
+                    <Option value="Đang chuẩn bị">Đang chuẩn bị</Option>
+                    <Option value="Đã hủy">Đã hủy</Option>
+                </Select>
+            </Space>
+
+
             <Table
                 selectionColumnWidth={10}
                 columns={columns}
-                dataSource={orders}
+                dataSource={filteredOrders}
                 rowKey="id"
                 pagination={{ pageSize: 5 }}
                 tableLayout="fixed"
