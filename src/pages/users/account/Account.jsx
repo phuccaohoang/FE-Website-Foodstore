@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, Tabs, Form, Input, Button, Upload, Avatar, message, } from "antd";
+import { Card, Tabs, Form, Input, Button, Upload, Avatar, message, Row, Col } from "antd";
 import { UploadOutlined, UserOutlined } from "@ant-design/icons";
 
 const { TabPane } = Tabs;
@@ -41,13 +41,15 @@ export const Account = () => {
                             address: "123 Nguyễn Trãi, Hà Nội",
                         }}
                     >
-                        <Form.Item label="Ảnh đại diện">
-                            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                        <Row gutter={32}>
+                            <Col xs={24} sm={8} md={6} style={{ textAlign: 'center' }}>
                                 <Avatar
-                                    size={80}
+                                    size={100}
                                     src={avatarUrl}
                                     icon={!avatarUrl && <UserOutlined />}
+                                    style={{ marginBottom: 16 }}
                                 />
+                                <br />
                                 <Upload
                                     showUploadList={false}
                                     beforeUpload={() => false}
@@ -55,30 +57,32 @@ export const Account = () => {
                                 >
                                     <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
                                 </Upload>
-                            </div>
-                        </Form.Item>
+                            </Col>
 
-                        <Form.Item
-                            label="Số điện thoại"
-                            name="phone"
-                            rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
-                        >
-                            <Input placeholder="Nhập số điện thoại" />
-                        </Form.Item>
+                            <Col xs={24} sm={16} md={18}>
+                                <Form.Item
+                                    label="Số điện thoại"
+                                    name="phone"
+                                    rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
+                                >
+                                    <Input placeholder="Nhập số điện thoại" />
+                                </Form.Item>
 
-                        <Form.Item
-                            label="Địa chỉ"
-                            name="address"
-                            rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
-                        >
-                            <Input placeholder="Nhập địa chỉ giao hàng" />
-                        </Form.Item>
+                                <Form.Item
+                                    label="Địa chỉ"
+                                    name="address"
+                                    rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
+                                >
+                                    <Input placeholder="Nhập địa chỉ giao hàng" />
+                                </Form.Item>
 
-                        <Form.Item>
-                            <Button type="primary" htmlType="submit">
-                                Lưu thay đổi
-                            </Button>
-                        </Form.Item>
+                                <Form.Item>
+                                    <Button type="primary" htmlType="submit" style={{ float: "right" }}>
+                                        Lưu thay đổi
+                                    </Button>
+                                </Form.Item>
+                            </Col>
+                        </Row>
                     </Form>
                 </TabPane>
 
@@ -109,7 +113,7 @@ export const Account = () => {
                         </Form.Item>
 
                         <Form.Item>
-                            <Button type="primary" htmlType="submit">
+                            <Button type="primary" htmlType="submit" style={{ float: "right" }}>
                                 Đổi mật khẩu
                             </Button>
                         </Form.Item>
