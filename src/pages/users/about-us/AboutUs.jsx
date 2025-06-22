@@ -20,7 +20,7 @@ export const AboutUs = () => {
             />
 
             <Typography style={{ textAlign: 'center', marginTop: 32 }}>
-                <Title style={{ fontSize: '100px' }}>ABOUT US</Title>
+                <Title style={{ fontSize: '100px', fontFamily: 'sans-serif' }} >ABOUT US</Title>
             </Typography>
 
             <Row gutter={[32, 48]} justify="center" style={{ marginTop: 24 }}>
@@ -40,7 +40,7 @@ export const AboutUs = () => {
                         preview={false}
                     />
                     <Paragraph style={{ textAlign: 'justify', fontSize: '20px' }}>
-                        Bạn đang tìm kiếm một trải nghiệm ẩm thực mới lạ, độc đáo? Nơi hương vị truyền thống hòa quyện cùng sự sáng tạo hiện đại? Hãy cùng khám phá... <strong>FOODSTORE!</strong>
+                        Bạn đang tìm kiếm một hành trình ẩm thực đầy bất ngờ ngay tại trung tâm Sài Gòn? Chào mừng bạn đến với FOODSTORE! Chúng tôi tự hào là điểm đến lý tưởng cho những ai yêu thích khám phá và thưởng thức những hương vị độc đáo, từ quen thuộc đến mới lạ. Hãy sẵn sàng để đánh thức mọi giác quan của bạn!
                     </Paragraph>
                 </Col>
 
@@ -60,8 +60,7 @@ export const AboutUs = () => {
                         preview={false}
                     />
                     <Paragraph style={{ textAlign: 'justify', fontSize: '20px' }}>
-                        <strong>FOODSTORE</strong> không chỉ là một cửa hàng đồ ăn thông thường. Chúng tôi tự hào mang đến một thực đơn đa dạng, phong phú, từ những món ăn quen thuộc được biến tấu độc đáo, đến những hương vị quốc tế đặc sắc. Với niềm đam mê ẩm thực và sự tận tâm trong từng món ăn, FOODSTORE cam kết mang đến cho bạn những trải nghiệm vị giác khó quên. Chất lượng nguyên liệu luôn là ưu tiên hàng đầu của chúng tôi, đảm bảo mỗi bữa ăn không chỉ ngon miệng mà còn an toàn và dinh dưỡng.
-                    </Paragraph>
+                        FOODSTORE không chỉ là nơi để bạn lấp đầy chiếc bụng đói, mà còn là không gian để bạn tận hưởng trọn vẹn niềm đam mê ẩm thực. Chúng tôi luôn nỗ lực mang đến một thực đơn phong phú, kết hợp hài hòa giữa những công thức truyền thống được lưu giữ và sự sáng tạo không ngừng. Với nguyên liệu được tuyển chọn kỹ lưỡng và đội ngũ tận tâm, FOODSTORE cam kết mỗi món ăn đều là một tác phẩm nghệ thuật, mang đến trải nghiệm ẩm thực đáng nhớ cho bạn và những người thân yêu.                    </Paragraph>
                 </Col>
 
                 <Col xs={24} md={8}>
@@ -80,7 +79,7 @@ export const AboutUs = () => {
                         preview={false}
                     />
                     <Paragraph style={{ textAlign: 'justify', fontSize: '20px' }}>
-                        Đừng chần chừ nữa! Hãy đến và khám phá thế giới ẩm thực đầy màu sắc tại <strong>FOODSTORE</strong> ngay hôm nay. Chúng tôi luôn sẵn sàng chào đón bạn!
+                        Vậy còn chần chừ gì nữa? Hãy đến và khám phá thế giới hương vị đặc sắc tại FOODSTORE ngay hôm nay! Dù bạn muốn một bữa trưa nhanh chóng, một buổi tối ấm cúng bên gia đình hay một cuộc hẹn hò lãng mạn, chúng tôi luôn sẵn sàng phục vụ bạn. Liên hệ với FOODSTORE ngay để trải nghiệm ẩm thực tuyệt vời!
                     </Paragraph>
                 </Col>
             </Row>
