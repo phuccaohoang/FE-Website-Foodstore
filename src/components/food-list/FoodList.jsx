@@ -7,9 +7,11 @@ export const FoodList = ({ title, foods, openFooter = false, onClickFooter = nul
 
 
     console.log('foods', foods)
+
+
     return (
         <>
-            <Title level={5} style={{ margin: '5px 250px', fontSize: '30px', fontFamily: 'Raleway' }}>{title}</Title>
+            <Title level={5} style={{ margin: '5px 250px', fontSize: '30px', fontFamily: 'sans-serif' }}>{title}</Title>
             {/* Danh sach */}
             <Row
                 style={{ margin: '0 auto', width: '1400px' }}

@@ -1,8 +1,5 @@
-import { Button, Card, Typography, Rate, Col, Row } from 'antd';
-const { Meta } = Card;
 import './home.css'
 import { Carousel } from 'antd';
-const { Title } = Typography;
 import bannerimg from '../../../assets/mon1.png'
 import bannerimg2 from '../../../assets/mon2.jpg'
 import { useEffect, useState, useNavigate } from 'react';
@@ -71,17 +68,15 @@ export const Home = () => {
 
                 </Carousel>
             </div>
-
+            {/* danh sach */}
             <FoodList
-                title={'Mon an ban chay'}
+                title={'Được ưu thích nhất'}
                 foods={foods}
                 openFooter={true}
                 onClickFooter={() => {
                     alert('xem them')
                 }}
             />
-
-
         </>
     )
 }

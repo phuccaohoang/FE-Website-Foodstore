@@ -9,13 +9,11 @@ import {
     Rate,
     List,
     Space,
-    Card,
 } from 'antd';
 import './FoodDetail.css';
 import { useParams } from 'react-router-dom';
 import { FoodList } from '../../../components/food-list/FoodList';
 const { Title, Text, Paragraph } = Typography;
-const { Meta } = Card;
 import bannerimg from '../../../assets/mon1.png'
 import foodService from '../../../services/foodService';
 
@@ -102,7 +100,7 @@ export const FoodDetail = () => {
                 food !== null ?
                     <>
                         {console.log('food', food)}
-                        <Title level={5} style={{ margin: '5px 250px', fontSize: '30px' }}>Chi tiết món ăn</Title>
+                        <Title level={5} style={{ margin: '5px 250px', fontSize: '30px', fontFamily: 'sans-serif' }}>Chi tiết món ăn</Title>
 
                         <div className="food-detail-container" style={{ margin: '0 auto', width: '93%' }}>
                             <div className="food-detail-image">

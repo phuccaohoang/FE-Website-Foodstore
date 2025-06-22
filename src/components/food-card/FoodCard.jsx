@@ -39,7 +39,7 @@ export const FoodCart = ({ food }) => {
                         </Button>
                     ]}
                 >
-                    <p style={{ fontSize: '25px' }}>{food.name}</p>
+                    <p style={{ fontSize: '25px', fontFamily: 'Calibri, sans-serif ' }}>{food.name}</p>
                     <div
                         style={{
                             marginTop: 8,

@@ -102,7 +102,7 @@ export const Cart = () => {
 
     return (
         <div className="cart-container" style={{ width: '65%', margin: '4px auto' }}>
-            <Title level={4} className="cart-title">Giỏ Hàng Của Bạn</Title>
+            <Title level={4} className="cart-title" style={{ fontFamily: 'sans-serif' }}>Giỏ Hàng Của Bạn</Title>
 
             {cartItems.map((item) => (
                 <div key={item.id} className="cart-item">

@@ -1,4 +1,5 @@
 import { Form, Input, Button, message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import './forgotpassword.css';
 
 export const ForgotPassword = () => {
@@ -10,6 +11,7 @@ export const ForgotPassword = () => {
         message.success(`Yêu cầu đặt lại mật khẩu đã được gửi tới ${email}`);
         form.resetFields();
     };
+    const navigate = useNavigate()
 
     return (
         <div className="forgot-container">
@@ -31,9 +33,11 @@ export const ForgotPassword = () => {
                         { type: 'email', message: 'Email không hợp lệ' },
                     ]}
                 >
-                    <Input />
+                    <Input size="large" />
                 </Form.Item>
-
+                <div className="forgot-actions">
+                    <div onClick={() => { navigate('/login') }}>Đăng nhập</div>
+                </div>
                 <Form.Item>
                     <Button type="primary" htmlType="submit" block>
                         Gửi

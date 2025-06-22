@@ -148,7 +148,7 @@ export const Order = () => {
             margin: '4px auto', width: '65%', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.05)', backgroundColor: '#f9fafc'
         }}>
             <Space style={{ justifyContent: 'space-between', display: 'flex' }}>
-                < Title level={3} > Đơn hàng của bạn</Title>
+                < Title level={4} style={{ fontFamily: 'sans-serif' }}> Đơn hàng của bạn</Title>
                 <Select
                     value={filterStatus}
                     onChange={value => setFilterStatus(value)}

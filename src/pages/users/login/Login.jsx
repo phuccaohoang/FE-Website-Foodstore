@@ -24,7 +24,7 @@ export const Login = () => {
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
             >
-                <h2 className="login-title">Đăng nhập</h2>
+                <h2 className="login-title" >Đăng nhập</h2>
 
                 <Form.Item
                     label="Email"
@@ -34,7 +34,7 @@ export const Login = () => {
                         { type: 'email', message: 'Email không hợp lệ' },
                     ]}
                 >
-                    <Input />
+                    <Input size="large" />
                 </Form.Item>
 
                 <Form.Item
@@ -45,7 +45,7 @@ export const Login = () => {
                         { type: 'password', message: 'Mật khẩu không hợp lệ' },
                     ]}
                 >
-                    <Input.Password />
+                    <Input.Password size="large" />
                 </Form.Item>
 
                 <div className="login-actions">
