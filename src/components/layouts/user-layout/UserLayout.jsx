@@ -1,14 +1,29 @@
 import './UserLayout.css'
+import { useState } from 'react';
 import { Outlet, useNavigate } from "react-router-dom"
 import { UserOutlined, ShoppingCartOutlined, BellOutlined } from '@ant-design/icons';
-import { Layout, Typography, Dropdown, Row, Col, Badge, } from 'antd';
+import { Layout, Typography, Dropdown, Row, Col, Badge, Modal, Tabs } from 'antd';
+import { ModalNotification } from '../../modals/modal-notification/ModalNotification';
 const { Header, Footer } = Layout;
 const { Title, Text, Link } = Typography;
+
 import logo from '../../../assets/logo.jpg'
+const { TabPane } = Tabs;
 
 export const UserLayout = () => {
+    //tao link
     const navigate = useNavigate()
 
+    //mo tat thong bao
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
     return (
         <>
             <Layout>
@@ -64,8 +79,9 @@ export const UserLayout = () => {
                         <div >
 
                             <Badge count={5}>
-                                <BellOutlined style={{ fontSize: '24px', color: '#1890ff' }} />
+                                <BellOutlined style={{ fontSize: '24px', color: '#1890ff' }} onClick={showModal} />
                             </Badge>
+                            <ModalNotification open={isModalVisible} onClose={handleCancel} />
                         </div>
                     </div>
                     <div className='Right__Header' style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
