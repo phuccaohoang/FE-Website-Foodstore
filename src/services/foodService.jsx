@@ -4,13 +4,13 @@ const foodService = {
     getFoods: (params = {}) => {
         return axiosClient.get('/get/foods', { params })
     },
-    getFood: ($slug) => {
-        return axiosClient.get('/get/food', { params: { slug: $slug } })
+    getFood: (slug) => {
+        return axiosClient.get('/get/food', { params: { slug: slug } })
     },
-    updateFoodStatus: ($list_id, $status) => {
+    updateFoodStatus: (list_id, status) => {
         return axiosClient.patch('/update/food-status', {
-            list_id: $list_id,
-            status: $status
+            list_id: list_id,
+            status: status
         })
     }
 }

@@ -3,6 +3,8 @@ import { Table, Button, Row, Col, Input, Tooltip, Select } from "antd"
 
 import { ModalAddFeedback } from "../../../components/modals/modal-add-feedback/ModalAddFeedback";
 import reviewService from "../../../services/reviewService";
+import { useSession } from "../../../context/SessionContext";
+import feedbackService from "../../../services/feedbackService";
 
 
 
@@ -16,6 +18,9 @@ export const ListReviews = () => {
 
     const [openModal, setOpenModal] = useState(false)
     const [reviews, setReviews] = useState([])
+    const [reviewId, setReviewId] = useState(null)
+    const [selectedRows, setSelectedRows] = useState([])
+    const { refresh, setRefresh } = useSession()
 
     useEffect(() => {
         const loadReviews = async () => {
@@ -34,7 +39,7 @@ export const ListReviews = () => {
             }
         }
         loadReviews()
-    }, [])
+    }, [refresh])
 
 
     return (
@@ -104,9 +109,10 @@ export const ListReviews = () => {
             </div>
             <Table
                 rowSelection={{
-
+                    selectedRowKeys: selectedRows,
                     onChange: (items) => {
                         console.log('list', items)
+                        setSelectedRows(items)
                     }
                 }}
                 columns={[
@@ -118,13 +124,24 @@ export const ListReviews = () => {
                     { title: 'Trang thai', dataIndex: 'status' },
                     {
                         title: 'Chuc nang', dataIndex: 'feedbacks',
-                        render: (item) => {
+                        render: (item, record) => {
                             return (
                                 item.length !== 0 ? <>
-                                    <Button style={styleButton} color="red" variant="dashed">Xoa phan hoi</Button>
+                                    <Button style={styleButton} color="red" variant="dashed"
+                                        onClick={async () => {
+                                            const response = await feedbackService.deleteFeedback({ id: item[0].id });
+                                            if (response) {
+                                                alert(response.message)
+                                                setRefresh(!refresh)
+                                            }
+                                        }}
+                                    >
+                                        Xoa phan hoi
+                                    </Button>
                                 </> : <>
                                     <Button style={styleButton} color="lime" variant="dashed"
                                         onClick={() => {
+                                            setReviewId(record.id)
                                             setOpenModal(true)
                                         }}
                                     >
@@ -136,6 +153,7 @@ export const ListReviews = () => {
                     },
                 ]}
                 expandable={{
+                    defaultExpandAllRows: false,
                     expandedRowOffset: 3,
                     expandedRowRender: item => {
                         return (
@@ -144,7 +162,7 @@ export const ListReviews = () => {
                             </>
                         )
                     },
-                    defaultExpandAllRows: true
+
                 }}
                 dataSource={reviews}
                 pagination={{
@@ -160,7 +178,20 @@ export const ListReviews = () => {
                     return (
                         <>
                             <div className="Footer__Table">
-                                <Button style={styleButton} color="red" variant="solid">An danh gia</Button>
+                                <Button style={styleButton} color="red" variant="solid"
+                                    onClick={async () => {
+                                        if (selectedRows.length > 0) {
+                                            const response = await reviewService.disableReviews(selectedRows)
+                                            if (response.status) {
+                                                alert(response.message)
+                                                setSelectedRows([])
+                                                setRefresh(!refresh)
+                                            }
+                                        }
+                                    }}
+                                >
+                                    An danh gia
+                                </Button>
 
                             </div>
                         </>
@@ -168,7 +199,7 @@ export const ListReviews = () => {
                 }}
             />
 
-            <ModalAddFeedback open={openModal} onCancel={() => { setOpenModal(false) }} />
+            <ModalAddFeedback reviewId={reviewId} open={openModal} onCancel={() => { setOpenModal(false) }} />
         </>
     )
 }

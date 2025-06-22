@@ -2,11 +2,28 @@ import { UploadOutlined } from "@ant-design/icons"
 import { Button, Col, Form, Input, InputNumber, Modal, Radio, Row, Select, Upload } from "antd"
 import TextArea from "antd/es/input/TextArea"
 import { useState } from "react"
+import orderService from "../../../services/orderService"
+import { useSession } from "../../../context/SessionContext"
 
-
-export const ModalCancelOrder = ({ open, onCancel }) => {
-
+const reasonCancel = [
+    {
+        label: 'Ly do 1',
+        value: 'Ly do 1',
+    },
+    {
+        label: 'Ly do 2',
+        value: 'Ly do 2',
+    },
+    {
+        label: 'Ly do 3',
+        value: 'Ly do 3',
+    },
+]
+export const ModalCancelOrder = ({ orders, open, onCancel }) => {
     const [disabled, setDisabled] = useState(true)
+    const [note, setNote] = useState(reasonCancel[0].value)
+    const [textArea, setTextArea] = useState('')
+    const { refresh, setRefresh } = useSession()
     return (
         <>
             <Modal
@@ -28,34 +45,65 @@ export const ModalCancelOrder = ({ open, onCancel }) => {
                 >
                     <Row  >
                         <Col span={24}>
-                            <Radio.Group
-                                style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
-                                defaultValue={1}
-                                onChange={(e) => {
-                                    let value = e.target.value
-                                    console.log(e)
-                                    if (value == 0) {
-                                        setDisabled(false)
-                                    }
-                                    else {
-                                        setDisabled(true)
-                                    }
-                                }}
-                                options={[
-                                    { value: 1, label: 'Ly do 1' },
-                                    { value: 2, label: 'Ly do 2' },
-                                    { value: 3, label: 'Ly do 3' },
-                                    { value: 0, label: 'Khac' },
-                                ]}
-                            />
+                            <Form.Item label="" name="note" rules={[{ required: false }]}>
+                                <Radio.Group
+                                    style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+                                    defaultValue={reasonCancel[0].value}
+                                    onChange={(e) => {
+                                        setNote(e.target.value)
+                                        if (e.target.value === 0) {
+                                            setDisabled(false)
+                                        }
+                                        else {
+                                            setDisabled(true)
+                                        }
+                                    }}
+                                    options={[
+                                        ...reasonCancel,
+                                        { value: 0, label: 'Khac' },
+                                    ]}
+                                />
+                            </Form.Item>
+
                         </Col>
                         <Col span={24}>
-                            <Form.Item label="" name="note" rules={[{ required: true }]}>
-                                <TextArea rows={5} placeholder="Ly do huy don" maxLength={300} disabled={disabled} />
+                            <Form.Item label="" rules={[{ required: false }]}>
+                                <TextArea
+                                    disabled={disabled}
+                                    onChange={(e) => {
+                                        setTextArea(e.target.value)
+                                    }}
+                                    rows={5} placeholder="Ly do huy don" maxLength={300}
+                                />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
-                            <Button color="blue" variant="solid" style={{ width: '100%' }}>Xac nhan</Button>
+                            <Button color="blue" variant="solid" style={{ width: '100%' }}
+                                onClick={async () => {
+                                    let text = null;
+                                    if (note === 0) {
+                                        text = textArea;
+                                    }
+                                    else {
+                                        text = note;
+                                    }
+
+                                    if (text = text.trim()) {
+                                        const response = await orderService.cancelOrder(orders, text)
+                                        if (response.status) {
+                                            alert(response.message)
+                                            setRefresh(!refresh)
+                                            onCancel()
+                                        }
+                                    }
+                                    else {
+                                        alert('Hay nhaap ly do huy don hang.')
+                                    }
+
+                                }}
+                            >
+                                Xac nhan
+                            </Button>
                         </Col>
 
 

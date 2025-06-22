@@ -5,6 +5,7 @@ import { ModalUpdateOrder } from "../../../components/modals/modal-update-orders
 import { ModalOrderDetail } from "../../../components/modals/modal-order-detail/ModalOrderDetail";
 import { ModalCancelOrder } from "../../../components/modals/modal-cancel-orders/ModalCancelOrders";
 import orderService from "../../../services/orderService";
+import { useSession } from "../../../context/SessionContext";
 
 
 
@@ -19,7 +20,10 @@ export const ListOrders = () => {
     const [openOrderDetail, setOpenOrderDetail] = useState(false)
 
     const [orders, setOrders] = useState([])
-    const [order, setOrder] = useState([])
+    const [order, setOrder] = useState({})
+    const [selectedRows, setSelectedRows] = useState([])
+
+    const { refresh, setRefresh } = useSession()
 
     useEffect(() => {
         const loadOrders = async () => {
@@ -29,7 +33,7 @@ export const ListOrders = () => {
                     let discount = item.coupon ? item.coupon.discount : 0;
                     return {
                         ...item,
-                        key: idx,
+                        key: item.id,
                         stt: idx + 1,
                         fullname: item.customer.fullname,
                         status: item.order_status.name,
@@ -41,7 +45,7 @@ export const ListOrders = () => {
         }
         //
         loadOrders()
-    }, [])
+    }, [refresh])
 
     return (
         <>
@@ -102,9 +106,10 @@ export const ListOrders = () => {
             </div>
             <Table
                 rowSelection={{
-
+                    selectedRowKeys: selectedRows,
                     onChange: (items) => {
                         console.log('list', items)
+                        setSelectedRows(items)
                     }
                 }}
                 columns={[
@@ -112,6 +117,7 @@ export const ListOrders = () => {
                     { title: 'Ten khach hang', dataIndex: 'fullname' },
                     { title: 'SDT', dataIndex: 'phone' },
                     { title: 'Dia chi nhan hang', dataIndex: 'address' },
+                    { title: 'Ghi chu', dataIndex: 'note' },
                     { title: 'Tong don hang', dataIndex: 'total_amount' },
                     { title: 'So luong mon an', dataIndex: 'quantity' },
                     { title: 'Gia van chuyen', dataIndex: 'delivery_cost' },
@@ -150,14 +156,21 @@ export const ListOrders = () => {
                             <div className="Footer__Table">
                                 <Button style={styleButton} color="gold" variant="solid"
                                     onClick={() => {
-                                        setOpenUpdate(true)
+                                        if (selectedRows.length > 0) setOpenUpdate(true)
+                                        else {
+                                            alert('0 row selected.')
+                                        }
                                     }}
                                 >
                                     Cap nhat trang thai
                                 </Button>
                                 <Button style={styleButton} color="red" variant="solid"
-                                    onClick={() =>
-                                        setOpenCancel(true)
+                                    onClick={() => {
+                                        if (selectedRows.length > 0) setOpenCancel(true)
+                                        else {
+                                            alert('0 row selected.')
+                                        }
+                                    }
                                     }
                                 >
                                     Huy don
@@ -168,19 +181,29 @@ export const ListOrders = () => {
                 }}
             />
 
-            <ModalUpdateOrder open={openUpdate} onCancel={() => {
-                setOpenUpdate(false)
-            }}
-                orders={[]}
+            <ModalUpdateOrder
+                open={openUpdate} onCancel={() => {
+                    setOpenUpdate(false)
+                    setSelectedRows([])
+                }}
+                orders={selectedRows}
             />
 
-            <ModalOrderDetail order={order} open={openOrderDetail} onCancel={() => {
-                setOpenOrderDetail(false)
-                setOrder([])
-            }}
+            <ModalOrderDetail
+                order={order} open={openOrderDetail} onCancel={() => {
+                    setOpenOrderDetail(false)
+                    setOrder({})
+                }}
             />
 
-            <ModalCancelOrder open={openCancel} onCancel={() => setOpenCancel(false)} />
+            <ModalCancelOrder
+                open={openCancel} onCancel={() => {
+                    setOpenCancel(false)
+                    setSelectedRows([])
+
+                }}
+                orders={selectedRows}
+            />
         </>
     )
 }

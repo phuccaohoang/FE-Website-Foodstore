@@ -11,13 +11,6 @@ const styleButton = {
     padding: '10px 15px',
 }
 
-const dataSource = Array.from({ length: 10 }).map((_, i) => ({
-    key: i,
-    stt: i,
-    fullname: `Edward King ${i}`,
-    quantity: { i },
-}));
-
 
 export const ModalOrderDetail = ({ order, open, onCancel }) => {
 
@@ -81,6 +74,15 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                                     <Text strong>Gia van chuyen: {order.delivery_cost} vnd</Text>
                                 </Col>
                             </Row>
+                            <Row gutter={[10, 10]} style={{ marginTop: '10px' }}>
+                                <Col span={16}>
+                                    <Text strong>Ghi chu: {order.note}</Text>
+                                </Col>
+                                <Col span={8}>
+                                    <Text strong>Trang thai: {order.order_status ? order.order_status.name : ''}</Text>
+                                </Col>
+
+                            </Row>
                         </Col>
 
                         <Col span={24} style={{ justifyContent: 'right', display: 'flex', columnGap: '10px' }}>
@@ -127,8 +129,20 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                 </Form>
             </Modal >
 
-            <ModalUpdateOrder open={openUpdate} onCancel={() => setOpenUpdate(false)} />
-            <ModalCancelOrder open={openCancel} onCancel={() => setOpenCancel(false)} />
+            <ModalUpdateOrder
+                orders={[order.id]} open={openUpdate} onCancel={() => {
+                    setOpenUpdate(false)
+                    onCancel()
+                }}
+            />
+            <ModalCancelOrder
+                orders={[order.id]}
+                open={openCancel} onCancel={() => {
+                    onCancel()
+                    setOpenCancel(false)
+                }}
+
+            />
         </>
     )
 }
