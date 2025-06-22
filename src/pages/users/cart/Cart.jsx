@@ -2,12 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './cart.css'
 import {
-    Button, Input, Typography, Divider, Image, Space, message,
+    Button, InputNumber, Typography, Divider, Image, Space, message,
 } from 'antd';
-import {
-    MinusOutlined,
-    PlusOutlined,
-} from '@ant-design/icons';
+import { } from '@ant-design/icons';
 import logo from '../../../assets/logo.jpg'
 import mon from '../../../assets/mon2.jpg'
 
@@ -15,7 +12,7 @@ const { Text, Title } = Typography;
 
 
 
-export const Cart = ({ cartItems: initialItems = [] }) => {
+export const Cart = () => {
     const navigate = useNavigate()
 
     const [cartItems, setCartItems] = useState([
@@ -41,36 +38,42 @@ export const Cart = ({ cartItems: initialItems = [] }) => {
 
 
 
-    const increase = (id) => {
-        setCartItems(prev =>
-            prev.map(item =>
-                item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-            )
-        );
-    };
-
-
-    const decrease = (id) => {
-        setCartItems(prev =>
-            prev.map(item =>
-                item.id === id && item.quantity > 1
-                    ? { ...item, quantity: item.quantity - 1 }
-                    : item
-            )
-        );
-    };
-
-
+    // xoa gio 
     const remove = (id) => {
         setCartItems(prev => prev.filter(item => item.id !== id));
     };
 
+    //luu so luong tam thoi
+    const [tempQuantities, setTempQuantities] = useState(() => {
+        const initialQuantities = {};
+        cartItems.forEach(item => {
+            initialQuantities[item.id] = item.quantity;
+        });
+        return initialQuantities;
+    });
 
+    // cap nhat so luong tam 
+    const handleQuantityChange = (id, value) => {
+        setTempQuantities(prev => ({
+            ...prev,
+            [id]: value,
+        }));
+    };
+
+    // cap nhat so luong chinh thuc
+    const updateQuantity = (id) => {
+        setCartItems(prev =>
+            prev.map(item =>
+                item.id === id ? { ...item, quantity: tempQuantities[id] } : item
+            )
+        );
+        message.success('Cập nhật số lượng thành công!');
+    };
 
     const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
 
-
+    // khi khong co trong gio
     if (cartItems.length === 0) {
         return (
             <div style={{ textAlign: 'center', padding: 64, }}>
@@ -121,9 +124,11 @@ export const Cart = ({ cartItems: initialItems = [] }) => {
                         </Space>
                     </div>
                     <div className="cart-item-quantity">
-                        <Button icon={<MinusOutlined />} onClick={() => decrease(item.id)} />
-                        <Input style={{ width: 40, textAlign: 'center' }} value={item.quantity} readOnly />
-                        <Button icon={<PlusOutlined />} onClick={() => increase(item.id)} />
+                        <InputNumber min={1}
+                            style={{ width: 70, textAlign: 'center' }}
+                            value={tempQuantities[item.id]}
+                            onChange={(value) => handleQuantityChange(item.id, value)} />
+                        <Button onClick={() => updateQuantity(item.id)}>Cập Nhật</Button>
                     </div>
                     <Text className="cart-item-price">
                         {(item.price * item.quantity).toLocaleString()}₫
@@ -137,7 +142,9 @@ export const Cart = ({ cartItems: initialItems = [] }) => {
 
             <div className="cart-summary">
                 <div className="cart-summary-text">
-                    <Typography.Title level={4}> <Text>Tạm tính: {total.toLocaleString()}₫</Text><br /></Typography.Title>
+                    <Typography.Title level={4}>
+                        <Text>Tạm tính: {total.toLocaleString()}₫</Text><br />
+                    </Typography.Title>
 
                 </div>
 

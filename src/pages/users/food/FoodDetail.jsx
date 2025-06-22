@@ -10,8 +10,6 @@ import {
     List,
     Space,
     Card,
-    Row,
-    Col
 } from 'antd';
 import './FoodDetail.css';
 import { useParams } from 'react-router-dom';
@@ -119,10 +117,14 @@ export const FoodDetail = () => {
 
                             <div className="food-detail-info">
                                 <div>
-                                    <Title level={3} className="food-title">{food.name}</Title>
-                                    <Tag bordered={false} color="cyan" style={{ fontSize: '20px' }}>{food.category.name}</Tag>
-                                    <Rate allowHalf disabled defaultValue={food.rating} />
+                                    <Space>
+                                        <Title level={3} className="food-title">{food.name}</Title>
+                                        <Rate allowHalf disabled defaultValue={food.rating} />
+                                    </Space>
 
+                                    <Title level={3} className="food-title">
+                                        <Tag bordered={false} color="cyan" style={{ fontSize: '20px' }}>{food.category.name}</Tag>
+                                    </Title>
                                     <Text strong className="food-price">{food.price}VNĐ</Text>
                                     <Paragraph className="food-description">{food.description}</Paragraph>
                                 </div>
