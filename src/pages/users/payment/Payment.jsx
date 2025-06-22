@@ -20,7 +20,7 @@ export const Payment = () => {
             <Row gutter={32} align="start">
 
                 <Col xs={24} md={16}>
-                    <Card style={{ marginBottom: 24, backgroundColor: '#CCCCCC' }}>
+                    <Card style={{ marginBottom: 24, backgroundColor: '#f5f5f5' }}>
                         <Title level={5}>Thông tin người dùng</Title>
                         <Form layout="vertical">
                             <Form.Item label="Tên khách hàng*" name="name" rules={[{ required: true }]}>
@@ -51,7 +51,7 @@ export const Payment = () => {
                         </Form>
                     </Card>
 
-                    <Card style={{ marginBottom: 24, backgroundColor: '#CCCCCC' }}>
+                    <Card style={{ marginBottom: 24, backgroundColor: '#f5f5f5' }}>
 
                         <Space style={{ width: '100%', }}>
                             <Title level={5}>Mã giảm giá</Title>
@@ -71,7 +71,7 @@ export const Payment = () => {
                         </Space>
                     </Card>
 
-                    <Card style={{ marginBottom: 24, backgroundColor: '#CCCCCC' }}>
+                    <Card style={{ marginBottom: 24, backgroundColor: '#f5f5f5' }}>
                         <Title level={5}>Phương thức thanh toán</Title>
                         <Radio.Group style={{ width: '100%' }} defaultValue="cash">
                             <Row gutter={[16, 12]}>
@@ -91,7 +91,7 @@ export const Payment = () => {
 
 
                 <Col xs={24} md={8}>
-                    <Card style={{ backgroundColor: '#CCCCCC' }}>
+                    <Card style={{ backgroundColor: '#f5f5f5' }}>
                         <Title level={5}>Đơn Hàng Của Bạn</Title>
                         <div style={{ marginBottom: 16 }}>
                             <div>

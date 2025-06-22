@@ -40,8 +40,20 @@ export const FoodCart = ({ food }) => {
                     ]}
                 >
                     <p style={{ fontSize: '25px' }}>{food.name}</p>
-                    <span style={{ fontSize: '18px' }}> <Tag color="cyan">{food.category.name}</Tag></span>
-                    <div style={{ marginTop: 8, fontWeight: 'bold' }}>{food.price}</div>
+                    <div
+                        style={{
+                            marginTop: 8,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 8,
+                            justifyContent: 'space-between'
+                        }}
+                    >
+                        <span > <Tag style={{ fontSize: '20px' }} bordered={false} color="cyan">{food.category.name}</Tag></span>
+                        <div style={{ marginTop: 8, fontWeight: 'bold' }}>{food.price} VNĐ</div>
+
+                    </div>
+
                     <div
                         style={{
                             marginTop: 8,
@@ -55,7 +67,7 @@ export const FoodCart = ({ food }) => {
                         <span style={{ color: '#555', fontSize: 13 }}>Đã bán {food.sold}</span>
                     </div>
                 </Card>
-            </Col>
+            </Col >
         </>
     )
 }

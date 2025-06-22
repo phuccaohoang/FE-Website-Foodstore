@@ -1,7 +1,7 @@
 import './UserLayout.css'
 import { Outlet, useNavigate } from "react-router-dom"
-import { UserOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Layout, Typography, Dropdown, Row, Col } from 'antd';
+import { UserOutlined, ShoppingCartOutlined, BellOutlined } from '@ant-design/icons';
+import { Layout, Typography, Dropdown, Row, Col, Badge, } from 'antd';
 const { Header, Footer } = Layout;
 const { Title, Text, Link } = Typography;
 import logo from '../../../assets/logo.jpg'
@@ -60,10 +60,20 @@ export const UserLayout = () => {
                             Về chúng tôi
                         </div>
                     </div>
-
                     <div className='Right__Header' style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                         <div >
-                            <ShoppingCartOutlined style={{ fontSize: '24px', color: '#1890ff' }} onClick={() => { navigate('/my-cart') }} />
+
+                            <Badge count={5}>
+                                <BellOutlined style={{ fontSize: '24px', color: '#1890ff' }} />
+                            </Badge>
+                        </div>
+                    </div>
+                    <div className='Right__Header' style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                        <div >
+
+                            <Badge count={5}>
+                                <ShoppingCartOutlined style={{ fontSize: '24px', color: '#1890ff' }} onClick={() => { navigate('/my-cart') }} />
+                            </Badge>
                         </div>
 
                         <Dropdown

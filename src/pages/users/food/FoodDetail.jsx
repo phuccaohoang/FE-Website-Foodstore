@@ -57,6 +57,7 @@ export const FoodDetail = () => {
 
 
 
+
     // danh sach 
     const [foods, setFoods] = useState([])
 
@@ -119,7 +120,7 @@ export const FoodDetail = () => {
                             <div className="food-detail-info">
                                 <div>
                                     <Title level={3} className="food-title">{food.name}</Title>
-                                    <Tag color="cyan">{food.category.name}</Tag>
+                                    <Tag bordered={false} color="cyan" style={{ fontSize: '20px' }}>{food.category.name}</Tag>
                                     <Rate allowHalf disabled defaultValue={food.rating} />
 
                                     <Text strong className="food-price">{food.price}VNĐ</Text>
