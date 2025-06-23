@@ -12,6 +12,12 @@ const cartService = {
     },
     deleteCarts: (params = {}) => {
         return axiosClient.delete('/delete/carts', { params })
+    },
+    updateCart: (id, quantity) => {
+        return axiosClient.patch('/update/cart', {
+            id: id,
+            quantity: quantity,
+        })
     }
 }
 

@@ -23,8 +23,10 @@ export const Cart = () => {
     const [selectedRows, setSelectedRows] = useState([])
     const [carts, setCarts] = useState([])
     const { user, setUser, refresh, setRefresh } = useSession()
+    const [disabled, setDisabled] = useState(true)
+    const [quantity, setQuantity] = useState(0)
 
-    console.log('user', user)
+
 
     useEffect(() => {
         const loadCart = async () => {
@@ -66,10 +68,26 @@ export const Cart = () => {
                     { title: 'Anh', dataIndex: 'image' },
                     { title: 'Mon an', dataIndex: 'food' },
                     {
-                        title: 'So luong', dataIndex: 'quantity', render: (item) => {
+                        title: 'So luong', dataIndex: 'quantity', render: (item, record) => {
                             return <>
-                                <InputNumber defaultValue={item} min={1} max={10} />
-                                <Button>Cap nhat</Button>
+                                <InputNumber defaultValue={item} min={1} max={10} style={{ width: 60 }} onChange={(value) => {
+                                    setDisabled(false)
+                                    setQuantity(value)
+                                }}
+                                />
+                                <> </>
+                                <Button
+                                    disabled={disabled}
+                                    onClick={async () => {
+                                        const response = await cartService.updateCart(record.id, quantity)
+                                        if (response.status) {
+                                            alert(response.message)
+                                            setRefresh(!refresh)
+                                        }
+                                    }}
+                                >
+                                    Cap nhat
+                                </Button>
                             </>
                         }
                     },

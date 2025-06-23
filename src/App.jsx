@@ -26,51 +26,67 @@ import { Order } from './pages/users/order/Order';
 import { Explore } from './pages/users/explore/Explore';
 import { Payment } from './pages/users/payment/Payment';
 import { FoodDetail } from './pages/users/food/fooddetail';
+//auth
+import { AuthLoggedIn } from './components/layouts/auth-logged-in/AuthLoggedIn';
+import { UserSignedOut } from './components/layouts/user-signed-out/UserSignedOut';
+import { AdminSignedOut } from './components/layouts/admin-signed-out/AdminSignedOut';
+
 function App() {
     return (
         <>
             <Routes>
-                <Route path='login' element={<Login />} />
-                <Route path='register' element={<Register />} />
-                <Route path='forgot-password' element={<ForgotPassword />} />
+
                 {/* admin routes */}
-                <Route path='admin' element={<AdminLayout />}>
-                    <Route index element={<Dashboard />} />
-                    <Route path='accounts'>
-                        <Route index element={<ListAccounts />} />
-                    </Route>
-                    <Route path='foods'>
-                        <Route index element={<ListFoods />} />
-                        <Route path='add' element={<AddFood />} />
-                    </Route>
-                    <Route path='coupons'>
-                        <Route index element={<ListCoupons />} />
-                        <Route path='add' element={<AddCoupon />} />
-                    </Route>
-                    <Route path='orders'>
-                        <Route index element={<ListOrders />} />
-                    </Route>
-                    <Route path='reviews'>
-                        <Route index element={<ListReviews />} />
-                    </Route>
-                    <Route path='statistics'>
-                        <Route path='revenue' element={<StatisticsRevenue />} />
-                        <Route path='orders' element={<StatisticsOrders />} />
-                        <Route path='foods' element={<StatisticsFoods />} />
-                        <Route path='customers' element={<StatisticsCustomers />} />
+                <Route element={<AdminSignedOut />}>
+                    <Route path='admin' element={<AdminLayout />}>
+                        <Route index element={<Dashboard />} />
+                        <Route path='accounts'>
+                            <Route index element={<ListAccounts />} />
+                        </Route>
+                        <Route path='foods'>
+                            <Route index element={<ListFoods />} />
+                            <Route path='add' element={<AddFood />} />
+                        </Route>
+                        <Route path='coupons'>
+                            <Route index element={<ListCoupons />} />
+                            <Route path='add' element={<AddCoupon />} />
+                        </Route>
+                        <Route path='orders'>
+                            <Route index element={<ListOrders />} />
+                        </Route>
+                        <Route path='reviews'>
+                            <Route index element={<ListReviews />} />
+                        </Route>
+                        <Route path='statistics'>
+                            <Route path='revenue' element={<StatisticsRevenue />} />
+                            <Route path='orders' element={<StatisticsOrders />} />
+                            <Route path='foods' element={<StatisticsFoods />} />
+                            <Route path='customers' element={<StatisticsCustomers />} />
+                        </Route>
                     </Route>
                 </Route>
                 {/* user-routes */}
                 <Route element={<UserLayout />}>
                     <Route index element={<Home />} />
                     <Route path='about-us' element={<AboutUs />} />
-                    <Route path='my-cart' element={<Cart />} />
-                    <Route path='my-order' element={<Order />} />
                     <Route path='explore' element={<Explore />} />
-                    <Route path='my-account' element={<Account />} />
                     <Route path='foods/:slug' element={<FoodDetail />} />
-                    <Route path='payment' element={<Payment />} />
 
+                    <Route element={<UserSignedOut />}>
+                        <Route path='my-cart' element={<Cart />} />
+                        <Route path='my-order' element={<Order />} />
+                        <Route path='my-account' element={<Account />} />
+                        <Route path='payment' element={<Payment />} />
+                    </Route>
+
+                </Route>
+
+                {/* auth-logged-in */}
+                <Route element={<AuthLoggedIn />}>
+                    <Route path='login' element={<Login />} />
+                    <Route path='admin/login' element={'admin login'} />
+                    <Route path='register' element={<Register />} />
+                    <Route path='forgot-password' element={<ForgotPassword />} />
                 </Route>
 
             </Routes>
