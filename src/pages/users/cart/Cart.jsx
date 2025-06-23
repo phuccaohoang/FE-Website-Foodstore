@@ -83,6 +83,7 @@ export const Cart = () => {
                                         if (response.status) {
                                             alert(response.message)
                                             setRefresh(!refresh)
+                                            setDisabled(true)
                                         }
                                     }}
                                 >
