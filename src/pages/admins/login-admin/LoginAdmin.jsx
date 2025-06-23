@@ -1,29 +1,21 @@
+import '../../users/login/login.css'
 import { Button, Form, Input } from 'antd';
-import { NavLink, useNavigate } from 'react-router-dom';
-import './login.css';
 import accountService from '../../../services/accountService';
 import { useSession } from '../../../context/SessionContext';
 
-
-
-
-const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
-};
-
-export const Login = () => {
+export const LoginAdmin = () => {
     const { user, setUser } = useSession()
 
 
     return (
-        <div className="login-container">
+        <div className="Login__Admin_container">
             <Form
                 name="basic"
                 layout="vertical"
                 className="lrf-form Form__Input" // log in- register-for got from
                 initialValues={{ remember: true }}
                 onFinish={async (value) => {
-                    const response = await accountService.login(value.email, value.password)
+                    const response = await accountService.login(value.email, value.password, 1)
                     if (response.status) {
                         const response2 = await accountService.me()
                         if (response2.status) {
@@ -31,10 +23,10 @@ export const Login = () => {
                         }
                     }
                 }}
-                onFinishFailed={onFinishFailed}
+
                 autoComplete="off"
             >
-                <h2 className="login-title" >Đăng nhập</h2>
+                <h2 className="login-title" >Đăng Nhập Quản Trị</h2>
 
                 <Form.Item
                     label="Email"
@@ -58,13 +50,10 @@ export const Login = () => {
                     <Input.Password size="large" />
                 </Form.Item>
 
-                <div className="form-actions">
-                    <NavLink className='Text__Link' to='/forgot-password'>Quên mật khẩu</NavLink>
-                    <NavLink className='Text__Link' to='/register'>Tạo tài khoản mới</NavLink>
-                </div>
+
 
                 <Form.Item>
-                    <Button className='Btn__Submit' type="primary" htmlType="submit" block>
+                    <Button className='Btn__Submit' type="primary" htmlType="submit" block style={{ marginTop: '20px' }}>
                         Đăng nhập
                     </Button>
                 </Form.Item>
