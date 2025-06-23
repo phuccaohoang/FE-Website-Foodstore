@@ -1,163 +1,114 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './cart.css'
 import {
     Button, InputNumber, Typography, Divider, Image, Space, message,
+    Table,
 } from 'antd';
-import { } from '@ant-design/icons';
+import { EditOutlined, LoadingOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import logo from '../../../assets/logo.jpg'
 import mon from '../../../assets/mon2.jpg'
+import { useSession } from '../../../context/SessionContext';
+import cartService from '../../../services/cartService';
 
 const { Text, Title } = Typography;
 
 
-
+const styleButton = {
+    padding: '10px 15px',
+}
 export const Cart = () => {
     const navigate = useNavigate()
 
-    const [cartItems, setCartItems] = useState([
-        {
-            id: 1,
-            name: 'Pizza Hải Sản Pesto',
-            image: { mon },
-            size: 'Cỡ vừa',
-            crust: 'Đế viền phô mai',
-            price: 245000,
-            quantity: 2,
-        },
-        {
-            id: 2,
-            name: 'Pizza Gà Phô Mai',
-            image: { mon },
-            size: 'Cỡ lớn',
-            crust: 'Đế dày bột tươi',
-            price: 195000,
-            quantity: 1,
-        },
-    ]);
+    const [selectedRows, setSelectedRows] = useState([])
+    const [carts, setCarts] = useState([])
+    const { user, setUser, refresh, setRefresh } = useSession()
+
+    console.log('user', user)
+
+    useEffect(() => {
+        const loadCart = async () => {
+            const response = await cartService.getCart()
+            if (response.status) {
+                setCarts(response.data.map((item, idx) => {
+                    return {
+                        ...item,
+                        stt: idx + 1,
+                        key: item.id,
+                        food: item.food.name,
+                        total_price: ((100 - Number(item.food.discount)) / 100) * Number(item.food.price) * Number(item.quantity),
+                    }
+                }))
+            }
+        }
+        //
+        loadCart()
+    }, [refresh])
 
 
 
-    // xoa gio 
-    const remove = (id) => {
-        setCartItems(prev => prev.filter(item => item.id !== id));
-    };
 
-    //luu so luong tam thoi
-    const [tempQuantities, setTempQuantities] = useState(() => {
-        const initialQuantities = {};
-        cartItems.forEach(item => {
-            initialQuantities[item.id] = item.quantity;
-        });
-        return initialQuantities;
-    });
-
-    // cap nhat so luong tam 
-    const handleQuantityChange = (id, value) => {
-        setTempQuantities(prev => ({
-            ...prev,
-            [id]: value,
-        }));
-    };
-
-    // cap nhat so luong chinh thuc
-    const updateQuantity = (id) => {
-        setCartItems(prev =>
-            prev.map(item =>
-                item.id === id ? { ...item, quantity: tempQuantities[id] } : item
-            )
-        );
-        message.success('Cập nhật số lượng thành công!');
-    };
-
-    const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-
-    // khi khong co trong gio
-    if (cartItems.length === 0) {
-        return (
-            <div style={{ textAlign: 'center', padding: 64, }}>
-                <Image
-                    src={logo}
-                    preview={false}
-                    width={200}
-                    style={{
-                        userSelect: 'none',
-                        WebkitUserSelect: 'none',
-                        MozUserSelect: 'none',
-                        msUserSelect: 'none'
-                    }}
-                />
-                <Title level={3}>Giỏ Hàng Trống</Title>
-                <Text>
-                    Hiện Tại Bạn Chưa Có Sản Phẩm Nào Trong Giỏ Hàng. Hãy Dạo Một Vòng Thực Đơn Để Chọn
-                    Sản Phẩm Yêu Thích Nhé!
-                </Text>
-                <div style={{ marginTop: 24 }}>
-                    <div   >  <Button type="primary" size="large" style={{ border: '2px solid ' }} onClick={() => { navigate('/') }}>Tiếp Tục Chọn Món</Button></div>
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div className="cart-container" style={{ width: '65%', margin: '4px auto' }}>
             <Title level={4} className="cart-title" style={{ fontFamily: 'sans-serif' }}>Giỏ Hàng Của Bạn</Title>
 
-            {cartItems.map((item) => (
-                <div key={item.id} className="cart-item">
-                    <Image
-                        src={mon}
-                        width={120}
-                        style={{
-                            userSelect: 'none',
-                            WebkitUserSelect: 'none',
-                            MozUserSelect: 'none',
-                            msUserSelect: 'none'
-                        }} />
-                    <div className="cart-item-details">
-                        <Text strong>{item.name}</Text>
-                        <div>{item.size}</div>
-                        <div>{item.crust}</div>
-                        <Space className="cart-item-actions">
-                            <Button size="small" danger type="link" onClick={() => remove(item.id)}>Xóa</Button>
-                        </Space>
-                    </div>
-                    <div className="cart-item-quantity">
-                        <InputNumber min={1}
-                            style={{ width: 70, textAlign: 'center' }}
-                            value={tempQuantities[item.id]}
-                            onChange={(value) => handleQuantityChange(item.id, value)} />
-                        <Button onClick={() => updateQuantity(item.id)}>Cập Nhật</Button>
-                    </div>
-                    <Text className="cart-item-price">
-                        {(item.price * item.quantity).toLocaleString()}₫
-                    </Text>
-                </div>
-            ))}
+            <Table
+                rowSelection={{
+                    selectedRowKeys: selectedRows,
+                    onChange: (items) => {
+                        console.log('list', items)
+                        setSelectedRows(items)
+                    }
+                }}
+                columns={[
+                    { title: 'STT', dataIndex: 'stt' },
+                    { title: 'Anh', dataIndex: 'image' },
+                    { title: 'Mon an', dataIndex: 'food' },
+                    {
+                        title: 'So luong', dataIndex: 'quantity', render: (item) => {
+                            return <>
+                                <InputNumber defaultValue={item} min={1} max={10} />
+                                <Button>Cap nhat</Button>
+                            </>
+                        }
+                    },
+                    { title: 'Tong tien', dataIndex: 'total_price' },
+                ]}
+                dataSource={carts}
+                pagination={false}
 
-            <Divider />
-
-
-
-            <div className="cart-summary">
-                <div className="cart-summary-text">
-                    <Typography.Title level={4}>
-                        <Text>Tạm tính: {total.toLocaleString()}₫</Text><br />
-                    </Typography.Title>
-
-                </div>
-
-                <Button
-                    type="primary"
-                    block
-                    className="cart-summary-button"
-                    style={{ width: '200px', float: 'right' }}
-                    onClick={() => { navigate('/payment') }}
-                >
-                    <div> Thanh Toán </div>
-                </Button>
-            </div>
+                footer={() => {
+                    return (
+                        <>
+                            <div className="Footer__Table">
+                                <Button style={styleButton} color="red" variant="solid"
+                                    onClick={async () => {
+                                        if (selectedRows.length === 0) alert('0 row selected.')
+                                        else {
+                                            const response = await cartService.deleteCarts({ list_id: selectedRows })
+                                            if (response.status) {
+                                                alert(response.message)
+                                                setRefresh(!refresh)
+                                                selectedRows([])
+                                            }
+                                        }
+                                    }}
+                                >
+                                    Xoa
+                                </Button>
+                                <Button style={styleButton} color="primary" variant="solid"
+                                    onClick={() => {
+                                        navigate('/payment')
+                                    }}
+                                >
+                                    Thanh toan
+                                </Button>
+                            </div>
+                        </>
+                    )
+                }}
+            />
         </div>
     );
 };

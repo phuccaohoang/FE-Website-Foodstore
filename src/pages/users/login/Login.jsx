@@ -1,6 +1,9 @@
 import { Button, Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
+import accountService from '../../../services/accountService';
+import { useSession } from '../../../context/SessionContext';
+import { use } from 'react';
 
 
 const onFinish = values => {
@@ -13,6 +16,9 @@ const onFinishFailed = errorInfo => {
 
 export const Login = () => {
     const navigate = useNavigate()
+    const { user, setUser } = useSession()
+
+
     return (
         <div className="login-container">
             <Form
@@ -20,7 +26,15 @@ export const Login = () => {
                 layout="vertical"
                 className="login-form"
                 initialValues={{ remember: true }}
-                onFinish={onFinish}
+                onFinish={async (value) => {
+                    const response = await accountService.login(value.email, value.password)
+                    if (response.status) {
+                        const response2 = await accountService.me()
+                        if (response2.status) {
+                            setUser({ ...response2.data })
+                        }
+                    }
+                }}
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
             >

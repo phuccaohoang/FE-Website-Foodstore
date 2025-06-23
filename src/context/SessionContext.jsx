@@ -1,14 +1,30 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
+import accountService from "../services/accountService";
 
 
 export const SessionContext = createContext();
 
 export const SessionProvider = ({ children }) => {
     const [refresh, setRefresh] = useState(true);
+    const [user, setUser] = useState(null);
+
+
+    useEffect(() => {
+        const loadUser = async () => {
+            const response = await accountService.me()
+            if (response.status) {
+                setUser({ ...response.data })
+            }
+        }
+        //
+        loadUser()
+    }, [])
 
     const contextValue = {
         refresh,
-        setRefresh
+        setRefresh,
+        user,
+        setUser,
     }
     return (
         <SessionContext.Provider value={contextValue}>

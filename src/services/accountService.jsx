@@ -9,6 +9,16 @@ const accountService = {
             list_id: list_id,
             status: status
         })
+    },
+    login: (email, password, isAdmin = 0) => {
+        return axiosClient.post('/auth/login', {
+            email: email,
+            password: password,
+            is_admin: isAdmin,
+        })
+    },
+    me: () => {
+        return axiosClient.get('/me')
     }
 }
 

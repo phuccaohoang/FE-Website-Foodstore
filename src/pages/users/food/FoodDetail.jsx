@@ -16,6 +16,7 @@ import { FoodList } from '../../../components/food-list/FoodList';
 const { Title, Text, Paragraph } = Typography;
 import bannerimg from '../../../assets/mon1.png'
 import foodService from '../../../services/foodService';
+import cartService from '../../../services/cartService';
 
 
 
@@ -37,21 +38,6 @@ export const FoodDetail = () => {
         loadFood();
     }, [])
     // danh gia
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     // danh sach 
@@ -90,8 +76,11 @@ export const FoodDetail = () => {
     const increase = () => setQuantity(prev => prev + 1);
     const decrease = () => setQuantity(prev => Math.max(1, prev - 1));
 
-    const handleAddToCart = () => {
-        message.success(`${quantity} ${food.name} đã được thêm vào giỏ hàng.`);
+    const handleAddToCart = async () => {
+        const response = await cartService.storeCart(food.id, quantity)
+        if (response.status) {
+            alert(response.message)
+        }
     };
     return (
         <>
