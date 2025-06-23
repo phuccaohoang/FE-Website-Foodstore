@@ -40,11 +40,12 @@ export const Account = () => {
                             phone: "0912345678",
                             address: "123 Nguyễn Trãi, Hà Nội",
                         }}
+                        className='Form__Account'
                     >
                         <Row gutter={32}>
-                            <Col xs={24} sm={8} md={6} style={{ textAlign: 'center' }}>
+                            <Col span={8} style={{ textAlign: 'center' }}>
                                 <Avatar
-                                    size={100}
+                                    size={200}
                                     src={avatarUrl}
                                     icon={!avatarUrl && <UserOutlined />}
                                     style={{ marginBottom: 16 }}
@@ -59,11 +60,17 @@ export const Account = () => {
                                 </Upload>
                             </Col>
 
-                            <Col xs={24} sm={16} md={18}>
+                            <Col span={16}>
+                                <Form.Item
+                                    label="Tên"
+                                    name="name"
+
+                                >
+                                    <Input placeholder="Nhập tên " />
+                                </Form.Item>
                                 <Form.Item
                                     label="Số điện thoại"
                                     name="phone"
-                                    rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
                                 >
                                     <Input placeholder="Nhập số điện thoại" />
                                 </Form.Item>
@@ -71,7 +78,6 @@ export const Account = () => {
                                 <Form.Item
                                     label="Địa chỉ"
                                     name="address"
-                                    rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
                                 >
                                     <Input placeholder="Nhập địa chỉ giao hàng" />
                                 </Form.Item>
@@ -87,7 +93,8 @@ export const Account = () => {
                 </TabPane>
 
                 <TabPane tab="Đổi mật khẩu" key="2">
-                    <Form layout="vertical" onFinish={onPasswordFinish}>
+                    <Form layout="vertical" onFinish={onPasswordFinish}
+                        className='Form__Account'>
                         <Form.Item
                             label="Mật khẩu hiện tại"
                             name="currentPassword"

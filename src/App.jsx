@@ -30,6 +30,7 @@ import { FoodDetail } from './pages/users/food/fooddetail';
 import { AuthLoggedIn } from './components/layouts/auth-logged-in/AuthLoggedIn';
 import { UserSignedOut } from './components/layouts/user-signed-out/UserSignedOut';
 import { AdminSignedOut } from './components/layouts/admin-signed-out/AdminSignedOut';
+import { LoginAdmin } from './pages/admins/login-admin/LoginAdmin';
 
 function App() {
     return (
@@ -85,7 +86,7 @@ function App() {
                 {/* auth-logged-in */}
                 <Route element={<AuthLoggedIn />}>
                     <Route path='login' element={<Login />} />
-                    <Route path='admin/login' element={'admin login'} />
+                    <Route path='admin/login' element={<LoginAdmin />} />
                     <Route path='register' element={<Register />} />
                     <Route path='forgot-password' element={<ForgotPassword />} />
                 </Route>

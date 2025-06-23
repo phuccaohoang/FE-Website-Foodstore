@@ -1,7 +1,8 @@
-import { Typography, Input, Select, Radio, Space, Pagination } from 'antd';
+import { Typography, Input, Select, Radio, Space, Pagination, Row, Col, Button } from 'antd';
 import { FoodList } from '../../../components/food-list/FoodList';
 import { useState, useEffect } from 'react';
 import foodService from '../../../services/foodService';
+import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 const handleChange = value => {
@@ -37,47 +38,73 @@ export const Explore = () => {
                 msUserSelect: 'none'
             }}>
 
-                <Space style={{ width: '100%', }}>
-                    <Typography.Title level={4} style={{ fontFamily: 'sans-serif' }}>Sắp xếp theo</Typography.Title>
-                    <Select
-                        defaultValue="up_price"
-                        style={{ width: 200, marginLeft: '40px' }}
-                        onChange={handleChange}
-                        options={[
-                            { value: 'down_price', label: 'Giá Thấp đến Cao' },
-                            { value: 'up_price', label: 'Giá Cao đến Thấp' },
+                <Row gutter={[5]} style={{ marginBottom: '10px' }}>
+                    <Col span={24}>
+                        <Typography.Title level={4} style={{ fontFamily: 'sans-serif' }}>Loại món ăn</Typography.Title>
+                    </Col>
+                    <Col span={24}>
+                        <Radio.Group size='large' defaultValue="">
+                            <Radio.Button value="a">Gà</Radio.Button>
+                            <Radio.Button value="b">Heo</Radio.Button>
+                            <Radio.Button value="c">Bò</Radio.Button>
+                            <Radio.Button value="e">Đồ uống</Radio.Button>
+                        </Radio.Group>
+                    </Col>
+                </Row>
+                <Row gutter={5}>
+                    <Col span={16}>
+                        <Row gutter={[10, 10]}>
+                            <Col span={24}>
+                                <Typography.Title level={4} style={{ fontFamily: 'sans-serif' }}>Tìm kiếm</Typography.Title>
+                            </Col>
+                        </Row>
+                        <Row gutter={[10, 10]}>
 
-                        ]}
-                    />
-                    <Typography.Title level={4} style={{ fontFamily: 'sans-serif' }}>Loại món ăn</Typography.Title>
-                    <Radio.Group defaultValue="">
-                        <Radio.Button value="a">Gà</Radio.Button>
-                        <Radio.Button value="b">Heo</Radio.Button>
-                        <Radio.Button value="c">Bò</Radio.Button>
-                        <Radio.Button value="d">Tráng miệng</Radio.Button>
-                        <Radio.Button value="e">Đồ uống</Radio.Button>
-                    </Radio.Group>
-                </Space>
-                <Space style={{ width: '100%', }}>
-                    <Typography.Title level={4} style={{ fontFamily: 'sans-serif' }}>Tìm kiếm món ăn</Typography.Title>
-                    <Search
-                        placeholder="Nhập tên món ăn"
-                        allowClear
-                        enterButton="Tìm kiếm"
-                        size="large"
-                        style={{ width: '329%' }}
-                        onSearch={onSearch}
-                    />
-                </Space>
+                            <Col span={24}>
+                                <Input size='large' />
+                            </Col>
+
+                        </Row>
+                    </Col>
+                    <Col span={7} offset={1}>
+                        <Row gutter={[10, 10]}>
+                            <Col span={24}>
+                                <Typography.Title level={4} style={{ fontFamily: 'sans-serif' }}>Sắp xếp</Typography.Title>
+                            </Col>
+                        </Row>
+
+                        <Row gutter={[10, 10]}>
+                            <Col span={14}>
+                                <Select
+                                    defaultValue="up_price"
+                                    style={{ width: '100%', }}
+                                    size='large'
+                                    onChange={handleChange}
+                                    options={[
+                                        { value: 'down_price', label: 'Giá Thấp đến Cao' },
+                                        { value: 'up_price', label: 'Giá Cao đến Thấp' },
+                                    ]}
+                                />
+                            </Col>
+                            <Col span={10} style={{ textAlign: 'right', width: '100%' }}>
+                                <Button size='large'><UndoOutlined /></Button>
+                                <> </>
+                                <Button size='large'> Tim kiếm</Button>
+                            </Col>
+                        </Row>
+                    </Col>
+
+
+                </Row>
+
+
             </div >
             {/* food lisT */}
             <FoodList
                 title={'Danh sách các món'}
                 foods={foods}
-                openFooter={true}
-                onClickFooter={() => {
-                    alert('xem them')
-                }}
+                openFooter={false}
+
             />
             <Pagination
                 current={page}

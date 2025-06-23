@@ -32,3 +32,8 @@
     background-color: hwb(232 4% 47% / 0.389);
 
 }
+
+/* lay out trang account */
+.Form__Account {
+    padding-top: 20px;
+}
