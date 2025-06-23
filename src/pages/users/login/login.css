@@ -9,13 +9,13 @@
 
 }
 
-.login-form {
+.lrf-form {
     background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(5px);
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
+    max-width: 600px;
     width: 100%;
 }
 
@@ -28,8 +28,28 @@
     color: #003366;
 }
 
-.login-actions {
+.form-actions {
     display: flex;
     justify-content: space-between;
     margin-bottom: 16px;
+    font-size: 15px;
+    text-decoration: underline;
+}
+
+.Form__Input input {
+    font-size: 32px !important;
+}
+
+.Form__Input label {
+    font-size: 25px !important;
+}
+
+.Text__Link {
+    font-size: 20px;
+}
+
+.Btn__Submit {
+    font-size: 20px;
+    padding: 20px;
+    display: flex;
 }

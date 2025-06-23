@@ -1,5 +1,5 @@
 import { Form, Input, Button, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './forgotpassword.css';
 
 export const ForgotPassword = () => {
@@ -19,7 +19,7 @@ export const ForgotPassword = () => {
                 form={form}
                 name="forgot-password"
                 layout="vertical"
-                className="forgot-form"
+                className="lrf-form Form__Input" // log in- register-for got from
                 onFinish={onFinish}
                 autoComplete="off"
             >
@@ -35,11 +35,11 @@ export const ForgotPassword = () => {
                 >
                     <Input size="large" />
                 </Form.Item>
-                <div className="forgot-actions">
-                    <div onClick={() => { navigate('/login') }}>Đăng nhập</div>
+                <div className="form-actions">
+                    <NavLink className='Text__Link' to='/login'>Đã có tài khoản</NavLink>
                 </div>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" block>
+                    <Button className='Btn__Submit' type="primary" htmlType="submit" block>
                         Gửi
                     </Button>
                 </Form.Item>

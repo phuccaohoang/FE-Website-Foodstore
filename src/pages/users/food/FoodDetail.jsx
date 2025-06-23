@@ -36,7 +36,7 @@ export const FoodDetail = () => {
             }
         }
         loadFood();
-    }, [])
+    }, [slug])
     // danh gia
 
 

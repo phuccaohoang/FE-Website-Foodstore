@@ -1,5 +1,5 @@
 import { Button, Form, Input } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './login.css';
 import accountService from '../../../services/accountService';
 import { useSession } from '../../../context/SessionContext';
@@ -24,7 +24,7 @@ export const Login = () => {
             <Form
                 name="basic"
                 layout="vertical"
-                className="login-form"
+                className="lrf-form Form__Input" // log in- register-for got from
                 initialValues={{ remember: true }}
                 onFinish={async (value) => {
                     const response = await accountService.login(value.email, value.password)
@@ -62,13 +62,13 @@ export const Login = () => {
                     <Input.Password size="large" />
                 </Form.Item>
 
-                <div className="login-actions">
-                    <div onClick={() => { navigate('/forgot-password') }}>Quên mật khẩu</div>
-                    <div onClick={() => { navigate('/register') }}>Tạo tài khoản mới</div>
+                <div className="form-actions">
+                    <NavLink className='Text__Link' to='/forgot-password'>Quên mật khẩu</NavLink>
+                    <NavLink className='Text__Link' to='/register'>Tạo tài khoản mới</NavLink>
                 </div>
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" block>
+                    <Button className='Btn__Submit' type="primary" htmlType="submit" block>
                         Đăng nhập
                     </Button>
                 </Form.Item>

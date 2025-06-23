@@ -19,7 +19,11 @@ export const ModalNotification = ({ open, onClose }) => {
                         AHIHI
                     </TabPane>
                     <TabPane tab="Đơn hàng" key="2" >
-                        <div onClick={() => navigate('/my-order')} style={{ cursor: 'pointer' }}>
+                        <div
+                            onClick={() => {
+                                navigate('/my-order')
+                                onClose()
+                            }} style={{ cursor: 'pointer' }}>
                             AHUHU
                         </div>
                     </TabPane>

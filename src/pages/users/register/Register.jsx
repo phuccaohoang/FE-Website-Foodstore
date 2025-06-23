@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Form, Input, Button, message } from 'antd';
 import './register.css';
 
@@ -27,7 +27,7 @@ export const Register = () => {
                     form={form}
                     name="register"
                     layout="vertical"
-                    className="register-form"
+                    className="lrf-form Form__Input" // log in- register-for got from
                     onFinish={onFinish}
                     autoComplete="off"
                 >
@@ -69,11 +69,11 @@ export const Register = () => {
                     >
                         <Input size="large" />
                     </Form.Item>
-                    <div className="register-actions">
-                        <div onClick={() => { navigate('/login') }}>Đăng nhập</div>
+                    <div className="form-actions">
+                        <NavLink className='Text__Link' to='/login'>Đã có tài khoản</NavLink>
                     </div>
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" block>
+                        <Button className='Btn__Submit' type="primary" htmlType="submit" block>
                             Đăng ký
                         </Button>
                     </Form.Item>
