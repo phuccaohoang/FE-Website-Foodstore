@@ -10,6 +10,8 @@ export const AdminSignedOut = () => {
         const authAdminSignedOut = () => {
             if (!user) {
                 navigate('/admin/login')
+            } else if (user.is_admin === 0) {
+                navigate('/')
             }
         }
         //
