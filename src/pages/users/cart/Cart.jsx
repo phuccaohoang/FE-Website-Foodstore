@@ -22,7 +22,7 @@ export const Cart = () => {
 
     const [selectedRows, setSelectedRows] = useState([])
     const [carts, setCarts] = useState([])
-    const { user, setUser, refresh, setRefresh } = useSession()
+    const { user, setUser, refresh, setRefresh, setPayments } = useSession()
     const [disabled, setDisabled] = useState(true)
     const [quantity, setQuantity] = useState(0)
 
@@ -48,6 +48,7 @@ export const Cart = () => {
     }, [refresh])
 
 
+    console.log('user', user)
 
 
 
@@ -77,13 +78,14 @@ export const Cart = () => {
                                 />
                                 <> </>
                                 <Button
+                                    key={record.id}
                                     disabled={disabled}
                                     onClick={async () => {
+                                        setDisabled(true)
                                         const response = await cartService.updateCart(record.id, quantity)
                                         if (response.status) {
                                             alert(response.message)
                                             setRefresh(!refresh)
-                                            setDisabled(true)
                                         }
                                     }}
                                 >
@@ -118,7 +120,12 @@ export const Cart = () => {
                                 </Button>
                                 <Button style={styleButton} color="primary" variant="solid"
                                     onClick={() => {
-                                        navigate('/payment')
+                                        if (selectedRows.length > 0) {
+                                            setPayments(selectedRows)
+                                            navigate('/payment')
+                                        } else {
+                                            alert('0 rows selected.')
+                                        }
                                     }}
                                 >
                                     Thanh toan

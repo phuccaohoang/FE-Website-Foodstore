@@ -73,6 +73,7 @@ function App() {
                     <Route path='foods/:slug' element={<FoodDetail />} />
 
                     <Route element={<UserSignedOut />}>
+                        {/* can dang nhap */}
                         <Route path='my-cart' element={<Cart />} />
                         <Route path='my-order' element={<Order />} />
                         <Route path='my-account' element={<Account />} />

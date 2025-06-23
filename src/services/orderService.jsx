@@ -15,6 +15,16 @@ const orderService = {
             list_id: list_id,
             note: note,
         })
+    },
+    storeOrder: (phone, address, delivery_cost, coupon_id, note, order_details) => {
+        return axiosClient.post('/store/order', {
+            phone: phone,
+            address: address,
+            delivery_cost: delivery_cost,
+            coupon_id: coupon_id,
+            note: note,
+            order_details: order_details,
+        })
     }
 }
 

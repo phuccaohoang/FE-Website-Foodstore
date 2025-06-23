@@ -7,6 +7,8 @@ export const SessionContext = createContext();
 export const SessionProvider = ({ children }) => {
     const [refresh, setRefresh] = useState(true);
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [payments, setPayments] = useState([]);
 
 
     useEffect(() => {
@@ -15,6 +17,7 @@ export const SessionProvider = ({ children }) => {
             if (response.status) {
                 setUser({ ...response.data })
             }
+
         }
         //
         loadUser()
@@ -25,6 +28,8 @@ export const SessionProvider = ({ children }) => {
         setRefresh,
         user,
         setUser,
+        setPayments,
+        payments
     }
     return (
         <SessionContext.Provider value={contextValue}>

@@ -8,22 +8,19 @@ const { Header, Footer } = Layout;
 const { Title, Text, Link } = Typography;
 
 import logo from '../../../assets/logo.jpg'
+import { useSession } from '../../../context/SessionContext';
+import accountService from '../../../services/accountService';
 const { TabPane } = Tabs;
 
 export const UserLayout = () => {
     //tao link
     const navigate = useNavigate()
+    const { setUser } = useSession()
 
     //mo tat thong bao
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [openNotification, setOpenNotification] = useState(false);
 
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
 
-    const handleCancel = () => {
-        setIsModalVisible(false);
-    };
     return (
         <>
             <Layout>
@@ -75,20 +72,22 @@ export const UserLayout = () => {
                             Về chúng tôi
                         </div>
                     </div>
-                    <div className='Right__Header' style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                        <div >
+                    <div className='Right__Header' style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}  >
+                        <div onClick={() => {
+                            setOpenNotification(true)
+                        }}>
 
                             <Badge count={5}>
-                                <BellOutlined style={{ fontSize: '24px', color: '#1890ff' }} onClick={showModal} />
+                                <BellOutlined style={{ fontSize: '24px', color: '#1890ff' }} />
                             </Badge>
-                            <ModalNotification open={isModalVisible} onClose={handleCancel} />
+
                         </div>
                     </div>
-                    <div className='Right__Header' style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                        <div >
+                    <div className='Right__Header' style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} >
+                        <div onClick={() => { navigate('/my-cart') }} >
 
                             <Badge count={5}>
-                                <ShoppingCartOutlined style={{ fontSize: '24px', color: '#1890ff' }} onClick={() => { navigate('/my-cart') }} />
+                                <ShoppingCartOutlined style={{ fontSize: '24px', color: '#1890ff' }} />
                             </Badge>
                         </div>
 
@@ -127,8 +126,11 @@ export const UserLayout = () => {
                                         label: <div >
                                             Đăng xuất
                                         </div>,
-                                        onClick: () => {
-                                            alert('đã đăng xuất')
+                                        onClick: async () => {
+                                            const response = await accountService.logout()
+                                            if (response.status) {
+                                                setUser(null)
+                                            }
                                         }
                                     },
                                 ]
@@ -200,6 +202,10 @@ export const UserLayout = () => {
                     </div>
                 </Footer>
             </Layout >
+
+            <ModalNotification open={openNotification} onClose={() => {
+                setOpenNotification(false)
+            }} />
         </>
     )
 }

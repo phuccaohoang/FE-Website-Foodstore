@@ -5,18 +5,52 @@ const { TextArea } = Input;
 
 const { Title, Text } = Typography;
 import bannerimg from '../../../assets/mon1.png'
+import { useSession } from '../../../context/SessionContext';
+import { useEffect, useState } from 'react';
+import couponService from '../../../services/couponService';
+import cartService from '../../../services/cartService';
+import orderService from '../../../services/orderService';
 
 const paymentOptions = [
-    { label: 'Ví điện tử', value: 'e-wallet' },
-    { label: 'Tiền mặt', value: 'cash' },
+    { label: 'The ATM', value: 'atm' },
+    { label: 'COD', value: 'cod' },
 ];
 
-const handleChange = value => {
-    console.log(`selected ${value}`);
-};
+
+//
 
 
 export const Payment = () => {
+
+    const { user, payments } = useSession()
+    const [coupons, setCoupons] = useState([])
+    const [carts, setCarts] = useState([])
+    const [discount, setDiscount] = useState(0)
+    const [totalMoney, setTotalMoney] = useState(0)
+
+    const delivery_cost = 15000
+
+    useEffect(() => {
+        // load phieu giam gia theo khach hang
+        const loadCouponsCustomer = async () => {
+            const response = await couponService.getCouponsCustomer()
+            if (response.status) {
+                setCoupons(response.data)
+            }
+        }
+        // load mon an khach hang muon thanh toan
+        const loadCartPayment = async () => {
+            const response = await cartService.getCartPayment({ list_id: payments })
+            if (response.status) {
+                setCarts(response.data.carts)
+                setTotalMoney(response.data.total_money)
+            }
+        }
+        //
+        loadCartPayment()
+        loadCouponsCustomer()
+    }, [])
+
     return (
         <div style={{ backgroundColor: '#f6f7f9', width: ' 65%', margin: '4px auto', padding: '24px 60px' }}>
             <Row gutter={32} align="start">
@@ -24,74 +58,90 @@ export const Payment = () => {
                 <Col xs={24} md={16}>
                     <Card style={{ marginBottom: 24, backgroundColor: '#f5f5f5' }}>
                         <Title level={5}>Thông tin người dùng</Title>
-                        <Form layout="vertical">
-                            <Form.Item label="Tên khách hàng*" name="name" rules={[{ required: true }]}>
-                                <Input placeholder="Nhập tên khách hàng" />
+                        <Form layout="vertical"
+                            onFinish={async (value) => {
+                                console.log('value', value, 'carts', carts)
+                                const response = await orderService.storeOrder(value.phone, value.address, value.delivery_cost, value.coupon_id, value.note, carts)
+                                if (response.status) {
+                                    alert(response.message)
+                                }
+                            }}
+                        >
+                            <Form.Item label="Tên khách hàng">
+                                <Input value={user ? user.info.fullname : null} readOnly />
                             </Form.Item>
                             <Form.Item
-                                label="Email*"
-                                name="email"
-                                rules={[
-                                    { required: true, message: 'Vui lòng nhập email' },
-                                    { type: 'email', message: 'Email không hợp lệ' },
-                                ]}>
-                                <Input placeholder="Nhập email của bạn" />
-
+                                label="Email"
+                            >
+                                <Input value={user ? user.email : null} readOnly />
                             </Form.Item>
                             <Text type="secondary" style={{ fontSize: 12 }}>
                                 Kiểm tra đơn hàng ở hộp thư đến hoặc thư mục spam
                             </Text>
-                            <Form.Item label="Số điện thoại*" name="phone" rules={[{ required: true }]}>
-                                <Input placeholder="Nhập số điện thoại của bạn để đặt hàng" />
+                            <Form.Item label="Số điện thoại*" name="phone" rules={[{ required: true }]} initialValue={user ? user.info.phone : null}>
+                                <Input placeholder="Nhập số điện thoại của bạn để đặt hàng" defaultValue={user ? user.info.phone : null} />
                             </Form.Item>
-                            <Form.Item label="Địa chỉ giao hàng*" name="adress" rules={[{ required: true }]}>
-                                <Input placeholder="Nhập địa chỉ cần giao cho đơn hàng" />
+                            <Form.Item label="Địa chỉ giao hàng*" name="address" rules={[{ required: true }]} initialValue={user ? user.info.address : null}>
+                                <Input placeholder="Nhập địa chỉ cần giao cho đơn hàng" defaultValue={user ? user.info.address : null} />
                             </Form.Item>
-                            <Form.Item label="Phí giao hàng*" name="adress" rules={[{ required: true }]}>
-                                <Title level={5}> 15000 Đồng</Title>
+                            <Form.Item label="Phí giao hàng*" name="delivery_cost" rules={[{ required: true }]} initialValue={delivery_cost}>
+                                <Input name="delivery_cost" value={delivery_cost} readOnly />
+                            </Form.Item>
+                            <Form.Item label="Phieu giam gia" name="coupon_id" rules={[{ required: true }]}>
+                                <Select
+                                    style={{ width: '100%', }}
+                                    onChange={(value) => {
+                                        const selectedCoupon = coupons.find(item => item.id === value);
+                                        setDiscount(selectedCoupon.discount)
+                                        console.log('discount', selectedCoupon)
+                                    }}
+                                    options={[
+                                        ...(coupons.length === 0 ? [{ value: null, label: 'Không' }] : coupons.map((item) => {
+                                            return {
+                                                value: item.id,
+                                                label: item.name,
+                                            }
+                                        }))
+                                    ]}
+
+                                />
                             </Form.Item>
                             <Form.Item label="Ghi chú khách hàng" name="note" >
                                 <TextArea
                                     placeholder="Nhập ghi chú (nếu có)."
-                                    autoSize={{ minRows: 2, maxRows: 8 }}
+                                    rows={4}
                                 />
                             </Form.Item>
+
+                            <Row>
+                                <Title level={5}>Phương thức thanh toán</Title>
+                                <Radio.Group style={{ width: '100%' }} defaultValue="cod">
+                                    <Row gutter={[16, 12]}>
+                                        <Col span={12}>
+                                            <Radio value={'cod'}>COD</Radio>
+                                        </Col>
+                                        <Col span={12}>
+                                            <Radio value={'atm'}>The ATM</Radio>
+                                        </Col>
+                                    </Row>
+                                </Radio.Group>
+                            </Row>
+
+                            <Button
+                                htmlType='submit'
+                                type='primary'
+                                block
+                                size="large"
+                                style={{
+                                    marginTop: 20,
+                                    fontWeight: 'bold',
+                                    borderRadius: 6,
+                                }}
+                            >
+                                HOÀN TẤT THANH TOÁN
+                            </Button>
                         </Form>
                     </Card>
-
-                    <Card style={{ marginBottom: 24, backgroundColor: '#f5f5f5' }}>
-
-                        <Space style={{ width: '100%', }}>
-                            <Title level={5}>Mã giảm giá</Title>
-
-                            <Select
-                                defaultValue="0"
-                                style={{ width: 100, }}
-                                onChange={handleChange}
-                                options={[
-                                    { value: '0', label: 'Không' },
-                                    { value: '1', label: 'Giảm 10%' },
-                                    { value: '2', label: 'Giảm 20%' },
-                                ]}
-
-                            />
-
-                        </Space>
-                    </Card>
-
-                    <Card style={{ marginBottom: 24, backgroundColor: '#f5f5f5' }}>
-                        <Title level={5}>Phương thức thanh toán</Title>
-                        <Radio.Group style={{ width: '100%' }} defaultValue="cash">
-                            <Row gutter={[16, 12]}>
-                                {paymentOptions.map((method) => (
-                                    <Col span={12} key={method.value}>
-                                        <Radio value={method.value}>{method.label}</Radio>
-                                    </Col>
-                                ))}
-                            </Row>
-                        </Radio.Group>
-                    </Card>
-
 
 
 
@@ -103,62 +153,39 @@ export const Payment = () => {
                         <Title level={5}>Đơn Hàng Của Bạn</Title>
                         <div style={{ marginBottom: 16 }}>
                             <div>
-                                <Text>Tổng: </Text><Text strong>155,000₫</Text>
+                                <Text>Tổng don hang: </Text><Text strong>{totalMoney} VND</Text>
                             </div>
                             <div>
-                                <Text>Giảm K.Mãi: </Text><Text type="danger">0₫</Text>
+                                <Text>Phieu giam gia: </Text><Text type="danger">{discount} VND</Text>
                             </div>
                             <div>
-                                <Text>Giảm Vouchers: </Text><Text type="danger">0₫</Text>
-                            </div>
-                            <div>
-                                <Text>Phí Giao Hàng: </Text><Text>0₫</Text>
+                                <Text>Phí Giao Hàng: </Text><Text>{delivery_cost} VND</Text>
                             </div>
                             <Divider />
                             <div>
-                                <Text strong style={{ color: 'red' }}>Tổng Cộng: </Text>
+                                <Text strong style={{ color: 'red' }}>Tổng tien phai tra: </Text>
                                 <Text strong style={{ color: 'red' }}>155,000 ₫</Text>
                             </div>
                         </div>
 
-                        <div>
-                            <Text>1 x <strong>Pizza Phô Mai Truyền Thống</strong></Text>
-                            <div style={{ fontSize: 12 }}>
-                                <div>Đế Dày Bột Tươi</div>
-                                <div>Cỡ 9 Inch</div>
-                            </div>
-                            <Image src={bannerimg} width={100} style={{ marginTop: 8, borderRadius: 6 }} />
-                        </div>
-                        <div>
-                            <Text>1 x <strong>Pizza Phô Mai Truyền Thống</strong></Text>
-                            <div style={{ fontSize: 12 }}>
-                                <div>Đế Dày Bột Tươi</div>
-                                <div>Cỡ 9 Inch</div>
-                            </div>
-                            <Image src={bannerimg} width={100} style={{ marginTop: 8, borderRadius: 6 }} />
-                        </div>
-                        <div>
-                            <Text>1 x <strong>Pizza Phô Mai Truyền Thống</strong></Text>
-                            <div style={{ fontSize: 12 }}>
-                                <div>Đế Dày Bột Tươi</div>
-                                <div>Cỡ 9 Inch</div>
-                            </div>
-                            <Image src={bannerimg} width={100} style={{ marginTop: 8, borderRadius: 6 }} />
-                        </div>
+                        {
+                            carts.length > 0 ? carts.map((item) => {
+                                return <>
+                                    <div>
+                                        <Text>{item.quantity} x <strong>{item.food.name}</strong></Text>
+                                        <div style={{ fontSize: 12 }}>
+                                            <p>{item.food.description}</p>
+                                        </div>
+                                        <Image src={bannerimg} width={100} style={{ marginTop: 8, borderRadius: 6 }} />
+                                    </div>
+                                </>
+                            }) : null
+                        }
+
+
                     </Card>
 
-                    <Button
-                        type='primary'
-                        block
-                        size="large"
-                        style={{
-                            marginTop: 20,
-                            fontWeight: 'bold',
-                            borderRadius: 6,
-                        }}
-                    >
-                        HOÀN TẤT THANH TOÁN
-                    </Button>
+
                 </Col>
             </Row>
         </div >

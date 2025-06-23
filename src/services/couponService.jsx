@@ -6,6 +6,9 @@ const couponService = {
     },
     updateCouponStatus: (list_id) => {
         return axiosClient.patch('/update/coupon-status', { list_id: list_id })
+    },
+    getCouponsCustomer: () => {
+        return axiosClient.get('/get/coupons-customer')
     }
 }
 

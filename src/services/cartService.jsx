@@ -18,6 +18,9 @@ const cartService = {
             id: id,
             quantity: quantity,
         })
+    },
+    getCartPayment: (params = {}) => {
+        return axiosClient.get('/get/cart-payment', { params })
     }
 }
 

@@ -19,6 +19,9 @@ const accountService = {
     },
     me: () => {
         return axiosClient.get('/me')
+    },
+    logout: () => {
+        return axiosClient.post('/auth/logout')
     }
 }
 
