@@ -12,8 +12,6 @@ export const PayATM = () => {
     return (
         <>
             <div style={{ maxWidth: '800px', margin: '20px  auto' }}>
-
-
                 <Card style={{ marginBottom: '20px' }}>
                     <Title level={5}>Thông tin đơn hàng</Title>
 
@@ -50,9 +48,6 @@ export const PayATM = () => {
                         <Col span={12}><Text>Thanh toán tại FOODSTORE nè ta nói nó xịn gì đâu ahihi haha huhu</Text></Col>
                     </Row>
                 </Card>
-
-
-
 
                 <Card>
                     <Title level={5}>Nhập thông tin thẻ</Title>
@@ -104,10 +99,6 @@ export const PayATM = () => {
                         </TabPane>
                     </Tabs>
                 </Card>
-
-
-
-
             </div>
         </>
     );
