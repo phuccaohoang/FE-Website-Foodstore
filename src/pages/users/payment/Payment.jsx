@@ -1,4 +1,4 @@
-import { Form, Input, Radio, Button, Typography, Divider, Row, Col, Card, Image, Select, Space } from 'antd';
+import { Form, Input, Radio, Button, Typography, Divider, Row, Col, Card, Image, Select } from 'antd';
 const { TextArea } = Input;
 
 
@@ -47,11 +47,11 @@ export const Payment = () => {
     }, [])
 
     return (
-        <div style={{ backgroundColor: '#f6f7f9', width: ' 65%', margin: '4px auto', padding: '24px 60px' }}>
-            <Row gutter={32} align="start">
+        <div style={{ width: ' 65%', margin: '4px auto', padding: '24px 60px' }}>
+            <Row gutter={32}  >
 
                 <Col xs={24} md={16}>
-                    <Card style={{ marginBottom: 24, backgroundColor: '#f5f5f5' }}>
+                    <Card style={{ marginBottom: 24 }}>
                         <Title level={5}>Thông tin người dùng</Title>
                         <Form layout="vertical"
                             onFinish={async (value) => {
@@ -137,14 +137,10 @@ export const Payment = () => {
                             </Button>
                         </Form>
                     </Card>
-
-
-
                 </Col>
 
-
                 <Col xs={24} md={8}>
-                    <Card style={{ backgroundColor: '#f5f5f5' }}>
+                    <Card>
                         <Title level={5}>Đơn Hàng Của Bạn</Title>
                         <div style={{ marginBottom: 16 }}>
                             <div>

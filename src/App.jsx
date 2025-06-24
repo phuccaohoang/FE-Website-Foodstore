@@ -24,7 +24,7 @@ import { Register } from './pages/users/register/Register';
 import { Account } from './pages/users/account/Account';
 import { Order } from './pages/users/order/Order';
 import { Explore } from './pages/users/explore/Explore';
-import { PaymentATM } from './pages/users/payment/PaymentATM';
+import { PayATM } from './pages/users/payment/PayATM';
 import { Payment } from './pages/users/payment/Payment';
 import { FoodDetail } from './pages/users/food/fooddetail';
 
@@ -93,7 +93,7 @@ function App() {
                     <Route path='forgot-password' element={<ForgotPassword />} />
 
                 </Route>
-                <Route path='pay-atm' element={<PaymentATM />} />
+                <Route path='pay-atm' element={<PayATM />} />
 
             </Routes>
         </>
