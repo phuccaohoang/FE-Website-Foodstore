@@ -1,9 +1,10 @@
 import './UserLayout.css'
 import { useState } from 'react';
 import { Outlet, useNavigate } from "react-router-dom"
-import { UserOutlined, ShoppingCartOutlined, BellOutlined } from '@ant-design/icons';
-import { Layout, Typography, Dropdown, Row, Col, Badge, Modal, Tabs } from 'antd';
+import { UserOutlined, ShoppingCartOutlined, BellOutlined, MessageOutlined } from '@ant-design/icons';
+import { Layout, Typography, Dropdown, Row, Col, Button, Badge, Tabs } from 'antd';
 import { ModalNotification } from '../../modals/modal-notification/ModalNotification';
+import { Chatbot } from '../../chatbot/Chatbot';
 const { Header, Footer } = Layout;
 const { Title, Text, Link } = Typography;
 
@@ -13,6 +14,9 @@ import accountService from '../../../services/accountService';
 const { TabPane } = Tabs;
 
 export const UserLayout = () => {
+
+    const [visible, setVisible] = useState(false);
+    const toggleChat = () => setVisible(!visible);
     //tao link
     const navigate = useNavigate()
     const { setUser } = useSession()
@@ -146,7 +150,15 @@ export const UserLayout = () => {
                 </Header>
 
                 <Outlet />
-
+                <Button
+                    type="primary"
+                    shape="circle"
+                    icon={<MessageOutlined />}
+                    size="large"
+                    style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 998 }}
+                    onClick={toggleChat}
+                />
+                <Chatbot visible={visible} toggle={toggleChat} />
                 <Footer style={{
                     backgroundColor: '#27408B',
                     color: '#fff',
