@@ -119,7 +119,9 @@ export const FoodDetail = () => {
                                 <div className="food-detail-action">
                                     <Space>
                                         <Button onClick={decrease} disabled={quantity <= 1}>-</Button>
-                                        <InputNumber min={1} value={quantity} />
+                                        <InputNumber min={1} value={quantity} max={10} onChange={(value) => {
+                                            setQuantity(value)
+                                        }} />
                                         <Button onClick={increase}>+</Button>
 
                                         <Button

@@ -15,7 +15,7 @@ const { TabPane } = Tabs;
 export const UserLayout = () => {
     //tao link
     const navigate = useNavigate()
-    const { setUser } = useSession()
+    const { setUser, user } = useSession()
 
     //mo tat thong bao
     const [openNotification, setOpenNotification] = useState(false);
@@ -91,57 +91,61 @@ export const UserLayout = () => {
                             </Badge>
                         </div>
 
-                        <Dropdown
-                            menu={{
-                                items: [
-                                    {
-                                        key: '1',
-                                        label: <div >
-                                            Đăng nhập
-                                        </div>,
-                                        onClick: () => {
-                                            navigate('/login')
-                                        }
-                                    },
-                                    {
-                                        key: '2',
-                                        label: <div >
-                                            Tài khoản
-                                        </div>,
-                                        onClick: () => {
-                                            navigate('/my-account')
-                                        }
-                                    },
-                                    {
-                                        key: '3',
-                                        label: <div >
-                                            Đơn hàng
-                                        </div>,
-                                        onClick: () => {
-                                            navigate('/my-order')
-                                        }
-                                    },
-                                    {
-                                        key: '4',
-                                        label: <div >
-                                            Đăng xuất
-                                        </div>,
-                                        onClick: async () => {
-                                            const response = await accountService.logout()
-                                            if (response.status) {
-                                                setUser(null)
-                                            }
-                                        }
-                                    },
-                                ]
-                            }}
-                            trigger={['hover']}
-                            placement="bottom"
-                        >
-                            <div>
-                                <UserOutlined style={{ fontSize: '24px', color: '#1890ff', cursor: 'pointer', marginTop: '10px' }} />
-                            </div>
-                        </Dropdown>
+                        {
+                            (!user) ? <>
+                                <div onClick={() => {
+                                    navigate('/login')
+                                }}>
+                                    <UserOutlined style={{ fontSize: '24px', color: '#1890ff', cursor: 'pointer', marginTop: '10px' }} />
+                                </div>
+                            </> : <>
+                                <Dropdown
+                                    menu={{
+                                        items: [
+
+                                            {
+                                                key: '2',
+                                                label: <div >
+                                                    Tài khoản
+                                                </div>,
+                                                onClick: () => {
+                                                    navigate('/my-account')
+                                                }
+                                            },
+                                            {
+                                                key: '3',
+                                                label: <div >
+                                                    Đơn hàng
+                                                </div>,
+                                                onClick: () => {
+                                                    navigate('/my-order')
+                                                }
+                                            },
+                                            {
+                                                key: '4',
+                                                label: <div >
+                                                    Đăng xuất
+                                                </div>,
+                                                onClick: async () => {
+                                                    const response = await accountService.logout()
+                                                    if (response.status) {
+                                                        setUser(null)
+                                                        navigate('/login')
+                                                    }
+                                                }
+                                            },
+                                        ]
+                                    }}
+                                    trigger={['hover']}
+                                    placement="bottom"
+                                >
+                                    <div>
+                                        <UserOutlined style={{ fontSize: '24px', color: '#1890ff', cursor: 'pointer', marginTop: '10px' }} />
+                                    </div>
+                                </Dropdown>
+                            </>
+                        }
+
                     </div>
                 </Header>
 

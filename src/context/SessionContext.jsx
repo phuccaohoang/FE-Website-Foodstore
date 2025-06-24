@@ -8,7 +8,14 @@ export const SessionProvider = ({ children }) => {
     const [refresh, setRefresh] = useState(true);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [payments, setPayments] = useState([]);
+    const [payment, setPayment] = useState({
+        cart_ids: [],
+        phone: null,
+        address: null,
+        delivery_cost: 0,
+        coupon_id: null,
+        note: null,
+    });
 
 
     useEffect(() => {
@@ -28,8 +35,8 @@ export const SessionProvider = ({ children }) => {
         setRefresh,
         user,
         setUser,
-        setPayments,
-        payments
+        setPayment,
+        payment
     }
     return (
         <SessionContext.Provider value={contextValue}>

@@ -22,6 +22,19 @@ const accountService = {
     },
     logout: () => {
         return axiosClient.post('/auth/logout')
+    },
+    updateCustomer: (address, phone, fullname) => {
+        return axiosClient.put('/update/customer', {
+            address: address,
+            phone: phone,
+            fullname: fullname,
+        })
+    },
+    updatePassword: (password, old_password) => {
+        return axiosClient.patch('/auth/update-password', {
+            password: password,
+            old_password: old_password,
+        })
     }
 }
 

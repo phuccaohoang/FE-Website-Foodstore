@@ -89,7 +89,7 @@ export const Explore = () => {
                             <Col span={10} style={{ textAlign: 'right', width: '100%' }}>
                                 <Button size='large'><UndoOutlined /></Button>
                                 <> </>
-                                <Button size='large'> Tim kiếm</Button>
+                                <Button size='large'><SearchOutlined /></Button>
                             </Col>
                         </Row>
                     </Col>

@@ -70,7 +70,7 @@ export const Home = () => {
             </div>
             {/* danh sach */}
             <FoodList
-                title={'Được ưu thích nhất'}
+                title={'Tat ca mon an'}
                 foods={foods}
                 openFooter={true}
                 onClickFooter={() => {

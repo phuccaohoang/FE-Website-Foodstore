@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { Card, Tabs, Form, Input, Button, Upload, Avatar, message, Row, Col } from "antd";
 import { UploadOutlined, UserOutlined } from "@ant-design/icons";
+import { useSession } from "../../../context/SessionContext";
+import accountService from "../../../services/accountService";
 
 const { TabPane } = Tabs;
 
 export const Account = () => {
     const [avatarUrl, setAvatarUrl] = useState(null);
+    const { user, setUser } = useSession()
+    const [form] = Form.useForm()
 
     const handleAvatarChange = (info) => {
         if (info.file.status === "done") {
@@ -15,19 +19,9 @@ export const Account = () => {
         }
     };
 
-    const onProfileFinish = (values) => {
-        console.log("Thông tin cá nhân:", values);
-        message.success("Cập nhật thông tin cá nhân thành công!");
-    };
 
-    const onPasswordFinish = (values) => {
-        if (values.newPassword !== values.confirmPassword) {
-            message.error("Mật khẩu xác nhận không khớp!");
-            return;
-        }
-        console.log("Đổi mật khẩu:", values);
-        message.success("Mật khẩu đã được thay đổi!");
-    };
+
+
 
     return (
         <Card style={{ margin: '4px auto', width: '65%  ' }}>
@@ -35,10 +29,26 @@ export const Account = () => {
                 <TabPane tab="Thông tin cá nhân" key="1">
                     <Form
                         layout="vertical"
-                        onFinish={onProfileFinish}
+                        onFinish={async (value) => {
+                            const response = await accountService.updateCustomer(value.address, value.phone, value.fullname)
+                            if (response.status) {
+                                setUser(item => {
+                                    return {
+                                        ...item,
+                                        info: {
+                                            phone: value.phone,
+                                            fullname: value.fullname,
+                                            address: value.address,
+                                        },
+                                    }
+                                })
+                                alert(response.message)
+                            }
+                        }}
                         initialValues={{
-                            phone: "0912345678",
-                            address: "123 Nguyễn Trãi, Hà Nội",
+                            phone: user.info.phone,
+                            fullname: user.info.fullname,
+                            address: user.info.address,
                         }}
                         className='Form__Account'
                     >
@@ -63,21 +73,29 @@ export const Account = () => {
                             <Col span={16}>
                                 <Form.Item
                                     label="Tên"
-                                    name="name"
-
+                                    name="fullname"
+                                    rules={[
+                                        { required: true }
+                                    ]}
                                 >
                                     <Input placeholder="Nhập tên " />
                                 </Form.Item>
                                 <Form.Item
                                     label="Số điện thoại"
                                     name="phone"
+                                    rules={[
+                                        { required: true }
+                                    ]}
                                 >
-                                    <Input placeholder="Nhập số điện thoại" />
+                                    <Input placeholder="Nhập số điện thoại" minLength={10} />
                                 </Form.Item>
 
                                 <Form.Item
                                     label="Địa chỉ"
                                     name="address"
+                                    rules={[
+                                        { required: true }
+                                    ]}
                                 >
                                     <Input placeholder="Nhập địa chỉ giao hàng" />
                                 </Form.Item>
@@ -93,11 +111,23 @@ export const Account = () => {
                 </TabPane>
 
                 <TabPane tab="Đổi mật khẩu" key="2">
-                    <Form layout="vertical" onFinish={onPasswordFinish}
-                        className='Form__Account'>
+                    <Form layout="vertical" onFinish={async (values) => {
+                        if (values.newPassword !== values.confirmPassword) {
+                            alert("Mật khẩu xác nhận không khớp!");
+                            return;
+                        }
+                        const response = await accountService.updatePassword(values.newPassword, values.oldPassword)
+                        if (response.status) {
+                            alert(response.message)
+                            form.resetFields()
+                        }
+                    }}
+                        className='Form__Account'
+                        form={form}
+                    >
                         <Form.Item
                             label="Mật khẩu hiện tại"
-                            name="currentPassword"
+                            name="oldPassword"
                             rules={[{ required: true, message: "Vui lòng nhập mật khẩu cũ!" }]}
                         >
                             <Input.Password placeholder="Nhập mật khẩu cũ" />
@@ -108,7 +138,7 @@ export const Account = () => {
                             name="newPassword"
                             rules={[{ required: true, message: "Vui lòng nhập mật khẩu mới!" }]}
                         >
-                            <Input.Password placeholder="Nhập mật khẩu mới" />
+                            <Input.Password placeholder="Nhập mật khẩu mới" minLength={8} />
                         </Form.Item>
 
                         <Form.Item
@@ -116,7 +146,7 @@ export const Account = () => {
                             name="confirmPassword"
                             rules={[{ required: true, message: "Vui lòng xác nhận mật khẩu!" }]}
                         >
-                            <Input.Password placeholder="Xác nhận mật khẩu mới" />
+                            <Input.Password placeholder="Xác nhận mật khẩu mới" minLength={8} />
                         </Form.Item>
 
                         <Form.Item>

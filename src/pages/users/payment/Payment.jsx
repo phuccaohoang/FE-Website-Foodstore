@@ -9,23 +9,26 @@ import { useEffect, useState } from 'react';
 import couponService from '../../../services/couponService';
 import cartService from '../../../services/cartService';
 import orderService from '../../../services/orderService';
-
-
+import { useNavigate } from "react-router-dom"
 
 //
 
 
 export const Payment = () => {
 
-    const { user, payments } = useSession()
+    const { user, payment, setPayment } = useSession()
     const [coupons, setCoupons] = useState([])
     const [carts, setCarts] = useState([])
     const [discount, setDiscount] = useState(0)
     const [totalMoney, setTotalMoney] = useState(0)
 
     const delivery_cost = 15000
+    const navigate = useNavigate()
 
     useEffect(() => {
+        if (payment.cart_ids.length === 0) {
+            navigate('/my-cart')
+        }
         // load phieu giam gia theo khach hang
         const loadCouponsCustomer = async () => {
             const response = await couponService.getCouponsCustomer()
@@ -35,7 +38,7 @@ export const Payment = () => {
         }
         // load mon an khach hang muon thanh toan
         const loadCartPayment = async () => {
-            const response = await cartService.getCartPayment({ list_id: payments })
+            const response = await cartService.getCartPayment({ list_id: payment.cart_ids })
             if (response.status) {
                 setCarts(response.data.carts)
                 setTotalMoney(response.data.total_money)
@@ -55,11 +58,38 @@ export const Payment = () => {
                         <Title level={5}>Thông tin người dùng</Title>
                         <Form layout="vertical"
                             onFinish={async (value) => {
-                                console.log('value', value, 'carts', carts)
-                                const response = await orderService.storeOrder(value.phone, value.address, value.delivery_cost, value.coupon_id, value.note, carts)
-                                if (response.status) {
-                                    alert(response.message)
+                                console.log('value', value)
+
+                                if (value.pay_method === 'cod') {
+
+                                    setPayment((item) => {
+                                        return {
+                                            ...item,
+                                            phone: value.phone,
+                                            address: value.address,
+                                            delivery_cost: value.delivery_cost,
+                                            note: value.note,
+                                            coupon_id: value.coupon_id,
+                                        }
+                                    })
+
+                                    const response = await orderService.storeOrder({
+                                        phone: value.phone,
+                                        address: value.address,
+                                        delivery_cost: value.delivery_cost,
+                                        note: value.note,
+                                        coupon_id: value.coupon_id,
+                                        cart_ids: payment.cart_ids,
+                                    })
+                                    if (response.status) {
+                                        alert(response.message)
+                                        navigate('/my-cart')
+                                    }
                                 }
+                                else {
+                                    navigate('/pay-atm')
+                                }
+
                             }}
                         >
                             <Form.Item label="Tên khách hàng">
@@ -70,13 +100,11 @@ export const Payment = () => {
                             >
                                 <Input value={user ? user.email : null} readOnly />
                             </Form.Item>
-                            <Text type="secondary" style={{ fontSize: 12 }}>
-                                Kiểm tra đơn hàng ở hộp thư đến hoặc thư mục spam
-                            </Text>
-                            <Form.Item label="Số điện thoại*" name="phone" rules={[{ required: true }]} initialValue={user ? user.info.phone : null}>
+
+                            <Form.Item label="Số điện thoại" name="phone" rules={[{ required: true }]} initialValue={user ? user.info.phone : null}>
                                 <Input placeholder="Nhập số điện thoại của bạn để đặt hàng" defaultValue={user ? user.info.phone : null} />
                             </Form.Item>
-                            <Form.Item label="Địa chỉ giao hàng*" name="address" rules={[{ required: true }]} initialValue={user ? user.info.address : null}>
+                            <Form.Item label="Địa chỉ giao hàng" name="address" rules={[{ required: true }]} initialValue={user ? user.info.address : null}>
                                 <Input placeholder="Nhập địa chỉ cần giao cho đơn hàng" defaultValue={user ? user.info.address : null} />
                             </Form.Item>
                             <Form.Item label="Phí giao hàng*" name="delivery_cost" rules={[{ required: true }]} initialValue={delivery_cost}>
@@ -86,17 +114,26 @@ export const Payment = () => {
                                 <Select
                                     style={{ width: '100%', }}
                                     onChange={(value) => {
-                                        const selectedCoupon = coupons.find(item => item.id === value);
-                                        setDiscount(selectedCoupon.discount)
-                                        console.log('discount', selectedCoupon)
+                                        if (value) {
+
+                                            const selectedCoupon = coupons.find(item => item.id === value);
+                                            setDiscount(selectedCoupon.discount)
+                                        }
+                                        else {
+                                            setDiscount(0)
+                                        }
                                     }}
                                     options={[
-                                        ...(coupons.length === 0 ? [{ value: null, label: 'Không' }] : coupons.map((item) => {
+                                        ...(coupons.map((item) => {
                                             return {
                                                 value: item.id,
                                                 label: item.name,
                                             }
-                                        }))
+                                        })),
+                                        {
+                                            value: 0,
+                                            label: 'Không'
+                                        },
                                     ]}
 
                                 />
@@ -108,19 +145,23 @@ export const Payment = () => {
                                 />
                             </Form.Item>
 
-                            <Row>
-                                <Title level={5}>Phương thức thanh toán</Title>
-                                <Radio.Group style={{ width: '100%' }} defaultValue="cod">
-                                    <Row gutter={[16, 12]}>
-                                        <Col span={12}>
-                                            <Radio value={'cod'}>COD</Radio>
-                                        </Col>
-                                        <Col span={12}>
-                                            <Radio value={'atm'}>The ATM</Radio>
-                                        </Col>
-                                    </Row>
-                                </Radio.Group>
-                            </Row>
+                            <Form.Item name="pay_method" initialValue={'cod'}>
+
+                                <Row>
+                                    <Title level={5}>Phương thức thanh toán</Title>
+                                    <Radio.Group style={{ width: '100%' }} defaultValue="cod">
+                                        <Row gutter={[16, 12]}>
+                                            <Col span={12}>
+                                                <Radio value={'cod'}>COD</Radio>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Radio value={'atm'}>The ATM</Radio>
+                                            </Col>
+                                        </Row>
+                                    </Radio.Group>
+                                </Row>
+                            </Form.Item>
+
 
                             <Button
                                 htmlType='submit'

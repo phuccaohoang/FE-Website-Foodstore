@@ -30,44 +30,49 @@ import { FoodDetail } from './pages/users/food/fooddetail';
 
 //auth
 import { AuthLoggedIn } from './components/layouts/auth-logged-in/AuthLoggedIn';
-import { UserSignedOut } from './components/layouts/user-signed-out/UserSignedOut';
-import { AdminSignedOut } from './components/layouts/admin-signed-out/AdminSignedOut';
 import { LoginAdmin } from './pages/admins/login-admin/LoginAdmin';
+import { useSession } from './context/SessionContext';
 
 function App() {
+
+
+    const { user } = useSession()
+
     return (
         <>
             <Routes>
 
                 {/* admin routes */}
-                <Route element={<AdminSignedOut />}>
-                    <Route path='admin' element={<AdminLayout />}>
-                        <Route index element={<Dashboard />} />
-                        <Route path='accounts'>
-                            <Route index element={<ListAccounts />} />
+                {
+                    (user !== null && user.is_admin === 1) ? <>
+                        <Route path='admin' element={<AdminLayout />}>
+                            <Route index element={<Dashboard />} />
+                            <Route path='accounts'>
+                                <Route index element={<ListAccounts />} />
+                            </Route>
+                            <Route path='foods'>
+                                <Route index element={<ListFoods />} />
+                                <Route path='add' element={<AddFood />} />
+                            </Route>
+                            <Route path='coupons'>
+                                <Route index element={<ListCoupons />} />
+                                <Route path='add' element={<AddCoupon />} />
+                            </Route>
+                            <Route path='orders'>
+                                <Route index element={<ListOrders />} />
+                            </Route>
+                            <Route path='reviews'>
+                                <Route index element={<ListReviews />} />
+                            </Route>
+                            <Route path='statistics'>
+                                <Route path='revenue' element={<StatisticsRevenue />} />
+                                <Route path='orders' element={<StatisticsOrders />} />
+                                <Route path='foods' element={<StatisticsFoods />} />
+                                <Route path='customers' element={<StatisticsCustomers />} />
+                            </Route>
                         </Route>
-                        <Route path='foods'>
-                            <Route index element={<ListFoods />} />
-                            <Route path='add' element={<AddFood />} />
-                        </Route>
-                        <Route path='coupons'>
-                            <Route index element={<ListCoupons />} />
-                            <Route path='add' element={<AddCoupon />} />
-                        </Route>
-                        <Route path='orders'>
-                            <Route index element={<ListOrders />} />
-                        </Route>
-                        <Route path='reviews'>
-                            <Route index element={<ListReviews />} />
-                        </Route>
-                        <Route path='statistics'>
-                            <Route path='revenue' element={<StatisticsRevenue />} />
-                            <Route path='orders' element={<StatisticsOrders />} />
-                            <Route path='foods' element={<StatisticsFoods />} />
-                            <Route path='customers' element={<StatisticsCustomers />} />
-                        </Route>
-                    </Route>
-                </Route>
+                    </> : null
+                }
                 {/* user-routes */}
                 <Route element={<UserLayout />}>
                     <Route index element={<Home />} />
@@ -75,14 +80,15 @@ function App() {
                     <Route path='explore' element={<Explore />} />
                     <Route path='foods/:slug' element={<FoodDetail />} />
 
-                    <Route element={<UserSignedOut />}>
-                        {/* can dang nhap */}
-                        <Route path='my-cart' element={<Cart />} />
-                        <Route path='my-order' element={<Order />} />
-                        <Route path='my-account' element={<Account />} />
-                        <Route path='payment' element={<Payment />} />
-                    </Route>
-
+                    {/* can dang nhap */}
+                    {
+                        (user !== null && user.is_admin === 0) ? <>
+                            <Route path='my-cart' element={<Cart />} />
+                            <Route path='my-order' element={<Order />} />
+                            <Route path='my-account' element={<Account />} />
+                            <Route path='payment' element={<Payment />} />
+                        </> : null
+                    }
                 </Route>
 
                 {/* auth-logged-in */}
