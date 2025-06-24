@@ -1,4 +1,3 @@
-import './payment.css'
 import { Form, Input, Radio, Button, Typography, Divider, Row, Col, Card, Image, Select, Space } from 'antd';
 const { TextArea } = Input;
 
@@ -11,10 +10,6 @@ import couponService from '../../../services/couponService';
 import cartService from '../../../services/cartService';
 import orderService from '../../../services/orderService';
 
-const paymentOptions = [
-    { label: 'The ATM', value: 'atm' },
-    { label: 'COD', value: 'cod' },
-];
 
 
 //
@@ -181,11 +176,7 @@ export const Payment = () => {
                                 </>
                             }) : null
                         }
-
-
                     </Card>
-
-
                 </Col>
             </Row>
         </div >

@@ -24,8 +24,10 @@ import { Register } from './pages/users/register/Register';
 import { Account } from './pages/users/account/Account';
 import { Order } from './pages/users/order/Order';
 import { Explore } from './pages/users/explore/Explore';
+import { PaymentATM } from './pages/users/payment/PaymentATM';
 import { Payment } from './pages/users/payment/Payment';
 import { FoodDetail } from './pages/users/food/fooddetail';
+
 //auth
 import { AuthLoggedIn } from './components/layouts/auth-logged-in/AuthLoggedIn';
 import { UserSignedOut } from './components/layouts/user-signed-out/UserSignedOut';
@@ -89,7 +91,9 @@ function App() {
                     <Route path='admin/login' element={<LoginAdmin />} />
                     <Route path='register' element={<Register />} />
                     <Route path='forgot-password' element={<ForgotPassword />} />
+
                 </Route>
+                <Route path='pay-atm' element={<PaymentATM />} />
 
             </Routes>
         </>
