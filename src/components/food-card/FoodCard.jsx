@@ -5,17 +5,37 @@ import { useNavigate } from "react-router-dom"
 
 export const FoodCart = ({ food }) => {
     const navigate = useNavigate();
+    const colorButton = [
+        'magenta',
+        'red',
+        'volcano',
+        'orange',
+        'gold',
+        'lime',
+        'green',
+        'blue',
+        'geekblue',
+        'purple',
+    ];
+    function getRandomColor() {
+        const randomIndex = Math.floor(Math.random() * colorButton.length);
+        return colorButton[randomIndex];
+    }
+
     return (
         <>
             <Col
                 span={6}
             >
                 <Card
+
                     className='Food__Card'
                     hoverable
                     cover={
                         <img
-
+                            onClick={() => {
+                                navigate(`/foods/${food.slug}`)
+                            }}
                             src={bannerimg}
                             style={{
                                 height: 150,
@@ -29,17 +49,9 @@ export const FoodCart = ({ food }) => {
                             className='Image__Food__Item'
                         />
                     }
-                    actions={[
-                        <Button type="primary" block
-                            onClick={() => {
-                                navigate(`/foods/${food.slug}`)
-                            }}
-                        >
-                            Xem chi tiết
-                        </Button>
-                    ]}
+
                 >
-                    <p style={{ fontSize: '25px', fontFamily: 'Calibri, sans-serif ' }}>{food.name}</p>
+                    <p style={{ fontSize: '30px', fontFamily: 'Montserrat' }}>{food.name}</p>
                     <div
                         style={{
                             marginTop: 8,
@@ -49,8 +61,8 @@ export const FoodCart = ({ food }) => {
                             justifyContent: 'space-between'
                         }}
                     >
-                        <span > <Tag style={{ fontSize: '20px' }} bordered={false} color="cyan">{food.category.name}</Tag></span>
-                        <div style={{ marginTop: 8, fontWeight: 'bold' }}>{food.price} VNĐ</div>
+                        <span > <Tag style={{ fontSize: '15px', padding: '5px 15px', fontWeight: 'bold' }} bordered={true} color={getRandomColor()}>{food.category.name}</Tag></span>
+                        <div style={{ fontWeight: '500', fontSize: '20px' }}>{food.price} VNĐ</div>
 
                     </div>
 
@@ -65,6 +77,23 @@ export const FoodCart = ({ food }) => {
                     >
                         <Rate allowHalf disabled defaultValue={food.rating} style={{ fontSize: 14 }} />
                         <span style={{ color: '#555', fontSize: 13 }}>Đã bán {food.sold}</span>
+                    </div>
+
+                    <div
+                        style={{
+                            marginTop: 10,
+                            display: 'flex',
+                            alignItems: 'center',
+
+                        }}
+                    >
+                        <Button variant="filled" color="orange" style={{ width: '100%', padding: '5px', fontWeight: 500 }}
+                            onClick={() => {
+                                alert('hello')
+                            }}
+                        >
+                            Them vao gio
+                        </Button>
                     </div>
                 </Card>
             </Col >

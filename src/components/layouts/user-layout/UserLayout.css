@@ -37,3 +37,27 @@
 .Form__Account {
     padding-top: 20px;
 }
+
+.Main__Content_User {
+    width: 1400px;
+    margin: 0 auto;
+}
+
+.Food__Card {
+    padding: 0 0 10px 0;
+    cursor: default;
+}
+
+.Food__Card img {
+    cursor: pointer;
+}
+
+.Chat__Bot {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+
+}
+
+.Avatar__Customer div {
+    display: flex;
+    justify-content: center;
+}

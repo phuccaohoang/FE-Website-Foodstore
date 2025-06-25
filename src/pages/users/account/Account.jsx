@@ -1,6 +1,6 @@
 import { use, useState } from "react";
-import { Card, Tabs, Form, Input, Button, Upload, Avatar, message, Row, Col } from "antd";
-import { UploadOutlined, UserOutlined } from "@ant-design/icons";
+import { Card, Tabs, Form, Input, Button, Upload, Avatar, message, Row, Col, Tooltip } from "antd";
+import { PlusCircleFilled, UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { useSession } from "../../../context/SessionContext";
 import accountService from "../../../services/accountService";
 
@@ -24,7 +24,7 @@ export const Account = () => {
 
 
     return (
-        <Card style={{ margin: '4px auto', width: '65%  ' }}>
+        <Card style={{ margin: '10px 0', width: '' }}>
             <Tabs defaultActiveKey="1" tabBarGutter={32}>
                 <TabPane tab="Thông tin cá nhân" key="1">
                     <Form
@@ -53,21 +53,22 @@ export const Account = () => {
                         className='Form__Account'
                     >
                         <Row gutter={32}>
-                            <Col span={8} style={{ textAlign: 'center' }}>
-                                <Avatar
-                                    size={200}
-                                    src={avatarUrl}
-                                    icon={!avatarUrl && <UserOutlined />}
-                                    style={{ marginBottom: 16 }}
-                                />
-                                <br />
-                                <Upload
-                                    showUploadList={false}
-                                    beforeUpload={() => false}
-                                    onChange={handleAvatarChange}
-                                >
-                                    <Button icon={<UploadOutlined />}>Tải ảnh lên</Button>
-                                </Upload>
+                            <Col span={8} >
+                                <Tooltip title="Click de chon anh" placement="bottom">
+
+                                    <Upload
+                                        className="Avatar__Customer"
+                                        action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                                        listType="picture-circle"
+                                        fileList={[]}
+                                        onPreview={null}
+                                        onChange={null}
+                                        style={{ overflow: "hidden", width: '300px', height: "300px", }}
+                                    >
+
+                                        <img style={{ width: '100%', aspectRatio: '1' }} src="https://vcdn1-vnexpress.vnecdn.net/2020/10/13/2-3-1602582609-1529-1602583414.jpg?w=0&h=0&q=100&dpr=2&fit=crop&s=HBytwvWn3vKhai8a8Bu_Ig" />
+                                    </Upload>
+                                </Tooltip>
                             </Col>
 
                             <Col span={16}>
@@ -78,7 +79,7 @@ export const Account = () => {
                                         { required: true }
                                     ]}
                                 >
-                                    <Input placeholder="Nhập tên " />
+                                    <Input size="large" placeholder="Nhập tên " />
                                 </Form.Item>
                                 <Form.Item
                                     label="Số điện thoại"
@@ -87,7 +88,7 @@ export const Account = () => {
                                         { required: true }
                                     ]}
                                 >
-                                    <Input placeholder="Nhập số điện thoại" minLength={10} />
+                                    <Input size="large" placeholder="Nhập số điện thoại" minLength={10} />
                                 </Form.Item>
 
                                 <Form.Item
@@ -97,11 +98,11 @@ export const Account = () => {
                                         { required: true }
                                     ]}
                                 >
-                                    <Input placeholder="Nhập địa chỉ giao hàng" />
+                                    <Input size="large" placeholder="Nhập địa chỉ giao hàng" />
                                 </Form.Item>
 
                                 <Form.Item>
-                                    <Button type="primary" htmlType="submit" style={{ float: "right" }}>
+                                    <Button size="large" type="primary" htmlType="submit" style={{ float: "right" }}>
                                         Lưu thay đổi
                                     </Button>
                                 </Form.Item>
@@ -130,7 +131,7 @@ export const Account = () => {
                             name="oldPassword"
                             rules={[{ required: true, message: "Vui lòng nhập mật khẩu cũ!" }]}
                         >
-                            <Input.Password placeholder="Nhập mật khẩu cũ" />
+                            <Input.Password size="large" placeholder="Nhập mật khẩu cũ" />
                         </Form.Item>
 
                         <Form.Item
@@ -138,7 +139,7 @@ export const Account = () => {
                             name="newPassword"
                             rules={[{ required: true, message: "Vui lòng nhập mật khẩu mới!" }]}
                         >
-                            <Input.Password placeholder="Nhập mật khẩu mới" minLength={8} />
+                            <Input.Password size="large" placeholder="Nhập mật khẩu mới" minLength={8} />
                         </Form.Item>
 
                         <Form.Item
@@ -146,11 +147,11 @@ export const Account = () => {
                             name="confirmPassword"
                             rules={[{ required: true, message: "Vui lòng xác nhận mật khẩu!" }]}
                         >
-                            <Input.Password placeholder="Xác nhận mật khẩu mới" minLength={8} />
+                            <Input.Password size="large" placeholder="Xác nhận mật khẩu mới" minLength={8} />
                         </Form.Item>
 
                         <Form.Item>
-                            <Button type="primary" htmlType="submit" style={{ float: "right" }}>
+                            <Button size="large" type="primary" htmlType="submit" style={{ float: "right" }}>
                                 Đổi mật khẩu
                             </Button>
                         </Form.Item>

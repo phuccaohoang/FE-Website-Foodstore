@@ -1,5 +1,5 @@
 import './order.css'
-import { Table, Tag, Button, Card, Typography, Image, Popconfirm, Select, Space, message, Divider } from "antd";
+import { Table, Tag, Button, Card, Typography, Image, Popconfirm, Select, Space, message, Divider, Row } from "antd";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from 'react';
 import mon from '../../../assets/mon2.jpg'
@@ -31,7 +31,9 @@ export const Order = () => {
         {
             title: "STT",
             dataIndex: "stt",
-            key: 1
+            key: 1,
+            width: 80,
+
         },
         {
             title: "Ten khach hang",
@@ -46,34 +48,48 @@ export const Order = () => {
         {
             title: "Dia chi",
             dataIndex: "address",
+            width: 300,
+
         },
         {
             title: "Tong don hang",
             dataIndex: "total_amount",
+            width: 150,
+
         },
         {
             title: "So luong",
             dataIndex: "quantity",
+            width: 100,
+
         },
         {
             title: "Phi van chuyen",
             dataIndex: "delivery_cost",
+            width: 150,
+
         },
         {
             title: "Phieu giam gia",
             dataIndex: "coupon_value",
+            width: 150,
+
         },
         {
             title: "Ghi chu",
             dataIndex: "note",
+            width: 300,
         },
         {
             title: "Trang thai",
             dataIndex: "order_status",
+            fixed: 'right',
         },
         {
             title: "Chức năng",
             key: "action",
+            fixed: 'right',
+
             render: (_, record) => {
                 return <>
 
@@ -144,9 +160,9 @@ export const Order = () => {
         <>
 
             <Card style={{
-                margin: '4px auto', width: '65%', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.05)', backgroundColor: '#f9fafc'
+                margin: '10px 0', width: '', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.05)', backgroundColor: '#f9fafc'
             }}>
-                <Space style={{ justifyContent: 'space-between', display: 'flex' }}>
+                <Row justify={'space-between'} alignItems={'center'}>
                     < Title level={4} style={{ fontFamily: 'sans-serif' }}> Đơn hàng của bạn</Title>
                     <Select
                         value={filterStatus}
@@ -164,14 +180,18 @@ export const Order = () => {
                             </> : null
                         }
                     </Select>
-                </Space>
+                </Row>
+                <Divider />
 
 
                 <Table
+
                     bordered
+                    scroll={{ x: 'max-content' }}
                     columns={columns}
                     dataSource={orders}
                     pagination={false}
+                    rowClassName={'Row__Orders'}
                     expandable={{
                         expandedRowRender: (value) => {
                             const dataSource = () => {
@@ -190,7 +210,11 @@ export const Order = () => {
 
                             return <>
                                 <Table
+                                    style={{ border: `2px solid darkblue`, padding: '50px 20px 20px 0' }}
                                     pagination={false}
+                                    size='small'
+                                    scroll={{ x: 'max-content' }}
+
                                     footer={(record) => {
 
                                         const total_money = Number(record[0].total_amount) + Number(record[0].delivery_cost) - Number(record[0].coupon_value)

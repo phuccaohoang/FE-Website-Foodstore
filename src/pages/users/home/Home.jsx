@@ -18,11 +18,11 @@ const slidesStyle = {
 
     objectFit: 'cover',
 
-    margin: 0,
-    color: '#fff',
-    lineHeight: '160px',
-    textAlign: 'center',
-    background: '#364d79',
+    // margin: 0,
+    // color: '#fff',
+    // lineHeight: '160px',
+    // textAlign: 'center',
+    // background: '#364d79',
 };
 export const Home = () => {
 
@@ -45,13 +45,14 @@ export const Home = () => {
             {/* Banner */}
             <div className='Slides'>
                 <Carousel autoplay style={{
-                    padding: '0 10%',
-                    width: '1750px',
-                    margin: '0 auto ',
+                    padding: '0',
+                    marginTop: '5px',
+                    borderRadius: '10px',
                     userSelect: 'none',
                     WebkitUserSelect: 'none',
                     MozUserSelect: 'none',
                     msUserSelect: 'none',
+                    overflow: "hidden"
                 }} >
                     <div>
                         <img style={slidesStyle} src={bannerimg} />

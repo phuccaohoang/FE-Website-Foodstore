@@ -4,6 +4,7 @@ import './cart.css'
 import {
     Button, InputNumber, Typography, Divider, Image, Space, message,
     Table,
+    Card,
 } from 'antd';
 import { EditOutlined, LoadingOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import logo from '../../../assets/logo.jpg'
@@ -15,7 +16,9 @@ const { Text, Title } = Typography;
 
 
 const styleButton = {
-    padding: '10px 15px',
+    padding: '25px 15px',
+    fontSize: '20px',
+    borderRadius: '18px'
 }
 export const Cart = () => {
     const navigate = useNavigate()
@@ -52,9 +55,9 @@ export const Cart = () => {
 
 
     return (
-        <div className="cart-container" style={{ width: '65%', margin: '4px auto' }}>
-            <Title level={4} className="cart-title" style={{ fontFamily: 'sans-serif' }}>Giỏ Hàng Của Bạn</Title>
-
+        <Card className="" style={{ width: '', margin: '10px 0' }}>
+            <Title level={4} className="cart-title" style={{ fontFamily: 'Montserrat', fontSize: '30px' }}>Giỏ Hàng Của Bạn</Title>
+            <Divider />
             <Table
                 rowSelection={{
                     selectedRowKeys: selectedRows,
@@ -129,6 +132,6 @@ export const Cart = () => {
                     )
                 }}
             />
-        </div>
+        </Card>
     );
 };

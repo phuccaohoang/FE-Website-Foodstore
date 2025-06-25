@@ -153,15 +153,19 @@ export const UserLayout = () => {
                     </div>
                 </Header>
 
-                <Outlet />
-                <Button
-                    type="primary"
-                    shape="circle"
-                    icon={<MessageOutlined />}
-                    size="large"
-                    style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 998 }}
+                <div className='Main__Content_User'>
+
+                    <Outlet />
+                </div>
+
+
+                <div
+                    style={{ position: 'fixed', bottom: 50, right: 30, zIndex: 998, backgroundColor: '#1677ff', borderRadius: '50%', padding: '10px' }}
                     onClick={toggleChat}
-                />
+                >
+
+                    <MessageOutlined style={{ fontSize: '40px', color: 'white' }} />
+                </div>
                 <Chatbot visible={visible} toggle={toggleChat} />
                 <Footer style={{
                     backgroundColor: '#27408B',

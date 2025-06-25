@@ -13,44 +13,40 @@ export const PayATM = () => {
         <>
             <div style={{ maxWidth: '800px', margin: '20px  auto' }}>
                 <Card style={{ marginBottom: '20px' }}>
-                    <Title level={5}>Thông tin đơn hàng</Title>
+                    <Title style={{ fontSize: '30px' }} level={5}>Thông tin đơn hàng</Title>
 
                     <Row align="middle" gutter={8} style={{ marginBottom: 12 }}>
                         <Col>
                             <img src="/logo.jpg" alt="ATM" style={{ height: 24 }} />
                         </Col>
                         <Col>
-                            <Text strong>FOODSTORE Online</Text>
+                            <Text style={{ fontSize: '20px' }} strong>FOODSTORE</Text>
                         </Col>
                     </Row>
 
-                    <Divider style={{ margin: '12px 0' }} />
+                    <Divider style={{}} />
 
-                    <Row style={{ marginBottom: 8 }}>
-                        <Col span={12}><Text>Giá trị đơn hàng:</Text></Col>
-                        <Col span={12}><Text strong>₫175.000</Text></Col>
+                    <Row style={{ marginBottom: 8, marginBottom: '10px' }}>
+                        <Col span={12}><Text style={{ fontSize: '20px' }}>Giá trị đơn hàng:</Text></Col>
+                        <Col span={12}><Text style={{ fontSize: '20px' }} strong>₫175.000</Text></Col>
                     </Row>
 
-                    <Row style={{ marginBottom: 8 }}>
-                        <Col span={12}><Text>Số tiền thanh toán:</Text></Col>
-                        <Col span={12}><Text strong style={{ color: '#1890ff' }}>₫175.000</Text></Col>
+
+
+                    <Row style={{ marginBottom: 8, marginBottom: '10px' }}>
+
+                        <Col span={12}><Text style={{ fontSize: '20px' }}>Mã giao dịch:</Text></Col>
+                        <Col span={12}><Text style={{ fontSize: '20px' }}>12345678</Text></Col>
                     </Row>
 
-                    <Divider style={{ margin: '12px 0' }} />
-
-                    <Row style={{ marginBottom: 8 }}>
-                        <Col span={12}><Text>Mã giao dịch:</Text></Col>
-                        <Col span={12}><Text>12345678</Text></Col>
-                    </Row>
-
-                    <Row style={{ marginBottom: 8 }}>
-                        <Col span={12}><Text>Nội dung:</Text></Col>
-                        <Col span={12}><Text>Thanh toán tại FOODSTORE nè ta nói nó xịn gì đâu ahihi haha huhu</Text></Col>
+                    <Row style={{ marginBottom: 8, marginBottom: '10px' }}>
+                        <Col span={12}><Text style={{ fontSize: '20px' }}>Nội dung:</Text></Col>
+                        <Col span={12}><Text style={{ fontSize: '20px' }}>Thanh toán tại FOODSTORE nè ta nói nó xịn gì đâu ahihi haha huhu</Text></Col>
                     </Row>
                 </Card>
 
                 <Card>
-                    <Title level={5}>Nhập thông tin thẻ</Title>
+                    <Title style={{ fontSize: '30px' }} level={5}>Nhập thông tin thẻ</Title>
                     <Tabs defaultActiveKey="atm">
                         <TabPane tab="Thẻ ATM" key="atm">
                             <Row style={{ marginBottom: 16 }}>

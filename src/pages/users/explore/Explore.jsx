@@ -1,4 +1,4 @@
-import { Typography, Input, Select, Radio, Space, Pagination, Row, Col, Button } from 'antd';
+import { Typography, Input, Select, Radio, Space, Pagination, Row, Col, Button, Card } from 'antd';
 import { FoodList } from '../../../components/food-list/FoodList';
 import { useState, useEffect } from 'react';
 import foodService from '../../../services/foodService';
@@ -31,11 +31,12 @@ export const Explore = () => {
     return (
         <>
             {/* FIlter */}
-            <div style={{
-                width: '1380px', margin: '10px auto', userSelect: 'none',
+            <Card style={{
+                userSelect: 'none',
                 WebkitUserSelect: 'none',
                 MozUserSelect: 'none',
-                msUserSelect: 'none'
+                msUserSelect: 'none',
+                marginTop: '10px'
             }}>
 
                 <Row gutter={[5]} style={{ marginBottom: '10px' }}>
@@ -98,21 +99,15 @@ export const Explore = () => {
                 </Row>
 
 
-            </div >
+            </Card >
             {/* food lisT */}
-            <FoodList
+            < FoodList
                 title={'Danh sách các món'}
                 foods={foods}
                 openFooter={false}
+                pagination={true}
+            />
 
-            />
-            <Pagination
-                current={page}
-                total={80}
-                pageSize={10}
-                onChange={(newPage) => setPage(newPage)}
-                style={{ margin: ' 5px auto' }}
-            />
         </>
     )
 }
