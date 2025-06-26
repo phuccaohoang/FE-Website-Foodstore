@@ -71,7 +71,7 @@ export const Home = () => {
             </div>
             {/* danh sach */}
             <FoodList
-                title={'Tat ca mon an'}
+                title={'Tất cả món ăn'}
                 foods={foods}
                 openFooter={true}
                 onClickFooter={() => {

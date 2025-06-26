@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Row, Col, Card, Typography, Input, Button, Tabs, Divider } from 'antd';
 import { CreditCardOutlined } from '@ant-design/icons';
 import { NavLink } from 'react-router-dom';
-
+import logo from '../../../assets/logo.jpg';
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
 
@@ -17,7 +17,7 @@ export const PayATM = () => {
 
                     <Row align="middle" gutter={8} style={{ marginBottom: 12 }}>
                         <Col>
-                            <img src="/logo.jpg" alt="ATM" style={{ height: 24 }} />
+                            <img src={logo} alt="ATM" style={{ height: 24 }} />
                         </Col>
                         <Col>
                             <Text style={{ fontSize: '20px' }} strong>FOODSTORE</Text>

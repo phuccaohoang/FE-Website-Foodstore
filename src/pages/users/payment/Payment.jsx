@@ -50,11 +50,11 @@ export const Payment = () => {
     }, [])
 
     return (
-        <div style={{ width: ' 65%', margin: '4px auto', padding: '24px 60px' }}>
+        <Card>
             <Row gutter={32}  >
 
                 <Col xs={24} md={16}>
-                    <Card style={{ marginBottom: 24 }}>
+                    <Card style={{ marginBottom: 24, backgroundColor: '#EEEEEE' }}>
                         <Title level={5}>Thông tin người dùng</Title>
                         <Form layout="vertical"
                             onFinish={async (value) => {
@@ -181,21 +181,21 @@ export const Payment = () => {
                 </Col>
 
                 <Col xs={24} md={8}>
-                    <Card>
+                    <Card style={{ backgroundColor: '#EEEEEE' }} >
                         <Title level={5}>Đơn Hàng Của Bạn</Title>
                         <div style={{ marginBottom: 16 }}>
                             <div>
-                                <Text>Tổng don hang: </Text><Text strong>{totalMoney} VND</Text>
+                                <Text>Tổng Đơn Hàng: </Text><Text strong>{totalMoney} VND</Text>
                             </div>
                             <div>
-                                <Text>Phieu giam gia: </Text><Text type="danger">{discount} VND</Text>
+                                <Text>Phiếu Giảm Giá: </Text><Text type="danger">{discount} VND</Text>
                             </div>
                             <div>
                                 <Text>Phí Giao Hàng: </Text><Text>{delivery_cost} VND</Text>
                             </div>
                             <Divider />
                             <div>
-                                <Text strong style={{ color: 'red' }}>Tổng tien phai tra: </Text>
+                                <Text strong style={{ color: 'red' }}>Tổng Tiền Phải Trả: </Text>
                                 <Text strong style={{ color: 'red' }}>155,000 ₫</Text>
                             </div>
                         </div>
@@ -216,6 +216,6 @@ export const Payment = () => {
                     </Card>
                 </Col>
             </Row>
-        </div >
+        </Card >
     );
 };
