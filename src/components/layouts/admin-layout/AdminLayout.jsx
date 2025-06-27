@@ -2,37 +2,16 @@ import './AdminLayout.css'
 import { Outlet, useNavigate } from "react-router-dom"
 import React, { useState } from 'react';
 import {
-    AppleOutlined,
-    BarChartOutlined,
-    CoffeeOutlined,
-    CommentOutlined,
-    DesktopOutlined,
-
-    DollarCircleOutlined,
-
-    FileDoneOutlined,
-
-    GiftOutlined,
-
-    HomeOutlined,
-
-    LogoutOutlined,
-
-    PieChartOutlined,
-
-    ProductOutlined,
-
-    TableOutlined,
-
-    TeamOutlined,
-
-    UserOutlined,
+    BarChartOutlined, CoffeeOutlined,
+    CommentOutlined, DollarCircleOutlined, FileDoneOutlined, GiftOutlined, HomeOutlined, LogoutOutlined, ProductOutlined, TableOutlined, TeamOutlined, UserOutlined,
 } from '@ant-design/icons';
 import { Avatar, Breadcrumb, Dropdown, Layout, Menu, theme } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 
 import logo from '../../../assets/logo.jpg';
-import avatar from '../../../assets/avatar.png';
+import avatar from '../../../assets/avatar.jpg';
+import accountService from '../../../services/accountService';
+import { useSession } from '../../../context/SessionContext';
 const siderStyle = {
     overflow: 'auto',
     height: '100vh',
@@ -54,6 +33,7 @@ export const AdminLayout = () => {
     // antd <--
 
     const navigate = useNavigate()
+    const { user, setUser } = useSession()
 
     return (
         <>
@@ -177,7 +157,7 @@ export const AdminLayout = () => {
                             height: 'auto'
                         }}>
                         <strong>
-                            Quan Tri Vien &nbsp;
+                            {user.info.fullname} &nbsp;
                         </strong>
                         <Dropdown
                             menu={{
@@ -191,6 +171,13 @@ export const AdminLayout = () => {
                                                 Dang xuat
                                             </span>
                                         ),
+                                        onClick: async () => {
+                                            const response = await accountService.logout()
+                                            if (response.status) {
+                                                setUser(null)
+                                                navigate('/admin/login')
+                                            }
+                                        }
                                     },
                                 ]
                             }}
@@ -201,7 +188,7 @@ export const AdminLayout = () => {
                         </Dropdown>
                     </Header>
                     <Content style={{ margin: '0 16px' }}>
-                        <Breadcrumb style={{ margin: '16px 10px', fontSize: 18 }} items={[{ title: <HomeOutlined style={{ fontSize: 20 }} /> }, { title: 'Dashboard' }]} />
+                        {/* <Breadcrumb style={{ margin: '16px 10px', fontSize: 18 }} items={[{ title: <HomeOutlined style={{ fontSize: 20 }} /> }, { title: 'Dashboard' }]} /> */}
                         <div
                             style={{
                                 padding: 24,

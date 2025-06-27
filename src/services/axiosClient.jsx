@@ -1,13 +1,14 @@
 import axios from 'axios';
 
+
 const axiosClient = axios.create({
     baseURL: 'http://localhost:8000/api',
     withCredentials: true,
     headers: {
-        'Content-Type': 'application/json',
+
         'Accept': 'application/json'
     },
-    timeout: 10000,
+    timeout: 15000,
 });
 
 axiosClient.interceptors.response.use(
@@ -17,6 +18,12 @@ axiosClient.interceptors.response.use(
     },
     (error) => {
         console.log('error >>>>>> ', error)
+        const message = error.response?.message || 'Có lỗi xảy ra!';
+        return Promise.resolve({
+            status: false,
+            data: null,
+            message,
+        });
     }
 )
 

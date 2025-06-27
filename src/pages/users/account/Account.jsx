@@ -3,24 +3,19 @@ import { Card, Tabs, Form, Input, Button, Upload, Avatar, message, Row, Col, Too
 import { PlusCircleFilled, UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { useSession } from "../../../context/SessionContext";
 import accountService from "../../../services/accountService";
+import avatar from "../../../assets/avatar.jpg";
+import { useNavigate } from "react-router-dom";
 
 const { TabPane } = Tabs;
 
 export const Account = () => {
-    const [avatarUrl, setAvatarUrl] = useState(null);
     const { user, setUser } = useSession()
     const [form] = Form.useForm()
-
-    const handleAvatarChange = (info) => {
-        if (info.file.status === "done") {
-            const url = URL.createObjectURL(info.file.originFileObj);
-            setAvatarUrl(url);
-            message.success("Đã cập nhật ảnh đại diện!");
-        }
-    };
+    const navigate = useNavigate()
 
 
-
+    const baseUrl = 'http://127.0.0.1:8000/'
+    const url = user.avatar ? `${baseUrl}${user.avatar}` : avatar
 
 
     return (
@@ -58,15 +53,22 @@ export const Account = () => {
 
                                     <Upload
                                         className="Avatar__Customer"
-                                        action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                                        listType="picture-circle"
-                                        fileList={[]}
-                                        onPreview={null}
-                                        onChange={null}
-                                        style={{ overflow: "hidden", width: '300px', height: "300px", }}
+                                        showUploadList={false}
+                                        multiple={false}
+                                        maxCount={1}
+                                        onChange={async (value) => {
+                                            const formData = new FormData()
+                                            formData.append('image', value.file.originFileObj)
+                                            const response = await accountService.updateAvatar(formData);
+                                            if (response.status) {
+                                                alert(response.message)
+                                                navigate(0)
+                                            }
+                                        }}
+                                        style={{ overflow: "hidden", width: '100%', height: "300px", textAlign: 'center' }}
                                     >
 
-                                        <img style={{ width: '100%', aspectRatio: '1' }} src="https://vcdn1-vnexpress.vnecdn.net/2020/10/13/2-3-1602582609-1529-1602583414.jpg?w=0&h=0&q=100&dpr=2&fit=crop&s=HBytwvWn3vKhai8a8Bu_Ig" />
+                                        <img style={{ height: '100%', aspectRatio: '1', borderRadius: '50%' }} src={url} />
                                     </Upload>
                                 </Tooltip>
                             </Col>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Table, Button, Row, Input, Radio, Col, Tag, Tooltip, Select } from "antd"
+import { Table, Button, Row, Input, Radio, Col, Tag, Tooltip, Select, Image } from "antd"
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
@@ -7,10 +7,28 @@ import { ModalUpdateFoods } from "../../../components/modals/modal-update-foods/
 //
 import foodService from "../../../services/foodService";
 import { useSession } from "../../../context/SessionContext";
+import categoryService from "../../../services/categoryService";
 
 const columns = [
     { title: 'STT', dataIndex: 'stt' },
-    { title: 'Anh', dataIndex: 'images' },
+    {
+        title: 'Anh', dataIndex: 'images', width: 250, render: (images) => {
+            return <>
+                <div className="Img__TD">
+
+                    <Image.PreviewGroup>
+                        {
+                            images.map(img => {
+                                return <Image width={250} src={`http://127.0.0.1:8000/${img.img}`} />
+                            })
+                        }
+
+                    </Image.PreviewGroup>
+                </div>
+
+            </>
+        }
+    },
     { title: 'Ten', dataIndex: 'name' },
     { title: 'Loai', dataIndex: 'category' },
     { title: 'Mo ta', dataIndex: 'description' },
@@ -36,6 +54,7 @@ export const ListFoods = () => {
 
     const navigate = useNavigate()
     const [foods, setFoods] = useState([])
+    const [categories, setCategories] = useState([])
     const [selectedRows, setselectedRows] = useState([])
 
     //
@@ -53,15 +72,22 @@ export const ListFoods = () => {
                         stt: idx + 1,
                         category: item.category.name,
                         status: item.status === 1 ? 'On' : 'Off',
+                        images: item.images,
                     }
                 }))
             }
 
         }
-        console.log(refresh)
+        const loadCaregories = async () => {
+            const response = await categoryService.getCategories()
+            if (response.status) {
+                setCategories(response.data)
+            }
+        }
 
         //
         loadFoods()
+        loadCaregories()
     }, [refresh]);
 
     const notifications = (response) => {
@@ -91,23 +117,32 @@ export const ListFoods = () => {
                                 buttonStyle="solid"
                             >
                                 <Radio value='0'>Tat ca</Radio>
-                                <Radio value='1'>Loai 1</Radio>
-                                <Radio value='2'>Loai 2</Radio>
-                                <Radio value='3'>Loai 3</Radio>
-                                <Radio value='4'>Loai 4</Radio>
-                                <Radio value='9'>Khac</Radio>
+                                {
+                                    categories.length !== 0 ? <>
+                                        {
+                                            categories.map((item) => {
+                                                return <Radio value={item.id}>{item.name}</Radio>
+                                            })
+                                        }
+                                    </> : null
+                                }
                             </Radio.Group>
                         </Tooltip>
                     </Col>
                     <Col offset={0}>
-                        <Tooltip placement="top" title="sap xep theo gia ban">
+                        <Tooltip placement="top" title="sap xep">
                             <Select
                                 defaultValue="1"
                                 style={{ width: 170 }}
 
                                 options={[
-                                    { value: '1', label: 'Gia ban giam dan' },
-                                    { value: '2', label: 'Gia ban tang dan' },
+                                    { value: '1', label: 'Mon an moi' },
+                                    { value: 'sold_desc', label: 'So luong da ban giam dan' },
+                                    { value: 'sold_asc', label: 'So luong da tang dan' },
+                                    { value: 'price_desc', label: 'Gia ban giam dan' },
+                                    { value: 'price_asc', label: 'Gia ban tang dan' },
+                                    { value: 'rating_desc', label: 'Danh gia giam dan' },
+                                    { value: 'rating_asc', label: 'Danh gia tang dan' },
                                 ]}
                             />
 
@@ -174,7 +209,11 @@ export const ListFoods = () => {
                             <div className="Footer__Table">
                                 <Button style={styleButton} color="gold" variant="solid"
                                     onClick={() => {
-                                        setOpenUpdate(true)
+                                        if (selectedRows.length === 0) alert('0 row selected.')
+                                        else {
+                                            setOpenUpdate(true)
+
+                                        }
                                     }}
                                 >
                                     Chinh sua
@@ -215,10 +254,11 @@ export const ListFoods = () => {
 
 
             <ModalUpdateFoods
-                foods={[1, 2]}
+                foods={selectedRows}
                 open={openUpdate}
                 onCancel={() => {
                     setOpenUpdate(false)
+                    setselectedRows([])
                 }}
             />
         </>

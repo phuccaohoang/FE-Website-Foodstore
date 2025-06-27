@@ -60,3 +60,14 @@ h2 {
 .Title__Section {
     margin: 10px;
 }
+
+.Img__TD {
+    position: relative;
+    max-height: 100px;
+    overflow: hidden;
+}
+
+.Img__TD div {
+    width: 100%;
+    height: 100%;
+}

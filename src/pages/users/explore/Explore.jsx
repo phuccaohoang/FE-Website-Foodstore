@@ -3,6 +3,7 @@ import { FoodList } from '../../../components/food-list/FoodList';
 import { useState, useEffect } from 'react';
 import foodService from '../../../services/foodService';
 import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import categoryService from '../../../services/categoryService';
 
 const { Search } = Input;
 const handleChange = value => {
@@ -16,6 +17,7 @@ export const Explore = () => {
     const [page, setPage] = useState(1);
 
     const [foods, setFoods] = useState([])
+    const [categories, setCategories] = useState([])
 
     useEffect(() => {
 
@@ -25,7 +27,14 @@ export const Explore = () => {
                 setFoods(response.data)
             }
         }
+        const loadCategories = async () => {
+            const response = await categoryService.getCategories()
+            if (response.status) {
+                setCategories(response.data)
+            }
+        }
         loadFoods()
+        loadCategories()
     }, [])
 
     return (
@@ -44,11 +53,18 @@ export const Explore = () => {
                         <Typography.Title level={4} style={{ fontFamily: 'sans-serif' }}>Loại món ăn</Typography.Title>
                     </Col>
                     <Col span={24}>
-                        <Radio.Group size='large' defaultValue="">
-                            <Radio.Button value="a">Gà</Radio.Button>
-                            <Radio.Button value="b">Heo</Radio.Button>
-                            <Radio.Button value="c">Bò</Radio.Button>
-                            <Radio.Button value="e">Đồ uống</Radio.Button>
+                        <Radio.Group size='large' defaultValue="0">
+                            <Radio.Button value={0}>Tat ca</Radio.Button>
+                            {
+                                categories.length !== 0 ? <>
+                                    {
+                                        categories.map((item) => {
+
+                                            return <Radio.Button value={item.id}>{item.name}</Radio.Button>
+                                        })
+                                    }
+                                </> : null
+                            }
                         </Radio.Group>
                     </Col>
                 </Row>

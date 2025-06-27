@@ -1,6 +1,8 @@
 import { Button, Card, Col, Rate, Tag } from "antd"
 import bannerimg from '../../assets/mon1.png'
 import { useNavigate } from "react-router-dom"
+import cartService from "../../services/cartService";
+import { useSession } from "../../context/SessionContext";
 
 
 export const FoodCart = ({ food }) => {
@@ -21,6 +23,8 @@ export const FoodCart = ({ food }) => {
         const randomIndex = Math.floor(Math.random() * colorButton.length);
         return colorButton[randomIndex];
     }
+
+    const { user } = useSession()
 
     return (
         <>
@@ -88,8 +92,16 @@ export const FoodCart = ({ food }) => {
                         }}
                     >
                         <Button variant="filled" color="orange" style={{ width: '100%', padding: '5px', fontWeight: 500 }}
-                            onClick={() => {
-                                alert('hello')
+                            onClick={async () => {
+                                if (!user) {
+                                    navigate('/login')
+                                } else {
+
+                                    const response = await cartService.storeCart(food.id, 1)
+                                    if (response.status) {
+                                        alert(response.message)
+                                    }
+                                }
                             }}
                         >
                             Them vao gio

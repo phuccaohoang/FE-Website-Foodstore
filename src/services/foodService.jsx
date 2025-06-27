@@ -12,7 +12,16 @@ const foodService = {
             list_id: list_id,
             status: status
         })
-    }
+    },
+    updateFoods: (data) => {
+        return axiosClient.put('/update/foods', data)
+    },
+    updateFood: (data) => {
+        return axiosClient.post('/update/food', data)
+    },
+    storeFood: (data) => {
+        return axiosClient.post('/store/food', data)
+    },
 }
 
 

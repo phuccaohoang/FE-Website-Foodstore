@@ -10,7 +10,7 @@ import { StatisticsRevenue } from './pages/admins/statistics/StatisticsRevenue'
 import { StatisticsOrders } from './pages/admins/statistics/StatisticsOrders'
 import { StatisticsFoods } from './pages/admins/statistics/StatisticsFoods'
 import { StatisticsCustomers } from './pages/admins/statistics/StatisticsCustomers'
-import { Dashboard } from './pages/admins/Dashboard'
+import { Dashboard } from './pages/admins/dashboard/Dashboard'
 import { AddFood } from './pages/admins/foods/AddFood';
 import { AddCoupon } from './pages/admins/coupons/AddCoupon';
 // USER

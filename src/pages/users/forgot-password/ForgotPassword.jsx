@@ -1,14 +1,20 @@
 import { Form, Input, Button, message } from 'antd';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './forgotpassword.css';
+import accountService from '../../../services/accountService';
 
 export const ForgotPassword = () => {
     const [form] = Form.useForm();
 
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
         const email = values.email.trim().toLowerCase();
 
-        message.success(`Yêu cầu đặt lại mật khẩu đã được gửi tới ${email}`);
+        const response = await accountService.forgotPassword({
+            email: email,
+        })
+        if (response.status) {
+            alert(response.message)
+        }
         form.resetFields();
     };
     const navigate = useNavigate()

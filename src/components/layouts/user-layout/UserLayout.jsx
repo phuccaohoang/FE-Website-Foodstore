@@ -9,6 +9,7 @@ const { Header, Footer } = Layout;
 const { Title, Text, Link } = Typography;
 
 import logo from '../../../assets/logo.jpg'
+import avatar from '../../../assets/avatar.jpg'
 import { useSession } from '../../../context/SessionContext';
 import accountService from '../../../services/accountService';
 const { TabPane } = Tabs;
@@ -23,7 +24,8 @@ export const UserLayout = () => {
 
     //mo tat thong bao
     const [openNotification, setOpenNotification] = useState(false);
-
+    const baseUrl = 'http://127.0.0.1:8000/'
+    const url = (user && user.avatar) ? `${baseUrl}${user.avatar}` : avatar
 
     return (
         <>
@@ -78,7 +80,13 @@ export const UserLayout = () => {
                     </div>
                     <div className='Right__Header' style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}  >
                         <div onClick={() => {
-                            setOpenNotification(true)
+                            if (!user) {
+                                navigate('/login')
+                            }
+                            else {
+
+                                setOpenNotification(true)
+                            }
                         }}>
 
                             <Badge count={5}>
@@ -88,7 +96,14 @@ export const UserLayout = () => {
                         </div>
                     </div>
                     <div className='Right__Header' style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} >
-                        <div onClick={() => { navigate('/my-cart') }} >
+                        <div onClick={() => {
+                            if (!user) {
+                                navigate('/login')
+                            } else {
+
+                                navigate('/my-cart')
+                            }
+                        }} >
 
                             <Badge count={5}>
                                 <ShoppingCartOutlined style={{ fontSize: '24px', color: '#1890ff' }} />
@@ -143,8 +158,8 @@ export const UserLayout = () => {
                                     trigger={['hover']}
                                     placement="bottom"
                                 >
-                                    <div>
-                                        <UserOutlined style={{ fontSize: '24px', color: '#1890ff', cursor: 'pointer', marginTop: '10px' }} />
+                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                                        <img style={{ height: '60px', aspectRatio: '1', borderRadius: '50%', overflow: 'hidden' }} src={url} />
                                     </div>
                                 </Dropdown>
                             </>

@@ -105,13 +105,13 @@ export const ListOrders = () => {
                 <h1>Danh sach cac don hang</h1>
             </div>
             <Table
-                rowSelection={{
-                    selectedRowKeys: selectedRows,
-                    onChange: (items) => {
-                        console.log('list', items)
-                        setSelectedRows(items)
-                    }
-                }}
+                // rowSelection={{
+                //     selectedRowKeys: selectedRows,
+                //     onChange: (items) => {
+                //         console.log('list', items)
+                //         setSelectedRows(items)
+                //     }
+                // }}
                 columns={[
                     { title: 'STT', dataIndex: 'stt' },
                     { title: 'Ten khach hang', dataIndex: 'fullname' },
@@ -150,35 +150,35 @@ export const ListOrders = () => {
                     }
                 }}
 
-                footer={() => {
-                    return (
-                        <>
-                            <div className="Footer__Table">
-                                <Button style={styleButton} color="gold" variant="solid"
-                                    onClick={() => {
-                                        if (selectedRows.length > 0) setOpenUpdate(true)
-                                        else {
-                                            alert('0 row selected.')
-                                        }
-                                    }}
-                                >
-                                    Cap nhat trang thai
-                                </Button>
-                                <Button style={styleButton} color="red" variant="solid"
-                                    onClick={() => {
-                                        if (selectedRows.length > 0) setOpenCancel(true)
-                                        else {
-                                            alert('0 row selected.')
-                                        }
-                                    }
-                                    }
-                                >
-                                    Huy don
-                                </Button>
-                            </div>
-                        </>
-                    )
-                }}
+            // footer={() => {
+            //     return (
+            //         <>
+            //             <div className="Footer__Table">
+            //                 <Button style={styleButton} color="gold" variant="solid"
+            //                     onClick={() => {
+            //                         if (selectedRows.length > 0) setOpenUpdate(true)
+            //                         else {
+            //                             alert('0 row selected.')
+            //                         }
+            //                     }}
+            //                 >
+            //                     Cap nhat trang thai
+            //                 </Button>
+            //                 <Button style={styleButton} color="red" variant="solid"
+            //                     onClick={() => {
+            //                         if (selectedRows.length > 0) setOpenCancel(true)
+            //                         else {
+            //                             alert('0 row selected.')
+            //                         }
+            //                     }
+            //                     }
+            //                 >
+            //                     Huy don
+            //                 </Button>
+            //             </div>
+            //         </>
+            //     )
+            // }}
             />
 
             <ModalUpdateOrder

@@ -35,6 +35,15 @@ const accountService = {
             password: password,
             old_password: old_password,
         })
+    },
+    register: (data) => {
+        return axiosClient.post('/auth/register', data)
+    },
+    forgotPassword: (data) => {
+        return axiosClient.post('/auth/forgot-password', data)
+    },
+    updateAvatar: (data) => {
+        return axiosClient.post('/update/avatar', data)
     }
 }
 

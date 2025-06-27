@@ -1,21 +1,22 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Form, Input, Button, message } from 'antd';
 import './register.css';
+import accountService from '../../../services/accountService';
 
 const existingUsers = ['test@example.com', 'admin@pizza.vn'];
 
 export const Register = () => {
     const [form] = Form.useForm();
 
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
         const email = values.email.trim().toLowerCase();
-        if (existingUsers.includes(email)) {
-            message.error('Email đã tồn tại!');
-            return;
+        const response = await accountService.register({
+            ...values,
+            email: email,
+        })
+        if (response.status) {
+            alert(response.message)
         }
-
-        message.success('Tạo tài khoản thành công!');
-        console.log('Đăng ký:', values);
         form.resetFields();
     };
     const navigate = useNavigate()
@@ -46,7 +47,7 @@ export const Register = () => {
 
                     <Form.Item
                         label="Tên hiển thị"
-                        name="name"
+                        name="fullname"
                         rules={[
                             { required: true, message: 'Vui lòng nhập mật khẩu!' },
                             { type: 'name', message: 'Tên không hợp lệ' },

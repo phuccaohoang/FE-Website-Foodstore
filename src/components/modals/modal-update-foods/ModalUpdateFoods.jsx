@@ -1,11 +1,40 @@
 import { UploadOutlined } from "@ant-design/icons"
 import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Upload } from "antd"
 import TextArea from "antd/es/input/TextArea"
+import { useEffect, useState } from "react"
+import categoryService from "../../../services/categoryService"
+import foodService from "../../../services/foodService"
+import { useSession } from "../../../context/SessionContext"
 
 
 export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
 
     const isItem = foods.length == 1 ? true : false
+    const [categories, setCategories] = useState([])
+    const [form] = Form.useForm()
+    const { refresh, setRefresh } = useSession()
+
+    useEffect(() => {
+        const loadCaregories = async () => {
+            const response = await categoryService.getCategories()
+            if (response.status) {
+                setCategories(response.data.map((item) => {
+                    return {
+                        value: item.id,
+                        label: item.name
+                    }
+                }))
+            }
+        }
+        //
+        loadCaregories()
+    }, [])
+
+    const notification = (response) => {
+        alert(response.message)
+        setRefresh(!refresh)
+        onCancel()
+    }
 
     return (
         <>
@@ -18,6 +47,7 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                 width={1000}
             >
                 <Form
+                    form={form}
                     name="wrap"
                     labelCol={{ flex: '120px' }}
                     labelAlign="left"
@@ -25,6 +55,52 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                     wrapperCol={{ flex: 1 }}
                     colon={false}
                     style={{ width: '100%', marginTop: '20px' }}
+                    onFinish={async (values) => {
+                        if (!isItem) {
+                            if (values.category_id == null && values.discount == null && values.price == null) {
+                                alert('Thay doi it nhat 1 thuoc tinh')
+                            }
+
+                            const response = await foodService.updateFoods({
+                                ...values,
+                                list_id: foods
+                            })
+                            if (response.status) {
+                                notification(response)
+                            }
+
+                        } else {
+                            if (values.category_id == null && values.discount == null && values.price == null && (values.name.trim() == '' || values.name == null) && (values.description == null || values.description.trim() == '') && (values.images == null || values.images.fileList.length === 0)) {
+                                alert('Thay doi it nhat 1 thuoc tinh')
+                            }
+                            else {
+
+                                console.log('values', values, 'foods', foods)
+                                const formData = new FormData()
+                                if (values.name !== null && values.name !== undefined) {
+                                    formData.append('name', values.name)
+                                }
+                                formData.append('category_id', values.category_id)
+                                if (values.name !== null && values.name !== undefined) {
+                                    formData.append('description', values.description)
+                                }
+                                formData.append('discount', values.discount)
+                                formData.append('price', values.price)
+                                if (values.images !== undefined && values.images !== null && values.images.fileList.length > 0) {
+                                    values.images.fileList.forEach(item => {
+                                        formData.append('images[]', item.originFileObj)
+                                    });
+                                }
+                                formData.append('id', foods[0])
+                                const response = await foodService.updateFood(formData)
+                                if (response.status) {
+                                    notification(response)
+
+                                }
+                            }
+                        }
+                        form.resetFields()
+                    }}
                 >
                     <Row gutter={[16, 16]} >
 
@@ -33,7 +109,7 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                                 isItem ? <>
                                     <Row>
                                         <Col span={24}>
-                                            <Form.Item label="Ten mon an" name="name" rules={[{ required: false }]}>
+                                            <Form.Item label="Ten mon an" name="name" rules={[{ required: false }]} initialValue={''}>
                                                 <Input />
                                             </Form.Item>
                                         </Col>
@@ -43,13 +119,13 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
 
                             <Row>
                                 <Col span={24}>
-                                    <Form.Item label="Loai mon an" name="category" rules={[{ required: false }]}>
+                                    <Form.Item label="Loai mon an" name="category_id" rules={[{ required: false }]}>
                                         <Select
-                                            defaultValue="1"
                                             options={[
-                                                { value: '1', label: 'Loai 1' },
-                                                { value: '2', label: 'Loai 2' },
-                                                { value: '3', label: 'Loai 3' },
+                                                {
+                                                    value: null
+                                                },
+                                                ...categories
                                             ]}
                                         />
                                     </Form.Item>
@@ -60,19 +136,16 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                                     <Form.Item label="Gia ban (VND)" name="price" rules={[{ required: false }]}>
                                         <InputNumber
                                             style={{ width: '100%' }}
-                                            defaultValue="50.000"
-                                            min="1"
-                                            step="1.000"
+                                            min="10000"
                                         />
                                     </Form.Item>
                                 </Col>
                             </Row>
                             <Row>
                                 <Col span={24}>
-                                    <Form.Item label="Giam gia (%)" name="discount" rules={[{ required: false }]}>
+                                    <Form.Item label="Giam gia (%)" name="discount" rules={[{ required: false }]} initialValue={null}>
                                         <InputNumber
                                             style={{ width: '100%' }}
-                                            defaultValue="0"
                                             min="0"
                                             max="100"
                                             step="1"
@@ -84,7 +157,7 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                                 isItem ? <>
                                     <Row>
                                         <Col span={24}>
-                                            <Form.Item label="Mo ta" name="description" rules={[{ required: false }]}>
+                                            <Form.Item label="Mo ta" name="description" rules={[{ required: false }]} initialValue={''}>
                                                 <TextArea rows={5} placeholder="Mo ta mon an" maxLength={300} />
                                             </Form.Item>
                                         </Col>
@@ -92,24 +165,11 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                                 </> : null
                             }
 
-                            <Row>
-                                <Col span={24}>
-                                    <Form.Item label="Trang thai" name="status" rules={[{ required: false }]}>
-                                        <Select
-                                            defaultValue="0"
-                                            options={[
-                                                { value: '0', label: 'An' },
-                                                { value: '1', label: 'Hien thi' },
-                                            ]}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                            </Row>
+
                             <Row >
                                 <Col span={24} style={{ textAlign: 'right' }}>
-                                    <Button color="blue" variant="dashed">lam moi</Button>
-                                    &nbsp;
-                                    <Button color="blue" variant="solid">Xac nhan</Button>
+
+                                    <Button htmlType="submit" color="blue" variant="solid">Xac nhan</Button>
                                 </Col>
                             </Row>
                         </Col>
@@ -119,11 +179,11 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                                     offset={1} span={11}>
                                     <Form.Item label="Anh mon an" name="images"   >
                                         <Upload
-                                            action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                                            action=''
                                             listType="picture"
-                                            maxCount={7}
+                                            maxCount={4}
                                             multiple
-                                            style={{ overflow: 'scroll', height: '100%' }}
+                                            style={{ backgroundColor: 'white' }}
                                         >
                                             <Button icon={<UploadOutlined />}>Upload</Button>
                                         </Upload>

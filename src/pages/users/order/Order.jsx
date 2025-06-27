@@ -187,7 +187,7 @@ export const Order = () => {
                 <Table
 
                     bordered
-                    scroll={{ x: 'max-content' }}
+                    // scroll={{ x: 'max-content' }}
                     columns={columns}
                     dataSource={orders}
                     pagination={false}
@@ -213,7 +213,7 @@ export const Order = () => {
                                     style={{ border: `2px solid darkblue`, padding: '50px 20px 20px 0' }}
                                     pagination={false}
                                     size='small'
-                                    scroll={{ x: 'max-content' }}
+                                    // scroll={{ x: 'max-content' }}
 
                                     footer={(record) => {
 
@@ -269,7 +269,7 @@ export const Order = () => {
                             </>
 
                         },
-                        expandedRowOffset: 2
+                        expandedRowOffset: 0
                     }}
                 />
             </Card >

@@ -9,6 +9,9 @@ const couponService = {
     },
     getCouponsCustomer: () => {
         return axiosClient.get('/get/coupons-customer')
+    },
+    storeCoupon: (data) => {
+        return axiosClient.post('/store/coupon', data)
     }
 }
 
