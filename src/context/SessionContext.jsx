@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import accountService from "../services/accountService";
+import { notification } from "antd";
 
 
 export const SessionContext = createContext();
@@ -7,6 +8,7 @@ export const SessionContext = createContext();
 export const SessionProvider = ({ children }) => {
     const [refresh, setRefresh] = useState(true);
     const [user, setUser] = useState(null);
+    const [note, setNote] = useState(null);
     const [loading, setLoading] = useState(false);
     const [payment, setPayment] = useState({
         cart_ids: [],
@@ -16,6 +18,16 @@ export const SessionProvider = ({ children }) => {
         coupon_id: null,
         note: null,
     });
+    //
+    const [api, contextHolder] = notification.useNotification()
+    const openNotification = (message, description) => {
+        api.open({
+            message: message,
+            description: description,
+            showProgress: true,
+            pauseOnHover: false,
+        })
+    }
 
 
     useEffect(() => {
@@ -36,7 +48,11 @@ export const SessionProvider = ({ children }) => {
         user,
         setUser,
         setPayment,
-        payment
+        payment,
+        contextHolder,
+        openNotification,
+        note,
+        setNote
     }
     return (
         <SessionContext.Provider value={contextValue}>

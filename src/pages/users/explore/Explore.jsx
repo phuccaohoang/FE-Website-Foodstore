@@ -53,7 +53,7 @@ export const Explore = () => {
                         <Typography.Title level={4} style={{ fontFamily: 'sans-serif' }}>Loại món ăn</Typography.Title>
                     </Col>
                     <Col span={24}>
-                        <Radio.Group size='large' defaultValue="0">
+                        <Radio.Group size='large' defaultValue={0} style={{ fontSize: '50px' }} className='Input__Filter__Custom'>
                             <Radio.Button value={0}>Tat ca</Radio.Button>
                             {
                                 categories.length !== 0 ? <>
@@ -78,7 +78,7 @@ export const Explore = () => {
                         <Row gutter={[10, 10]}>
 
                             <Col span={24}>
-                                <Input size='large' />
+                                <Input size='large' className='Input__Filter__Custom' />
                             </Col>
 
                         </Row>
@@ -93,6 +93,7 @@ export const Explore = () => {
                         <Row gutter={[10, 10]}>
                             <Col span={14}>
                                 <Select
+                                    className='Input__Filter__Custom'
                                     defaultValue="up_price"
                                     style={{ width: '100%', }}
                                     size='large'
@@ -103,7 +104,7 @@ export const Explore = () => {
                                     ]}
                                 />
                             </Col>
-                            <Col span={10} style={{ textAlign: 'right', width: '100%' }}>
+                            <Col className='BTN__Search' span={10} style={{ textAlign: 'right', width: '100%', display: 'flex', justifyContent: 'right', columnGap: '10px' }}>
                                 <Button size='large'><UndoOutlined /></Button>
                                 <> </>
                                 <Button size='large'><SearchOutlined /></Button>

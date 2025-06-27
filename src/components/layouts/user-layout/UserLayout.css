@@ -39,17 +39,35 @@
 }
 
 .Main__Content_User {
-    width: 1400px;
+    width: 1600px;
     margin: 0 auto;
 }
 
 .Food__Card {
     padding: 0 0 10px 0;
     cursor: default;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .Food__Card img {
     cursor: pointer;
+    flex-shrink: 0;
+}
+
+.Food__Card .ant-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.Food__Card .ant-card-body p {
+    flex: 1;
+}
+
+.Food__Card .ant-card-body div {
+    flex-shrink: 0;
 }
 
 .Chat__Bot {
@@ -60,4 +78,21 @@
 .Avatar__Customer div {
     display: flex;
     justify-content: center;
+}
+
+input.Input__Filter__Custom {
+    font-size: 26px;
+    padding: 5px 10px;
+}
+
+.Input__Filter__Custom.ant-select.ant-select-lg {
+    height: 51px;
+}
+
+.BTN__Search button {
+    height: 100%;
+}
+
+.Input__Filter__Custom div {
+    font-size: 25px;
 }

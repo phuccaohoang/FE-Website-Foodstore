@@ -1,5 +1,5 @@
 import './UserLayout.css'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from "react-router-dom"
 import { UserOutlined, ShoppingCartOutlined, BellOutlined, MessageOutlined } from '@ant-design/icons';
 import { Layout, Typography, Dropdown, Row, Col, Button, Badge, Tabs } from 'antd';
@@ -12,6 +12,7 @@ import logo from '../../../assets/logo.jpg'
 import avatar from '../../../assets/avatar.jpg'
 import { useSession } from '../../../context/SessionContext';
 import accountService from '../../../services/accountService';
+import couponService from '../../../services/couponService';
 const { TabPane } = Tabs;
 
 export const UserLayout = () => {
@@ -20,19 +21,24 @@ export const UserLayout = () => {
     const toggleChat = () => setVisible(!visible);
     //tao link
     const navigate = useNavigate()
-    const { setUser, user } = useSession()
+    const { setUser, user, note } = useSession()
 
     //mo tat thong bao
     const [openNotification, setOpenNotification] = useState(false);
     const baseUrl = 'http://127.0.0.1:8000/'
     const url = (user && user.avatar) ? `${baseUrl}${user.avatar}` : avatar
 
+    //
+
+    //
+
     return (
         <>
             <Layout>
                 <Header style={{
                     background: '#141414',
-                    padding: '0 40px',
+                    width: '100%',
+                    margin: '0 auto',
                     display: 'flex',
                     alignItems: 'center',
                     backgroundColor: '#27408B',
@@ -89,7 +95,7 @@ export const UserLayout = () => {
                             }
                         }}>
 
-                            <Badge count={5}>
+                            <Badge count={note}>
                                 <BellOutlined style={{ fontSize: '24px', color: '#1890ff' }} />
                             </Badge>
 
@@ -105,7 +111,7 @@ export const UserLayout = () => {
                             }
                         }} >
 
-                            <Badge count={5}>
+                            <Badge count={user ? user.has_carts : null}>
                                 <ShoppingCartOutlined style={{ fontSize: '24px', color: '#1890ff' }} />
                             </Badge>
                         </div>

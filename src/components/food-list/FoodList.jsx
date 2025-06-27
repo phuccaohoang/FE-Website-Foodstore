@@ -38,7 +38,7 @@ export const FoodList = ({ title, foods, openFooter = false, onClickFooter = nul
                     openFooter ? <>
                         <Divider />
                         <Row justify={'center'}>
-                            <Button color='default' variant='dashed'
+                            <Button color='default' variant='dashed' style={{ fontSize: '25px', padding: '25px 15px', fontWeight: '400' }}
                                 onClick={onClickFooter}
                             >Xem them</Button>
                         </Row>

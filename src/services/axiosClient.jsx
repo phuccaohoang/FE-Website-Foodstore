@@ -22,7 +22,7 @@ axiosClient.interceptors.response.use(
         return Promise.resolve({
             status: false,
             data: null,
-            message,
+            message: message,
         });
     }
 )

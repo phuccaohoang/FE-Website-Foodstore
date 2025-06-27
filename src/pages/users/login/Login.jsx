@@ -1,4 +1,4 @@
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, Input, notification } from 'antd';
 import { NavLink } from 'react-router-dom';
 import './login.css';
 import accountService from '../../../services/accountService';
@@ -13,8 +13,15 @@ const onFinishFailed = errorInfo => {
 
 export const Login = () => {
     const { user, setUser } = useSession()
+    const [api, contextHolder] = notification.useNotification()
 
-    const [messageApi, contextHolder] = message.useMessage();
+    const openNotification = (message, description) => {
+        api.open({
+            message: message,
+            description: description,
+            showProgress: true,
+        })
+    }
 
     return (
         <>
@@ -27,16 +34,21 @@ export const Login = () => {
                     initialValues={{ remember: true }}
                     onFinish={async (value) => {
 
+
+
                         const response = await accountService.login(value.email, value.password)
                         if (response.status) {
                             const response2 = await accountService.me()
                             if (response2.status) {
 
                                 setUser({ ...response2.data })
-
                             } else {
-
+                                openNotification('Title notification', 'description1')
+                                console.log(response2)
                             }
+                        } else {
+                            console.log(response)
+                            openNotification('Title notification', 'description')
                         }
                     }}
                     onFinishFailed={onFinishFailed}

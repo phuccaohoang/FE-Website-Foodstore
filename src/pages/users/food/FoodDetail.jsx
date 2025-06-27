@@ -6,12 +6,13 @@ import {
     Col
 } from 'antd';
 import './FoodDetail.css';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FoodList } from '../../../components/food-list/FoodList';
 const { Title, Text, Paragraph } = Typography;
 import bannerimg from '../../../assets/mon1.png'
 import foodService from '../../../services/foodService';
 import cartService from '../../../services/cartService';
+import { useSession } from '../../../context/SessionContext';
 
 
 
@@ -54,10 +55,25 @@ export const FoodDetail = () => {
 
     const [quantity, setQuantity] = useState(1);
 
+    const { user, setUser, contextHolder, openNotification } = useSession()
+    const navigate = useNavigate()
+
     const handleAddToCart = async () => {
-        const response = await cartService.storeCart(food.id, quantity)
-        if (response.status) {
-            alert(response.message)
+        if (user) {
+            const response = await cartService.storeCart(food.id, quantity)
+            if (response.status) {
+                openNotification('success', "description")
+                setUser(user => {
+                    return {
+                        ...user,
+                        has_carts: user.has_carts + 1,
+                    }
+                })
+            } else {
+                openNotification('error', "description")
+            }
+        } else {
+            navigate('/login')
         }
     };
 
@@ -79,7 +95,7 @@ export const FoodDetail = () => {
     }
     return (
         <>
-
+            {contextHolder}
             {
                 food !== null ?
                     <>

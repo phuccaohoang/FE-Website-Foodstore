@@ -7,8 +7,6 @@ import {
     Card,
 } from 'antd';
 import { EditOutlined, LoadingOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import logo from '../../../assets/logo.jpg'
-import mon from '../../../assets/mon2.jpg'
 import { useSession } from '../../../context/SessionContext';
 import cartService from '../../../services/cartService';
 
@@ -25,8 +23,7 @@ export const Cart = () => {
 
     const [selectedRows, setSelectedRows] = useState([])
     const [carts, setCarts] = useState([])
-    const { user, setUser, refresh, setRefresh, setPayment } = useSession()
-    const [quantity, setQuantity] = useState(0)
+    const { user, setUser, refresh, setRefresh, setPayment, contextHolder, openNotification } = useSession()
 
 
 
@@ -54,7 +51,9 @@ export const Cart = () => {
 
 
 
-    return (
+    return (<>
+        {contextHolder}
+
         <Card className="" style={{ width: '', margin: '10px 0' }}>
             <Title level={4} className="cart-title" style={{ fontFamily: 'Montserrat', fontSize: '30px' }}>Giỏ Hàng Của Bạn</Title>
             <Divider />
@@ -97,13 +96,25 @@ export const Cart = () => {
                             <div className="Footer__Table">
                                 <Button style={styleButton} color="red" variant="solid"
                                     onClick={async () => {
-                                        if (selectedRows.length === 0) alert('0 row selected.')
+                                        if (selectedRows.length === 0) {
+                                            openNotification('warning', '0 row selected.')
+                                        }
                                         else {
                                             const response = await cartService.deleteCarts({ list_id: selectedRows })
                                             if (response.status) {
-                                                alert(response.message)
+                                                openNotification('success', 'description.')
+                                                setUser(user => {
+                                                    return {
+                                                        ...user,
+                                                        has_carts: user.has_carts - selectedRows.length
+                                                    }
+                                                })
+                                                setSelectedRows([])
                                                 setRefresh(!refresh)
-                                                selectedRows([])
+                                            } else {
+                                                openNotification('error', 'description.')
+                                                setSelectedRows([])
+
                                             }
                                         }
                                     }}
@@ -112,7 +123,7 @@ export const Cart = () => {
                                 </Button>
                                 <Button style={styleButton} color="primary" variant="solid"
                                     onClick={() => {
-                                        if (selectedRows.length > 0) {
+                                        if (selectedRows.length !== 0) {
                                             setPayment(item => {
                                                 return {
                                                     ...item,
@@ -121,7 +132,8 @@ export const Cart = () => {
                                             })
                                             navigate('/payment')
                                         } else {
-                                            alert('0 rows selected.')
+                                            openNotification('warning', '0 row selected.')
+
                                         }
                                     }}
                                 >
@@ -133,5 +145,6 @@ export const Cart = () => {
                 }}
             />
         </Card>
+    </>
     );
 };
