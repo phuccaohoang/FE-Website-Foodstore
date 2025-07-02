@@ -20,12 +20,13 @@ export const SessionProvider = ({ children }) => {
     });
     //
     const [api, contextHolder] = notification.useNotification()
-    const openNotification = (message, description) => {
-        api.open({
+    const openNotification = (message, description, type = 'info') => {
+        api[type]({
             message: message,
             description: description,
             showProgress: true,
             pauseOnHover: false,
+            placement: 'topLeft'
         })
     }
 

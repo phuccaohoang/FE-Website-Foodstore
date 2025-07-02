@@ -5,29 +5,35 @@ import { useState } from "react"
 import orderService from "../../../services/orderService"
 import { useSession } from "../../../context/SessionContext"
 
-const reasonCancel = [
+const reasonCancelAdmin = [
     {
-        label: 'Ly do 1',
-        value: 'Ly do 1',
+        label: 'Thông tin đơn hàng không hợp lệ',
+        value: 'Thông tin đơn hàng không hợp lệ',
     },
     {
-        label: 'Ly do 2',
-        value: 'Ly do 2',
-    },
-    {
-        label: 'Ly do 3',
-        value: 'Ly do 3',
+        label: 'Món ăn đã hết hàng',
+        value: 'Món ăn đã hết hàng',
     },
 ]
-export const ModalCancelOrder = ({ orders, open, onCancel }) => {
+const reasonCancelCustomer = [
+    {
+        label: 'Muốn thay đổi đơn hàng',
+        value: 'Muốn thay đổi đơn hàng',
+    },
+]
+export const ModalCancelOrder = ({ orders, open, onCancel, type = 'admin' }) => {
+    const reasonCancel = type === 'admin' ? reasonCancelAdmin : reasonCancelCustomer
+
+
     const [disabled, setDisabled] = useState(true)
     const [note, setNote] = useState(reasonCancel[0].value)
     const [textArea, setTextArea] = useState('')
-    const { refresh, setRefresh } = useSession()
+    const { refresh, setRefresh, openNotification } = useSession()
+
     return (
         <>
             <Modal
-                title={<p>Huy don hang</p>}
+                title={<p>Hủy đơn hàng</p>}
                 footer={false}
                 open={open}
                 onCancel={onCancel}
@@ -60,7 +66,7 @@ export const ModalCancelOrder = ({ orders, open, onCancel }) => {
                                     }}
                                     options={[
                                         ...reasonCancel,
-                                        { value: 0, label: 'Khac' },
+                                        { value: 0, label: 'Khác' },
                                     ]}
                                 />
                             </Form.Item>
@@ -73,7 +79,7 @@ export const ModalCancelOrder = ({ orders, open, onCancel }) => {
                                     onChange={(e) => {
                                         setTextArea(e.target.value)
                                     }}
-                                    rows={5} placeholder="Ly do huy don" maxLength={300}
+                                    rows={5} placeholder="Lý do hủy đơn" maxLength={300}
                                 />
                             </Form.Item>
                         </Col>
@@ -91,18 +97,23 @@ export const ModalCancelOrder = ({ orders, open, onCancel }) => {
                                     if (text = text.trim()) {
                                         const response = await orderService.cancelOrder(orders, text)
                                         if (response.status) {
-                                            alert(response.message)
+                                            openNotification('success', 'description')
                                             setRefresh(!refresh)
                                             onCancel()
                                         }
+                                        else {
+                                            openNotification('error', 'description')
+
+                                        }
                                     }
                                     else {
-                                        alert('Hay nhaap ly do huy don hang.')
+                                        openNotification('warning', 'description')
+
                                     }
 
                                 }}
                             >
-                                Xac nhan
+                                Xác nhận
                             </Button>
                         </Col>
 

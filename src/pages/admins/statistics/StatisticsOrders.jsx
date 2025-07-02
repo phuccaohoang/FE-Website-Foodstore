@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, Button, Row, Col, DatePicker } from "antd"
+import { useSession } from "../../../context/SessionContext";
+import orderService from "../../../services/orderService";
 const { RangePicker } = DatePicker
 
 
@@ -7,7 +9,8 @@ const { RangePicker } = DatePicker
 const columns = [
     { title: 'STT', dataIndex: 'stt' },
 
-    { title: 'Trang thai', dataIndex: 'fullname' },
+    { title: 'Trạng thái đơn hàng', dataIndex: 'order_status' },
+    { title: 'Số lượng đơn hàng', dataIndex: 'total_orders' },
 ];
 // const dataSource = Array.from({ length: 10 }).map((_, i) => ({
 //     key: i,
@@ -21,34 +24,60 @@ const styleButton = {
 }
 
 export const StatisticsOrders = () => {
+    const { refresh, setRefresh } = useSession()
+    const [orders, setOrders] = useState([])
+    const [date, setDate] = useState({
+        start_date: null,
+        end_date: null,
+    })
+    useEffect(() => {
+        const loadStatisticsOrders = async () => {
+            const response = await orderService.getStatisticsOrders(date)
+            if (response.status) {
+                setOrders(response.data.map((item, idx) => {
+                    return {
+                        stt: idx + 1,
+                        order_status: item.order_status.name,
+                        total_orders: item.total_orders
+                    }
+                }))
+            } else {
+
+            }
+        }
+        //
+        loadStatisticsOrders()
+    }, [refresh])
     return (
         <>
             <div className="Title__Page">
-                <h1>Thong ke don hang</h1>
+                <h1>Thống kê đơn hàng</h1>
             </div>
 
             <Row style={{ marginTop: '20px' }} gutter={[16, 16]}>
                 <Col>
-                    <RangePicker />
+                    <RangePicker
+                        onChange={(values) => {
+                            setDate({
+                                start_date: `${values[0].$y}-${values[0].$M + 1}-${values[0].$D}`,
+                                end_date: `${values[1].$y}-${values[1].$M + 1}-${values[1].$D}`,
+                            })
+                        }}
+                    />
                 </Col>
                 <Col span={8} offset={1}>
-                    <Button color="blue" variant="dashed">Tai lai</Button>
+                    <Button color="blue" variant="dashed" onClick={() => setRefresh(!refresh)}>Thống kê</Button>
                 </Col>
             </Row>
 
             <Table
                 style={{ marginTop: '20px' }}
-                rowSelection={{
 
-                    onChange: (items) => {
-                        console.log('list', items)
-                    }
-                }}
                 columns={columns}
-                dataSource={[]}
+                dataSource={orders}
                 pagination={{
                     defaultCurrent: 1,
-                    total: 50,
+                    total: orders.length,
                     pageSize: 10,
                     onChange: (item) => {
                         console.log('page', item)

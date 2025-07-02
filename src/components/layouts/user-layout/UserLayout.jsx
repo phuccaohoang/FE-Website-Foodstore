@@ -21,7 +21,7 @@ export const UserLayout = () => {
     const toggleChat = () => setVisible(!visible);
     //tao link
     const navigate = useNavigate()
-    const { setUser, user, note } = useSession()
+    const { setUser, user, note, contextHolder } = useSession()
 
     //mo tat thong bao
     const [openNotification, setOpenNotification] = useState(false);
@@ -34,6 +34,7 @@ export const UserLayout = () => {
 
     return (
         <>
+            {contextHolder}
             <Layout>
                 <Header style={{
                     background: '#141414',
@@ -165,7 +166,7 @@ export const UserLayout = () => {
                                     placement="bottom"
                                 >
                                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                                        <img style={{ height: '60px', aspectRatio: '1', borderRadius: '50%', overflow: 'hidden' }} src={url} />
+                                        <img style={{ height: '60px', aspectRatio: '1', objectFit: 'cover', borderRadius: '50%', overflow: 'hidden' }} src={url} />
                                     </div>
                                 </Dropdown>
                             </>
@@ -181,13 +182,15 @@ export const UserLayout = () => {
 
 
                 <div
-                    style={{ position: 'fixed', bottom: 50, right: 30, zIndex: 998, backgroundColor: '#1677ff', borderRadius: '50%', padding: '10px' }}
+                    className='BTN__Chatbot'
+                    style={{ position: 'fixed', bottom: 50, right: 30, zIndex: 998, backgroundColor: '#1677ff', borderRadius: '50%', padding: '10px', cursor: 'pointer' }}
                     onClick={toggleChat}
                 >
 
                     <MessageOutlined style={{ fontSize: '40px', color: 'white' }} />
                 </div>
                 <Chatbot visible={visible} toggle={toggleChat} />
+
                 <Footer style={{
                     backgroundColor: '#27408B',
                     color: '#fff',

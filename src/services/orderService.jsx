@@ -18,7 +18,21 @@ const orderService = {
     },
     storeOrder: (payment) => {
         return axiosClient.post('/store/order', payment)
-    }
+    },
+    // thog ke
+    getStatisticsFoods: (params = {}) => {
+        return axiosClient.get('/get/statistics-foods', { params })
+    },
+    getStatisticsOrders: (params = {}) => {
+        return axiosClient.get('/get/statistics-orders', { params })
+    },
+    getStatisticsCustomers: (params = {}) => {
+        return axiosClient.get('/get/statistics-customers', { params })
+    },
+    getStatisticsRevenue: (params = {}) => {
+        return axiosClient.get('/get/statistics-revenue', { params })
+    },
+
 }
 
 

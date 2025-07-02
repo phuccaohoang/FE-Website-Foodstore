@@ -33,10 +33,11 @@ export const AdminLayout = () => {
     // antd <--
 
     const navigate = useNavigate()
-    const { user, setUser } = useSession()
+    const { user, setUser, contextHolder } = useSession()
 
     return (
         <>
+            {contextHolder}
             <Layout className='Prevent__Select' style={{ minHeight: '100vh' }}>
                 <Sider
                     width={270}
@@ -62,7 +63,7 @@ export const AdminLayout = () => {
                             {
                                 key: 2,
                                 icon: <TeamOutlined />,
-                                label: 'Tai khoan',
+                                label: 'Tài khoản',
                                 onClick: () => {
                                     navigate('/admin/accounts')
                                 }
@@ -70,7 +71,7 @@ export const AdminLayout = () => {
                             {
                                 key: 3,
                                 icon: <ProductOutlined />,
-                                label: 'Mon an',
+                                label: 'Món ăn',
                                 onClick: () => {
                                     navigate('/admin/foods')
                                 }
@@ -78,7 +79,7 @@ export const AdminLayout = () => {
                             {
                                 key: 4,
                                 icon: <GiftOutlined />,
-                                label: 'Phieu giam gia',
+                                label: 'Phiếu giảm giá',
                                 onClick: () => {
                                     navigate('/admin/coupons')
                                 }
@@ -86,7 +87,7 @@ export const AdminLayout = () => {
                             {
                                 key: 5,
                                 icon: <FileDoneOutlined />,
-                                label: 'Don hang',
+                                label: 'Đơn hàng',
                                 onClick: () => {
                                     navigate('/admin/orders')
                                 }
@@ -94,7 +95,7 @@ export const AdminLayout = () => {
                             {
                                 key: 6,
                                 icon: <CommentOutlined />,
-                                label: 'Danh gia',
+                                label: 'Đánh giá',
                                 onClick: () => {
                                     navigate('/admin/reviews')
                                 }
@@ -102,7 +103,7 @@ export const AdminLayout = () => {
                             {
                                 key: 'sub1',
                                 icon: <BarChartOutlined />,
-                                label: 'Xem thong ke',
+                                label: 'Xem thống kê',
                                 children: [
                                     {
                                         key: 7,
@@ -115,7 +116,7 @@ export const AdminLayout = () => {
                                     {
                                         key: 8,
                                         icon: <FileDoneOutlined />,
-                                        label: 'Don hang',
+                                        label: 'Đơn hàng',
                                         onClick: () => {
                                             navigate('/admin/statistics/orders')
                                         }
@@ -123,7 +124,7 @@ export const AdminLayout = () => {
                                     {
                                         key: 9,
                                         icon: <ProductOutlined />,
-                                        label: 'Mon an',
+                                        label: 'Món ăn',
                                         onClick: () => {
                                             navigate('/admin/statistics/foods')
                                         }
@@ -131,7 +132,7 @@ export const AdminLayout = () => {
                                     {
                                         key: 10,
                                         icon: <UserOutlined />,
-                                        label: 'Khach hang',
+                                        label: 'Khách hàng',
                                         onClick: () => {
                                             navigate('/admin/statistics/customers')
                                         }
@@ -156,8 +157,8 @@ export const AdminLayout = () => {
                             borderBottom: 'solid 10px #f5f5f5',
                             height: 'auto'
                         }}>
-                        <strong>
-                            {user.info.fullname} &nbsp;
+                        <strong style={{ fontSize: 18 }}>
+                            {user.fullname} &nbsp;
                         </strong>
                         <Dropdown
                             menu={{
@@ -165,10 +166,10 @@ export const AdminLayout = () => {
                                     {
                                         key: '1',
                                         label: (
-                                            <span>
+                                            <span style={{ fontSize: 20 }}>
                                                 <LogoutOutlined />
                                                 &nbsp;
-                                                Dang xuat
+                                                Đăng xuất
                                             </span>
                                         ),
                                         onClick: async () => {

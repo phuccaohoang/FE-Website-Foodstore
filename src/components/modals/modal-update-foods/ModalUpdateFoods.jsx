@@ -12,7 +12,7 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
     const isItem = foods.length == 1 ? true : false
     const [categories, setCategories] = useState([])
     const [form] = Form.useForm()
-    const { refresh, setRefresh } = useSession()
+    const { refresh, setRefresh, openNotification } = useSession()
 
     useEffect(() => {
         const loadCaregories = async () => {
@@ -30,8 +30,7 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
         loadCaregories()
     }, [])
 
-    const notification = (response) => {
-        alert(response.message)
+    const notification = () => {
         setRefresh(!refresh)
         onCancel()
     }
@@ -39,7 +38,7 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
     return (
         <>
             <Modal
-                title={<p>Cap nhat thong tin {isItem ? '' : 'danh sach'} mon an</p>}
+                title={<p>Cập nhật thông tin {isItem ? '' : 'danh sách'} món ăn</p>}
                 footer={false}
                 open={open}
                 onCancel={onCancel}
@@ -58,7 +57,7 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                     onFinish={async (values) => {
                         if (!isItem) {
                             if (values.category_id == null && values.discount == null && values.price == null) {
-                                alert('Thay doi it nhat 1 thuoc tinh')
+                                openNotification('Cảnh báo', 'Thay đổi ít nhất 1 thuộc tính', 'warning')
                             }
 
                             const response = await foodService.updateFoods({
@@ -66,12 +65,18 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                                 list_id: foods
                             })
                             if (response.status) {
-                                notification(response)
+                                notification()
+                                openNotification('Thành công', 'Cập nhật món ăn thành công', 'success')
+
+                            } else {
+                                openNotification('Thất bại', 'Cập nhật món ăn thất bại', 'error')
+
                             }
 
                         } else {
                             if (values.category_id == null && values.discount == null && values.price == null && (values.name.trim() == '' || values.name == null) && (values.description == null || values.description.trim() == '') && (values.images == null || values.images.fileList.length === 0)) {
-                                alert('Thay doi it nhat 1 thuoc tinh')
+                                openNotification('Cảnh báo', 'Thay đổi ít nhất 1 thuộc tính', 'warning')
+
                             }
                             else {
 
@@ -94,7 +99,11 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                                 formData.append('id', foods[0])
                                 const response = await foodService.updateFood(formData)
                                 if (response.status) {
-                                    notification(response)
+                                    notification()
+                                    openNotification('Thành công', 'Cập nhật món ăn thành công', 'success')
+
+                                } else {
+                                    openNotification('Thất bại', 'Cập nhật món ăn thất bại', 'error')
 
                                 }
                             }
@@ -109,7 +118,7 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                                 isItem ? <>
                                     <Row>
                                         <Col span={24}>
-                                            <Form.Item label="Ten mon an" name="name" rules={[{ required: false }]} initialValue={''}>
+                                            <Form.Item label="Tên món ăn" name="name" rules={[{ required: false }]} initialValue={''}>
                                                 <Input />
                                             </Form.Item>
                                         </Col>
@@ -119,7 +128,7 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
 
                             <Row>
                                 <Col span={24}>
-                                    <Form.Item label="Loai mon an" name="category_id" rules={[{ required: false }]}>
+                                    <Form.Item label="Loại món ăn" name="category_id" rules={[{ required: false }]}>
                                         <Select
                                             options={[
                                                 {
@@ -133,7 +142,7 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                             </Row>
                             <Row>
                                 <Col span={24}>
-                                    <Form.Item label="Gia ban (VND)" name="price" rules={[{ required: false }]}>
+                                    <Form.Item label="Giá bán (VND)" name="price" rules={[{ required: false }]}>
                                         <InputNumber
                                             style={{ width: '100%' }}
                                             min="10000"
@@ -143,7 +152,7 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                             </Row>
                             <Row>
                                 <Col span={24}>
-                                    <Form.Item label="Giam gia (%)" name="discount" rules={[{ required: false }]} initialValue={null}>
+                                    <Form.Item label="Giảm giá (%)" name="discount" rules={[{ required: false }]} initialValue={null}>
                                         <InputNumber
                                             style={{ width: '100%' }}
                                             min="0"
@@ -157,8 +166,8 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                                 isItem ? <>
                                     <Row>
                                         <Col span={24}>
-                                            <Form.Item label="Mo ta" name="description" rules={[{ required: false }]} initialValue={''}>
-                                                <TextArea rows={5} placeholder="Mo ta mon an" maxLength={300} />
+                                            <Form.Item label="Mô tả" name="description" rules={[{ required: false }]} initialValue={''}>
+                                                <TextArea rows={5} placeholder="Mô tả món ăn" maxLength={300} />
                                             </Form.Item>
                                         </Col>
                                     </Row>
@@ -169,7 +178,7 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                             <Row >
                                 <Col span={24} style={{ textAlign: 'right' }}>
 
-                                    <Button htmlType="submit" color="blue" variant="solid">Xac nhan</Button>
+                                    <Button htmlType="submit" color="blue" variant="solid">Xác nhận</Button>
                                 </Col>
                             </Row>
                         </Col>
@@ -177,7 +186,7 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                             isItem ? <>
                                 <Col
                                     offset={1} span={11}>
-                                    <Form.Item label="Anh mon an" name="images"   >
+                                    <Form.Item label="Hình ảnh" name="images"   >
                                         <Upload
                                             action=''
                                             listType="picture"

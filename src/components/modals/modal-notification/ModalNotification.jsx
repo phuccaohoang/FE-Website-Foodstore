@@ -45,16 +45,16 @@ export const ModalNotification = ({ open, onClose }) => {
                             coupons.length !== 0 ? <>
                                 <Row>
                                     <Col span={6}>
-                                        Ten Phieu
+                                        Tên phiếu
                                     </Col>
                                     <Col span={10}>
-                                        Mo ta
+                                        Mô tả
                                     </Col>
                                     <Col span={4}>
-                                        So luong
+                                        Số lượng
                                     </Col>
                                     <Col span={4}>
-                                        Han su dung
+                                        Hạn sử dụng
                                     </Col>
                                 </Row>
                                 <Divider />
@@ -80,7 +80,7 @@ export const ModalNotification = ({ open, onClose }) => {
                                         </>
                                     })
                                 }
-                            </> : 'Khong co.'
+                            </> : 'Không có.'
                         }
                     </TabPane>
 

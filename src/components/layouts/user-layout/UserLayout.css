@@ -80,9 +80,26 @@
     justify-content: center;
 }
 
+/* //explore */
 input.Input__Filter__Custom {
     font-size: 26px;
     padding: 5px 10px;
+}
+
+.Input__Filter__Custom.ant-radio-group-large {
+    font-size: 0;
+    margin-bottom: 15px;
+    display: flex;
+}
+
+.Input__Filter__Custom.ant-radio-group label {
+    height: 50px;
+}
+
+.Input__Filter__Custom.ant-radio-group label span.ant-radio-button-label {
+    display: flex;
+    height: 100%;
+    align-items: center;
 }
 
 .Input__Filter__Custom.ant-select.ant-select-lg {
@@ -96,3 +113,19 @@ input.Input__Filter__Custom {
 .Input__Filter__Custom div {
     font-size: 25px;
 }
+
+.Input__Filter__Custom span {
+
+    font-size: 25px;
+}
+
+.BTN__Chatbot {
+    transition: 0.3s all;
+}
+
+.BTN__Chatbot:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+
+}
+
+/* //explore */

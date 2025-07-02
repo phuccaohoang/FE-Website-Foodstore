@@ -9,6 +9,8 @@ import {
 import { EditOutlined, LoadingOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useSession } from '../../../context/SessionContext';
 import cartService from '../../../services/cartService';
+//
+import NoImg from '../../../assets/mon2.jpg'
 
 const { Text, Title } = Typography;
 
@@ -37,6 +39,7 @@ export const Cart = () => {
                         stt: idx + 1,
                         key: item.id,
                         food: item.food.name,
+                        images: item.food.images,
                         total_price: ((100 - Number(item.food.discount)) / 100) * Number(item.food.price) * Number(item.quantity),
                     }
                 }))
@@ -52,7 +55,7 @@ export const Cart = () => {
 
 
     return (<>
-        {contextHolder}
+        {/* {contextHolder} */}
 
         <Card className="" style={{ width: '', margin: '10px 0' }}>
             <Title level={4} className="cart-title" style={{ fontFamily: 'Montserrat', fontSize: '30px' }}>Giỏ Hàng Của Bạn</Title>
@@ -66,18 +69,29 @@ export const Cart = () => {
                     }
                 }}
                 columns={[
-                    { title: 'STT', dataIndex: 'stt' },
-                    { title: 'Anh', dataIndex: 'image' },
-                    { title: 'Mon an', dataIndex: 'food' },
+                    { title: 'STT', dataIndex: 'stt', width: 50 },
                     {
-                        title: 'So luong', dataIndex: 'quantity', render: (item, record) => {
+                        title: 'Ảnh', dataIndex: 'images', render: (images) => {
+                            const img = images.length !== 0 ? `http://127.0.0.1:8000/${images[0].img}` : NoImg
+                            return <>
+                                <img src={img} alt={img} style={{ width: '100%' }} />
+                            </>
+                        }, width: '200px'
+                    },
+                    { title: 'Món ăn', dataIndex: 'food' },
+                    {
+                        title: 'Số lượng', dataIndex: 'quantity', render: (item, record) => {
                             return <>
                                 <InputNumber defaultValue={item} min={1} max={10} style={{ width: 60 }} onChange={async (value) => {
 
                                     const response = await cartService.updateCart(record.id, value)
                                     if (response.status) {
-                                        alert(response.message)
+                                        openNotification('Thành công', 'Cập nhật số lượng thành công', 'success')
                                         setRefresh(!refresh)
+                                    }
+                                    else {
+                                        openNotification('Thất bại', 'Cập nhật số lượng thất bại', 'error')
+
                                     }
                                 }}
                                 />
@@ -85,7 +99,7 @@ export const Cart = () => {
                             </>
                         }
                     },
-                    { title: 'Tong tien', dataIndex: 'total_price' },
+                    { title: 'Tổng tiền (VND)', dataIndex: 'total_price' },
                 ]}
                 dataSource={carts}
                 pagination={false}
@@ -97,12 +111,12 @@ export const Cart = () => {
                                 <Button style={styleButton} color="red" variant="solid"
                                     onClick={async () => {
                                         if (selectedRows.length === 0) {
-                                            openNotification('warning', '0 row selected.')
+                                            openNotification('Cảnh báo', 'Hãy chọn món ăn.', 'warning')
                                         }
                                         else {
                                             const response = await cartService.deleteCarts({ list_id: selectedRows })
                                             if (response.status) {
-                                                openNotification('success', 'description.')
+                                                openNotification('Thành công', 'Xóa khỏi giỏ thành công', 'success')
                                                 setUser(user => {
                                                     return {
                                                         ...user,
@@ -112,14 +126,15 @@ export const Cart = () => {
                                                 setSelectedRows([])
                                                 setRefresh(!refresh)
                                             } else {
-                                                openNotification('error', 'description.')
+                                                openNotification('Thất bại', 'Xóa khỏi giỏ thất bại', 'error')
+
                                                 setSelectedRows([])
 
                                             }
                                         }
                                     }}
                                 >
-                                    Xoa
+                                    Xóa
                                 </Button>
                                 <Button style={styleButton} color="primary" variant="solid"
                                     onClick={() => {
@@ -132,12 +147,12 @@ export const Cart = () => {
                                             })
                                             navigate('/payment')
                                         } else {
-                                            openNotification('warning', '0 row selected.')
+                                            openNotification('Cảnh báo', 'Hãy chọn món ăn.', 'warning')
 
                                         }
                                     }}
                                 >
-                                    Thanh toan
+                                    Thanh toán
                                 </Button>
                             </div>
                         </>

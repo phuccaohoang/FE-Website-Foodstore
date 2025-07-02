@@ -52,6 +52,10 @@ h2 {
     flex: 1;
 }
 
+.Item__Top .ant-statistic-title {
+    font-size: 20px;
+}
+
 .Statistics__Item .Item__Bot {
     margin-top: auto;
     flex-shrink: 0;

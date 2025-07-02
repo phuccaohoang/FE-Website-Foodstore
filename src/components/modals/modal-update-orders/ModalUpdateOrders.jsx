@@ -7,9 +7,10 @@ import orderStatusService from "../../../services/orderStatusService"
 import orderService from "../../../services/orderService"
 
 
-export const ModalUpdateOrder = ({ open, onCancel, orders }) => {
+export const ModalUpdateOrder = ({ open, onCancel, orders, order_status_id }) => {
     const [orderStatus, setOrderStatus] = useState([])
-    const { refresh, setRefresh } = useSession()
+    const { refresh, setRefresh, openNotification } = useSession()
+    // const [statusId, setStatusId] = useState(order_status_id)
 
     useEffect(() => {
         const loadOrderSatus = async () => {
@@ -26,7 +27,7 @@ export const ModalUpdateOrder = ({ open, onCancel, orders }) => {
     return (
         <>
             <Modal
-                title={<p>Cap nhat trang thai don hang</p>}
+                title={<p>Cập nhật trạng thái đơn hàng</p>}
                 footer={false}
                 open={open}
                 onCancel={onCancel}
@@ -44,23 +45,27 @@ export const ModalUpdateOrder = ({ open, onCancel, orders }) => {
                     onFinish={async (item) => {
                         const response = await orderService.updateOrderStatus(orders, item.order_status_id)
                         if (response.status) {
-                            alert(response.message)
+                            openNotification('Thành công', 'Cập nhật trạng thái giao hàng thành công', 'success')
                             setRefresh(!refresh)
                             onCancel()
+                        } else {
+                            openNotification('Thất bại', 'Cập nhật trạng thái giao hàng thất bại', 'error')
+
                         }
                     }}
                 >
                     <Row  >
 
                         <Col span={24}>
-                            <Form.Item label="Trang thai" name="order_status_id" rules={[{ required: true }]} initialValue={1}>
+                            <Form.Item label="Trạng thái" name="order_status_id" rules={[{ required: true }]} initialValue={order_status_id}>
                                 <Select
-                                    // defaultValue={1}
+                                    defaultValue={order_status_id}
                                     options={
                                         orderStatus.map((item, idx) => {
                                             return {
                                                 label: item.name,
                                                 value: item.id,
+                                                disabled: (order_status_id >= item.id)
                                             }
                                         })
                                     }
@@ -68,7 +73,7 @@ export const ModalUpdateOrder = ({ open, onCancel, orders }) => {
                             </Form.Item>
                         </Col>
                         <Col span={24}>
-                            <Button htmlType="submit" color="blue" variant="solid" style={{ width: '100%' }}>Xac nhan</Button>
+                            <Button htmlType="submit" color="blue" variant="solid" style={{ width: '100%' }}>Xác nhận</Button>
                         </Col>
 
 

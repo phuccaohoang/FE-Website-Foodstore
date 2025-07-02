@@ -2,50 +2,88 @@
 import { Column, Line, Pie } from "@ant-design/charts";
 import { ArrowUpOutlined, DollarCircleOutlined, FileDoneOutlined, ProductOutlined, TeamOutlined, UserAddOutlined, UserOutlined } from "@ant-design/icons"
 import { Card, Col, Row, Statistic, Table } from "antd"
+import { useEffect, useState } from "react";
+import orderService from "../../../services/orderService";
 
 export const Dashboard = () => {
 
+    const [foods, setFoods] = useState([])
+    const [orders, setOrders] = useState([])
+    const [customers, setCustomers] = useState([])
+    const [revenue, setRevenue] = useState({
+        total_orders: 0,
+        total_revenue: 0,
+    })
+
+    const today = new Date();
+    // Hàm format yyyy-mm-dd
+    const formatDate = (date) => date.toISOString().slice(0, 10);
+    // Ngày đầu tháng đã format
+    const startDate = formatDate(new Date(today.getFullYear(), today.getMonth(), 1));
+    // Ngày hiện tại đã format
+    const endDate = formatDate(today);
+    const date = {
+        start_date: startDate,
+        end_date: endDate
+    }
+
+    useEffect(() => {
+        const loadStatisticsFoods = async () => {
+            const response = await orderService.getStatisticsFoods(date)
+            if (response.status) {
+                setFoods(response.data.map(item => {
+                    return {
+                        type: item.food.name,
+                        value: Number(item.total_quantity)
+                    }
+                }))
+            }
+        }
+        const loadStatisticsRevenue = async () => {
+            const response = await orderService.getStatisticsRevenue(date)
+            if (response.status) {
+                setRevenue({
+                    total_orders: response.data[0].total_orders,
+                    total_revenue: response.data[0].total_revenue,
+                })
+            }
+        }
+        const loadStatisticsOrders = async () => {
+            const response = await orderService.getStatisticsOrders(date)
+            if (response.status) {
+                setOrders(response.data.map((item) => {
+                    return {
+                        type: item.order_status.name,
+                        value: item.total_orders
+                    }
+                }))
+            }
+        }
+        const loadStatisticsCustomers = async () => {
+            const response = await orderService.getStatisticsCustomers(date)
+            if (response.status) {
+                setCustomers(response.data.map((item, idx) => {
+                    return {
+                        stt: idx + 1,
+                        fullname: item.customer.fullname,
+                        total_quantity_orders: item.total_quantity_orders,
+                        total_money_orders: item.total_money_orders,
+                    }
+                }))
+            }
+        }
+        //
+        loadStatisticsRevenue()
+        loadStatisticsCustomers()
+        loadStatisticsFoods()
+        loadStatisticsOrders()
+    }, [])
 
 
-    const configLine = {
-        data: [
-            { month: 'Jan', value: 3 },
-            { month: 'Feb', value: 4 },
-            { month: 'Mar', value: 3.5 },
-            { month: 'Apr', value: 5 },
-            { month: 'May', value: 4.9 },
-            { month: 'June', value: 6 },
-            { month: 'July', value: 7 },
-            { month: 'Aug', value: 9 },
-            { month: 'Sep', value: 13 },
-            { month: 'Oct', value: 10 },
-            { month: 'Nov', value: 7 },
-            { month: 'Dec', value: 11 },
-        ],
-        xField: 'month',
-        yField: 'value',
-        point: {
-            shapeField: 'circle',
-            sizeField: 4,
-        },
-        interaction: {
-            tooltip: {
-                marker: false,
-            },
-        },
-        style: {
-            lineWidth: 2,
-        },
-    };
+
 
     const configPie = {
-        data: [
-            { type: 'Cho duyet', value: 27 },
-            { type: 'Da duyet', value: 25 },
-            { type: 'Dang giao', value: 18 },
-            { type: 'Da giao', value: 15 },
-            { type: 'Da huy', value: 10 },
-        ],
+        data: orders,
         angleField: 'value',
         colorField: 'type',
         innerRadius: 0.6,
@@ -70,7 +108,7 @@ export const Dashboard = () => {
                 type: 'text',
                 data: [],
                 style: {
-                    text: 'Don Hang',
+                    text: `Đơn hàng ${orders.length !== 0 ? null : 'chưa có'}`,
                     x: '50%',
                     y: '50%',
                     textAlign: 'center',
@@ -82,17 +120,9 @@ export const Dashboard = () => {
     };
 
 
+
     const configColumn = {
-        data: [
-            { type: 'mon an 1', value: 12 },
-            { type: 'mon an 2', value: 15 },
-            { type: 'mon an 3', value: 2 },
-            { type: 'mon an 4', value: 33 },
-            { type: 'mon an 5', value: 27 },
-            { type: 'mon an 6', value: 12 },
-            { type: 'mon an 7', value: 8 },
-            { type: 'mon an 8', value: 9 },
-        ],
+        data: foods,
         xField: 'type',
         yField: 'value',
         markBackground: {
@@ -102,7 +132,7 @@ export const Dashboard = () => {
         },
         scale: {
             y: {
-                domain: Array.from({ length: 34 }).map((_, item) => {
+                domain: Array.from({ length: foods.length !== 0 ? (foods[0].value + 1) : 0 }).map((_, item) => {
                     return item
                 }).reverse(),
             },
@@ -110,141 +140,89 @@ export const Dashboard = () => {
         legend: false,
     };
 
+
+
     return (
         <>
             <div className="Title__Page">
-                <h1>Dashboard</h1>
+                <h1>Thống kê tháng {today.getMonth() + 1}</h1>
             </div>
             <Row gutter={[16, 16]} style={{ marginTop: '20px' }}>
-                <Col span={4}>
+                <Col span={3}>
                     <Card className="Statistics__Item" variant="borderless">
                         <Statistic
                             className="Item__Top"
 
-                            title="Don hang thang 7"
-                            value={90}
+                            title="Đơn hàng"
+                            value={revenue.total_orders}
                             valueStyle={{ color: 'blue', fontSize: 32 }}
                             prefix={<FileDoneOutlined />}
                             suffix=''
                         />
-                        <Statistic
-                            className="Item__Bot"
 
-                            title=""
-                            value={10}
-                            precision={2}
-                            valueStyle={{ color: 'green', fontSize: 18 }}
-                            prefix={<>
-                                <FileDoneOutlined />
-                                &nbsp;
-                                <ArrowUpOutlined />
-                            </>}
-                            suffix={<>
-                                <span>%</span>
-                                &nbsp;
-                                <span>thang 6</span>
-                            </>}
-                        />
                     </Card>
                 </Col>
 
-                <Col span={8}>
+                <Col span={7}>
                     <Card className="Statistics__Item" variant="borderless">
                         <Statistic
                             className="Item__Top"
 
-                            title="Doanh thu thang 7"
-                            value={12000000}
+                            title="Doanh thu"
+                            value={revenue.total_revenue}
                             precision={2}
                             valueStyle={{ color: 'gold', fontSize: 32 }}
                             prefix={<DollarCircleOutlined />}
                             suffix='VND'
                         />
-                        <Statistic
-                            className="Item__Bot"
 
-                            title=""
-                            value={17}
-                            precision={2}
-                            valueStyle={{ color: 'green', fontSize: 18 }}
-                            prefix={<>
-                                <DollarCircleOutlined />
-                                &nbsp;
-                                <ArrowUpOutlined />
-                            </>}
-                            suffix={<>
-                                <span>%</span>
-                                &nbsp;
-                                <span>thang 6</span>
-                            </>}
-                        />
                     </Card>
                 </Col>
                 <Col span={8}>
                     <Card className="Statistics__Item" variant="borderless">
                         <Statistic
                             className="Item__Top"
-                            title="Mon an yeu thich thang 7"
-                            value={"Banh mi heo quay quay quay quay quay"}
+                            title="Món ăn bán chạy"
+                            value={`${foods.length !== 0 ? foods[0].type : 'Chưa có dữ liệu'}`}
 
                             // precision={2}
                             valueStyle={{ color: '#f89880', fontSize: 32 }}
-                            // prefix={<ProductOutlined />}
-                            suffix=""
                         />
-                        <Statistic
-                            className="Item__Bot"
 
-                            value={30}
-                            precision={0}
-                            valueStyle={{ color: 'grey', fontSize: 18 }}
-                            prefix={<ProductOutlined />}
-                            suffix="/ 90 da ban"
-                        />
                     </Card>
                 </Col>
-                <Col span={4}>
+                <Col span={6}>
                     <Card className="Statistics__Item" variant="borderless">
                         <Statistic
                             className="Item__Top"
 
-                            title="Khach hang moi thang 7"
-                            value={2}
+                            title={`Khách hàng của tháng`}
+                            value={customers.length !== 0 ? customers[0].fullname : 'Chưa có dữ liệu'}
                             precision={0}
                             valueStyle={{ color: '#7b3f00', fontSize: 32 }}
 
-                            prefix={<UserAddOutlined />}
+                        // prefix={<UserOutlined />}
                         />
-                        <Statistic
-                            className="Item__Bot"
 
-                            value={100}
-                            precision={0}
-                            valueStyle={{ color: 'grey', fontSize: 18 }}
-                            prefix={<TeamOutlined />}
-
-                        />
                     </Card>
                 </Col>
             </Row>
 
-            <div className="Title__Page" style={{ marginTop: '20px' }}>
-                <h2 className="">Bieu do the hien doanh thu</h2>
-            </div>
-            <Row gutter={[16, 16]} style={{ marginTop: '20px' }}>
-                <Line {...configLine} />
-            </Row>
+
 
             <div className="Title__Page" style={{ marginTop: '20px' }}>
-                <h2 className="">Bieu do thong ke so luong mon an da duoc mua</h2>
+                <h2 className="">Biểu đồ thống kê số lượng món ăn được mua</h2>
             </div>
-            <Row gutter={[16, 16]} style={{ marginTop: '20px' }}>
-                <Column {...configColumn} />
-            </Row>
+            {
+                foods.length !== 0 ?
+                    <Row gutter={[16, 16]} style={{ marginTop: '20px' }}>
+                        <Column {...configColumn} />
+                    </Row> : <p style={{ fontSize: 20 }}> Chưa có dữ liệu</p>
+            }
 
             <Row gutter={[16, 16]} style={{ marginTop: '20px' }}>
                 <Col span={16}>
-                    <h2 style={{ marginTop: '20px' }}>Thong ke khach mua hang</h2>
+                    <h2 style={{ marginTop: '20px' }}>Thống kê khách mua hàng</h2>
 
                     <Table
                         bordered={true}
@@ -255,58 +233,25 @@ export const Dashboard = () => {
                                 dataIndex: 'stt'
                             },
                             {
-                                title: 'Ten khach hang',
+                                title: 'Tên khách hàng',
                                 dataIndex: 'fullname'
                             },
                             {
-                                title: 'So don hang da mua',
-                                dataIndex: 'quantity'
+                                title: 'Tổng đơn hàng',
+                                dataIndex: 'total_quantity_orders'
                             },
                             {
-                                title: 'Tong gia tri don hang',
-                                dataIndex: 'total'
+                                title: 'Tổng giá trị đơn hàng',
+                                dataIndex: 'total_money_orders'
                             },
                         ]}
 
-                        dataSource={[
-                            {
-                                key: 1,
-                                stt: 1,
-                                fullname: 'Le Xuan Thinh',
-                                quantity: 12,
-                                total: '1,200,000'
-                            },
-                            {
-                                key: 2,
-                                stt: 2,
-                                fullname: 'Pessi',
-                                quantity: 10,
-                                total: '900,000'
-                            },
-                            {
-                                key: 3,
-                                stt: 3,
-                                fullname: 'Go Nan Do',
-                                quantity: 6,
-                                total: '570,000'
-                            },
-                            {
-                                key: 4,
-                                stt: 4,
-                                fullname: 'Ledimir Puthin',
-                                quantity: 4,
-                                total: '500,000'
-                            },
-                            {
-                                key: 5,
-                                stt: 5,
-                                fullname: 'Donal Trung',
-                                quantity: 2,
-                                total: '200,000'
-                            },
-                        ]}
+                        dataSource={customers}
 
-                        pagination={false}
+                        pagination={{
+                            pageSize: 5,
+                            total: customers.length
+                        }}
                     />
                 </Col>
                 <Col span={8}>

@@ -1,11 +1,20 @@
-import { FoodCart } from "../food-card/FoodCard"
+import { useNavigate } from "react-router-dom";
+import { FoodCard } from "../food-card/FoodCard"
 import { Button, Card, Col, Divider, Pagination, Row, Typography } from "antd"
 const { Title } = Typography;
 
 
-export const FoodList = ({ title, foods, openFooter = false, onClickFooter = null, pagination = false }) => {
+export const FoodList = ({ title, foods, openFooter = false, pagination = false,
+    page = {
+        current_page: 1,
+        total: 1,
+        last_page: 1,
+        per_page: 12,
+        onChangePage: () => null,
+    },
+}) => {
 
-
+    const navigate = useNavigate()
 
 
     return (
@@ -24,7 +33,7 @@ export const FoodList = ({ title, foods, openFooter = false, onClickFooter = nul
                         <Row gutter={[16, 16]}>
                             {foods.length !== 0 ? foods.map((item, idx) => {
                                 return <>
-                                    <FoodCart food={item} />
+                                    <FoodCard food={item} />
                                 </>
                             })
                                 : null
@@ -39,8 +48,10 @@ export const FoodList = ({ title, foods, openFooter = false, onClickFooter = nul
                         <Divider />
                         <Row justify={'center'}>
                             <Button color='default' variant='dashed' style={{ fontSize: '25px', padding: '25px 15px', fontWeight: '400' }}
-                                onClick={onClickFooter}
-                            >Xem them</Button>
+                                onClick={() => {
+                                    navigate('/explore')
+                                }}
+                            >Xem thêm</Button>
                         </Row>
                     </> : null
                 }
@@ -48,10 +59,11 @@ export const FoodList = ({ title, foods, openFooter = false, onClickFooter = nul
                 {
                     pagination ? <>
                         <Pagination
-                            current={1}
-                            total={80}
-                            pageSize={10}
-                            onChange={(newPage) => setPage(newPage)}
+                            current={page.current_page}
+                            total={page.total}
+                            pageSize={page.per_page}
+                            onChange={page.onChangePage}
+
                             style={{ marginTop: '20px', justifyContent: 'center' }}
                             showSizeChanger={false}
                         />

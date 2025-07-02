@@ -9,7 +9,7 @@
 
 .food-detail-image {
     flex-shrink: 0;
-    width: 800px;
+    width: 850px;
     aspect-ratio: 19 / 10;
     border-radius: 12px;
     overflow: hidden;
@@ -20,7 +20,6 @@
 
 .food-detail-image img {
     width: 100%;
-    height: 100%;
     object-fit: cover;
     display: block;
     border-radius: 12px;
@@ -38,19 +37,40 @@
 
 }
 
-
-
-
-.food-title {
-    margin-bottom: 8px;
-    color: #222;
+.Row__Detail ul.ant-rate.css-dev-only-do-not-override-ut69n1,
+.Row__Detail li.ant-rate-star.ant-rate-star-full {
+    margin: 0;
 }
 
-.food-price {
-    font-size: 20px;
-    color: #fa541c;
-    display: block;
-    margin-bottom: 16px;
+.Row__Detail {
+    align-items: center;
+}
+
+.Row__Detail span.ant-typography.css-dev-only-do-not-override-ut69n1 {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+}
+
+
+
+
+
+.Food__Price {
+    display: flex;
+    column-gap: 10px;
+}
+
+.Food__Price span {
+    font-size: 30px;
+    display: flex;
+    color: red;
+    font-weight: 600;
+}
+
+.Food__Price span del {
+    display: flex;
+    align-items: center;
 }
 
 .food-description {

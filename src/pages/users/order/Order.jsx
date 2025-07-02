@@ -36,52 +36,52 @@ export const Order = () => {
 
         },
         {
-            title: "Ten khach hang",
+            title: "Tên khách hàng",
             dataIndex: "fullname",
             key: 2
         },
         {
-            title: "Phone",
+            title: "SDT",
             dataIndex: "phone",
             key: 3
         },
         {
-            title: "Dia chi",
+            title: "Địa chỉ",
             dataIndex: "address",
             width: 300,
 
         },
         {
-            title: "Tong don hang",
+            title: "Tổng đơn hàng",
             dataIndex: "total_amount",
             width: 150,
 
         },
         {
-            title: "So luong",
+            title: "Số lượng",
             dataIndex: "quantity",
             width: 100,
 
         },
         {
-            title: "Phi van chuyen",
+            title: "Phí vận chuyển",
             dataIndex: "delivery_cost",
             width: 150,
 
         },
         {
-            title: "Phieu giam gia",
+            title: "Phiếu giảm giá",
             dataIndex: "coupon_value",
             width: 150,
 
         },
         {
-            title: "Ghi chu",
+            title: "Ghi chú",
             dataIndex: "note",
             width: 300,
         },
         {
-            title: "Trang thai",
+            title: "Trạng thái",
             dataIndex: "order_status",
             fixed: 'right',
         },
@@ -191,7 +191,7 @@ export const Order = () => {
                     columns={columns}
                     dataSource={orders}
                     pagination={false}
-                    rowClassName={'Row__Orders'}
+                    rowClassName={''}
                     expandable={{
                         expandedRowRender: (value) => {
                             const dataSource = () => {
@@ -220,7 +220,7 @@ export const Order = () => {
                                         const total_money = Number(record[0].total_amount) + Number(record[0].delivery_cost) - Number(record[0].coupon_value)
                                         return <>
                                             <strong style={{ display: 'flex', justifyContent: 'right', alignItems: 'end' }}>
-                                                Tong don hang: <span style={{ fontSize: '20px', margin: '0 10px' }}> {total_money} </span> VND
+                                                Tổng đơn hàng: <span style={{ fontSize: '20px', margin: '0 10px' }}> {total_money} </span> VND
                                             </strong>
                                             <Divider />
                                         </>
@@ -231,23 +231,23 @@ export const Order = () => {
                                             dataIndex: "stt",
                                         },
                                         {
-                                            title: "Mon an",
+                                            title: "Món ăn",
                                             dataIndex: "food",
                                         },
                                         {
-                                            title: "So luong",
+                                            title: "Số lượng",
                                             dataIndex: "quantity",
                                         },
                                         {
-                                            title: "Gia (VND)",
+                                            title: "Giá (VND)",
                                             dataIndex: "price",
                                         },
                                         {
-                                            title: "Giam gia (%)",
+                                            title: "Giảm giá (%)",
                                             dataIndex: "discount",
                                         },
                                         {
-                                            title: "Chuc nang",
+                                            title: "Chức năng",
                                             render: (_, record) => {
                                                 return <>
                                                     <Button
@@ -257,7 +257,7 @@ export const Order = () => {
                                                             setOpenReview(true)
                                                         }}
                                                     >
-                                                        Danh gia
+                                                        Đánh giá
                                                     </Button>
                                                 </>
                                             }
@@ -269,12 +269,13 @@ export const Order = () => {
                             </>
 
                         },
-                        expandedRowOffset: 0
+                        expandedRowOffset: 0,
+
                     }}
                 />
             </Card >
 
-            <ModalCancelOrder orders={[orderId]} open={openCancel} onCancel={() => {
+            <ModalCancelOrder type='customer' orders={[orderId]} open={openCancel} onCancel={() => {
                 setOpenCancel(false)
             }} />
 

@@ -5,35 +5,54 @@ import foodService from '../../../services/foodService';
 import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import categoryService from '../../../services/categoryService';
 
-const { Search } = Input;
-const handleChange = value => {
-    console.log(`selected ${value}`);
-};
-const onSearch = (value, _e, info) =>
-    console.log(info === null || info === void 0 ? void 0 : info.source, value);
+
 
 
 export const Explore = () => {
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState({
+        current_page: 1,
+        total: 1,
+        last_page: 1,
+        per_page: 12,
+        onChangePage: () => null,
+    });
 
     const [foods, setFoods] = useState([])
     const [categories, setCategories] = useState([])
+    //
+    const [categoryId, setCategoryId] = useState(0)
+    const [searchName, setSearchName] = useState('')
+    const [sortBy, setSortBy] = useState('default')
+    //
+    const [search, setSearch] = useState(true)
 
     useEffect(() => {
 
         const loadFoods = async () => {
-            const response = await foodService.getFoods();
+            const response = await foodService.getFoods({
+                name: searchName,
+                category_id: categoryId,
+                sort_by: sortBy,
+                status: 1,
+                page: page.current_page,
+                per_page: 8,
+            });
             if (response.status) {
                 setFoods(response.data)
+                setPage(response.page)
             }
         }
+
+        loadFoods()
+    }, [search])
+
+    useEffect(() => {
         const loadCategories = async () => {
             const response = await categoryService.getCategories()
             if (response.status) {
                 setCategories(response.data)
             }
         }
-        loadFoods()
         loadCategories()
     }, [])
 
@@ -53,8 +72,11 @@ export const Explore = () => {
                         <Typography.Title level={4} style={{ fontFamily: 'sans-serif' }}>Loại món ăn</Typography.Title>
                     </Col>
                     <Col span={24}>
-                        <Radio.Group size='large' defaultValue={0} style={{ fontSize: '50px' }} className='Input__Filter__Custom'>
-                            <Radio.Button value={0}>Tat ca</Radio.Button>
+                        <Radio.Group size='large' defaultValue={0} value={categoryId} style={{ fontSize: '50px' }}
+                            className='Input__Filter__Custom'
+                            onChange={(e) => setCategoryId(e.target.value)}
+                        >
+                            <Radio.Button value={0}>Tất cả</Radio.Button>
                             {
                                 categories.length !== 0 ? <>
                                     {
@@ -78,7 +100,9 @@ export const Explore = () => {
                         <Row gutter={[10, 10]}>
 
                             <Col span={24}>
-                                <Input size='large' className='Input__Filter__Custom' />
+                                <Input size='large' className='Input__Filter__Custom' value={searchName}
+                                    onChange={(e) => setSearchName(e.target.value)}
+                                />
                             </Col>
 
                         </Row>
@@ -91,23 +115,48 @@ export const Explore = () => {
                         </Row>
 
                         <Row gutter={[10, 10]}>
-                            <Col span={14}>
+                            <Col span={16}>
                                 <Select
                                     className='Input__Filter__Custom'
-                                    defaultValue="up_price"
+                                    defaultValue="default"
                                     style={{ width: '100%', }}
                                     size='large'
-                                    onChange={handleChange}
+                                    value={sortBy}
+                                    onChange={(value) => {
+                                        setSortBy(value)
+                                    }}
                                     options={[
-                                        { value: 'down_price', label: 'Giá Thấp đến Cao' },
-                                        { value: 'up_price', label: 'Giá Cao đến Thấp' },
+                                        { value: 'default', label: 'Mới nhất' },
+                                        { value: 'price_asc', label: 'Giá Thấp đến Cao' },
+                                        { value: 'price_desc', label: 'Giá Cao đến Thấp' },
+                                        { value: 'discount_desc', label: 'Giam Giá' },
+                                        { value: 'rating_desc', label: 'Xep Hang Mon An' },
+                                        { value: 'sold_desc', label: 'So Luong Da Ban' },
                                     ]}
                                 />
                             </Col>
-                            <Col className='BTN__Search' span={10} style={{ textAlign: 'right', width: '100%', display: 'flex', justifyContent: 'right', columnGap: '10px' }}>
-                                <Button size='large'><UndoOutlined /></Button>
+                            <Col className='BTN__Search' span={8} style={{ textAlign: 'right', width: '100%', display: 'flex', justifyContent: 'right', columnGap: '10px' }}>
+                                <Button size='large'
+                                    onClick={() => {
+                                        setCategoryId(0)
+                                        setSortBy('default')
+                                        setSearchName('')
+                                    }}
+                                >
+                                    <UndoOutlined />
+                                </Button>
                                 <> </>
-                                <Button size='large'><SearchOutlined /></Button>
+                                <Button size='large'
+                                    onClick={() => {
+                                        setPage({
+                                            ...page,
+                                            current_page: 1,
+                                        })
+                                        setSearch(!search)
+                                    }}
+                                >
+                                    <SearchOutlined />
+                                </Button>
                             </Col>
                         </Row>
                     </Col>
@@ -123,6 +172,18 @@ export const Explore = () => {
                 foods={foods}
                 openFooter={false}
                 pagination={true}
+                page={
+                    {
+                        ...page,
+                        onChangePage: (value) => {
+                            setPage({
+                                ...page,
+                                current_page: value
+                            })
+                            setSearch(!search)
+                        }
+                    }
+                }
             />
 
         </>

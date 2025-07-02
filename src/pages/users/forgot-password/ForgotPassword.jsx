@@ -2,9 +2,11 @@ import { Form, Input, Button, message } from 'antd';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './forgotpassword.css';
 import accountService from '../../../services/accountService';
+import { useSession } from '../../../context/SessionContext';
 
 export const ForgotPassword = () => {
     const [form] = Form.useForm();
+    const { contextHolder, openNotification } = useSession()
 
     const onFinish = async (values) => {
         const email = values.email.trim().toLowerCase();
@@ -13,7 +15,10 @@ export const ForgotPassword = () => {
             email: email,
         })
         if (response.status) {
-            alert(response.message)
+            openNotification('Thành công', 'Mật khẩu mới đã được gửi về mail của bạn', 'success')
+        } else {
+            openNotification('Thất bại', 'Đã có lỗi xảy ra vui lòng thử lại', 'error')
+
         }
         form.resetFields();
     };
@@ -21,6 +26,7 @@ export const ForgotPassword = () => {
 
     return (
         <div className="forgot-container">
+            {contextHolder}
             <Form
                 form={form}
                 name="forgot-password"

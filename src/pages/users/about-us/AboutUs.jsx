@@ -9,7 +9,7 @@ export const AboutUs = () => {
     return (
         <Card>
             <Layout style={{ backgroundColor: '#FFFFFF' }}>
-                <Image
+                {/* <Image
                     src={aboutusimg}
                     preview={false}
                     style={{
@@ -18,10 +18,10 @@ export const AboutUs = () => {
                         MozUserSelect: 'none',
                         msUserSelect: 'none'
                     }}
-                />
+                /> */}
 
                 <Typography style={{ textAlign: 'center', marginTop: 32 }}>
-                    <Title style={{ fontSize: '100px', fontFamily: 'sans-serif' }} >ABOUT US</Title>
+                    <Title style={{ fontSize: '100px', fontFamily: 'sans-serif' }} >FOODSTORE</Title>
                 </Typography>
 
                 <Row gutter={[32, 48]} justify="center" style={{ marginTop: 24 }}>

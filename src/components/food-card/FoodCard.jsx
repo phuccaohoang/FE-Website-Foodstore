@@ -1,12 +1,13 @@
 import { Badge, Button, Card, Col, Rate, Tag, Typography } from "antd"
-import bannerimg from '../../assets/mon1.png'
+import NonImg from '../../assets/mon1.png'
 import { useNavigate } from "react-router-dom"
 import cartService from "../../services/cartService";
 import { useSession } from "../../context/SessionContext";
 const { Text } = Typography;
 
-export const FoodCart = ({ food }) => {
+export const FoodCard = ({ food }) => {
     const navigate = useNavigate();
+    //
     const colorButton = [
         'magenta',
         'red',
@@ -24,9 +25,29 @@ export const FoodCart = ({ food }) => {
         return colorButton[randomIndex];
     }
 
+    function getRandomFoodNameColor() {
+        const randomIndex = Math.floor(Math.random() * colorFoodName.length);
+        return colorFoodName[randomIndex];
+    }
+    const colorFoodName = [
+        '#008B8B',
+        '#B8860B',
+        '#DC143C',
+        'blue',
+        '#9400D3',
+    ]
+    const styleFoodName = () => {
+        const color = getRandomFoodNameColor()
+        return {
+            textShadow: `0px 0px 10px ${color}, 0px 0px 10px ${color}, 0px 0px 10px ${color}, 0px 0px 10px ${color}`,
+            color: 'white'
+        }
+    }
+    //
+
     const { user, setUser, contextHolder, openNotification } = useSession()
 
-
+    const image = (food.images.length !== 0) ? `http://127.0.0.1:8000/${food.images[0].img}` : NonImg;
 
     const mainContent = <>
         <Card
@@ -39,7 +60,8 @@ export const FoodCart = ({ food }) => {
                     onClick={() => {
                         navigate(`/foods/${food.slug}`)
                     }}
-                    src={bannerimg}
+                    src={image}
+                    alt={image}
                     style={{
                         height: 180,
                         objectFit: 'cover',
@@ -55,7 +77,7 @@ export const FoodCart = ({ food }) => {
             }
 
         >
-            <p style={{ fontSize: '30px', fontFamily: 'Montserrat', fontWeight: '500' }}>{food.name}</p>
+            <p style={{ fontSize: '30px', fontFamily: 'Montserrat', fontWeight: '500', ...styleFoodName() }}>{food.name}</p>
             <div
                 style={{
                     marginTop: 8,
@@ -115,7 +137,7 @@ export const FoodCart = ({ food }) => {
 
                             const response = await cartService.storeCart(food.id, 1)
                             if (response.status) {
-                                openNotification('success', 'description')
+                                openNotification('Thành công', 'Thêm món ăn vào giỏ thành công', 'success')
                                 setUser(user => {
                                     return {
                                         ...user,
@@ -123,27 +145,27 @@ export const FoodCart = ({ food }) => {
                                     }
                                 })
                             } else {
-                                openNotification('error', 'description')
+                                openNotification('Thông báo', 'Đã có trong giỏ')
 
                             }
                         }
                     }}
                 >
-                    Them vao gio
+                    Thêm vào giỏ
                 </Button>
             </div>
         </Card>
     </>
     return (
         <>
-            {contextHolder}
+            {/* {contextHolder} */}
             <Col
                 span={6}
             >
                 {
                     food.discount > 0 ? <>
                         <Badge.Ribbon color="red" disabled
-                            text={`SALE ${food.discount}%`} style={{ fontSize: '25px', padding: '8px', fontWeight: '500' }}
+                            text={`Giảm giá ${food.discount}%`} style={{ fontSize: '20px', padding: '8px', fontWeight: '500' }}
                         >
                             {mainContent}
                         </Badge.Ribbon>

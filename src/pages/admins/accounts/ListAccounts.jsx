@@ -8,10 +8,16 @@ import { useSession } from "../../../context/SessionContext";
 
 const columns = [
     { title: 'STT', dataIndex: 'stt' },
-    { title: 'Anh dai dien', dataIndex: 'avatar' },
+    {
+        title: 'Ảnh đại diện', dataIndex: 'avatar', render: (item) => {
+            return <>
+                <img style={{ width: 150 }} src={`http://127.0.0.1:8000/${item}`} alt={item} />
+            </>
+        }
+    },
     { title: 'Email', dataIndex: 'email' },
-    { title: 'Ho ten', dataIndex: 'fullname' },
-    { title: 'Trang thai', dataIndex: 'status' },
+    { title: 'Tên hiển thị', dataIndex: 'fullname' },
+    { title: 'Trạng thái', dataIndex: 'status' },
 ];
 // const dataSource = Array.from({ length: 10 }).map((_, i) => ({
 //     key: i,
@@ -29,12 +35,26 @@ export const ListAccounts = () => {
     const [accounts, setAccounts] = useState([])
 
     const [selectedRows, setSelectedRows] = useState([])
+    const [status, setStatus] = useState(3)
+    const [fullname, setFullname] = useState('')
 
-    const { refresh, setRefresh } = useSession()
+    const { refresh, setRefresh, openNotification } = useSession()
+
+    const [page, setPage] = useState({
+        current_page: 1,
+        total: 1,
+        last_page: 1,
+        per_page: 5,
+    })
 
     useEffect(() => {
         const loadAccounts = async () => {
-            const response = await accountService.getAccounts();
+            const response = await accountService.getAccounts({
+                fullname: fullname,
+                status: status,
+                page: page.current_page,
+                per_page: page.per_page,
+            });
             if (response.status) {
                 setAccounts(response.data.map((item, idx) => {
                     return {
@@ -42,9 +62,10 @@ export const ListAccounts = () => {
                         key: item.id,
                         stt: idx + 1,
                         fullname: item.customers[0].fullname,
-                        status: item.status === 1 ? 'On' : 'Off',
+                        status: item.status === 1 ? 'Hoạt động' : 'Đã khóa',
                     }
                 }))
+                setPage(response.page)
             }
         }
         //
@@ -53,34 +74,35 @@ export const ListAccounts = () => {
 
     }, [refresh])
 
-    const notifications = (response) => {
+    const notifications = () => {
         setSelectedRows([])
         setRefresh(!refresh)
-        alert(response.message)
+
     }
 
     return (
         <>
             <div className="Filter__Table">
                 <Row>
-                    <h1>Bo loc</h1>
+                    <h1>Bộ lọc</h1>
                 </Row>
 
                 <Row justify='left' align='middle' gutter={[16, 16]}>
                     <Col span={24}>
-                        <Input placeholder="Tu khoa" />
+                        <Input placeholder="Tên hiển thị" value={fullname} onChange={(e) => setFullname(e.target.value)} />
                     </Col>
                     <Col>
-                        <Tooltip placement="top" title="trang thai tai khoan">
+                        <Tooltip placement="top" title="Trạng thái tài khoản">
 
                             <Select
-                                defaultValue="0"
+                                defaultValue={3}
                                 style={{ width: 120 }}
-
+                                value={status}
+                                onChange={(e) => setStatus(e)}
                                 options={[
-                                    { value: '0', label: 'Tat ca' },
-                                    { value: '1', label: 'Hoat dong' },
-                                    { value: '2', label: 'Dang khoa' },
+                                    { value: 3, label: 'Tất cả' },
+                                    { value: 1, label: 'Hoạt động' },
+                                    { value: 0, label: 'Đang khóa' },
 
                                 ]}
                             />
@@ -88,14 +110,20 @@ export const ListAccounts = () => {
                     </Col>
 
                     <Col style={{ marginLeft: 'auto' }}>
-                        <Button color="blue" variant="dashed" style={{ marginRight: 10 }}>Reset</Button>
-                        <Button color="lime" variant="solid">Tim kiem</Button>
+                        <Button color="blue" variant="dashed" style={{ marginRight: 10 }} onClick={() => {
+                            setStatus(3)
+                            setFullname('')
+                        }}>Làm mới</Button>
+                        <Button color="lime" variant="solid" onClick={() => {
+                            setRefresh(!refresh)
+                            console.log(status, fullname, page)
+                        }}>Tìm kiếm</Button>
                     </Col>
 
                 </Row>
             </div >
             <div className="Title__Page">
-                <h1>Danh sach tai khoan khach hang</h1>
+                <h1>Danh sách tài khoản khách hàng</h1>
 
 
             </div>
@@ -111,10 +139,16 @@ export const ListAccounts = () => {
                 dataSource={accounts}
                 pagination={{
                     defaultCurrent: 1,
-                    total: 50,
-                    pageSize: 10,
+                    total: page.total,
+                    pageSize: page.per_page,
                     onChange: (item) => {
-                        console.log('page', item)
+                        setPage(page => {
+                            return {
+                                ...page,
+                                current_page: item
+                            }
+                        })
+                        setRefresh(!refresh)
                     }
                 }}
 
@@ -128,12 +162,17 @@ export const ListAccounts = () => {
                                         else {
                                             const response = await accountService.updateAccountStatus(selectedRows, 1)
                                             if (response.status) {
-                                                notifications(response)
+                                                notifications()
+                                                openNotification('Thành công', 'Mở khóa tài khoản thành công', 'success')
+
+                                            } else {
+                                                openNotification('Thất bại', 'Mở khóa tài khoản thất bại', 'error')
+
                                             }
                                         }
                                     }}
                                 >
-                                    Mo khoa
+                                    Mở khóa
                                 </Button>
                                 <Button style={styleButton} color="danger" variant="solid"
                                     onClick={async () => {
@@ -141,12 +180,17 @@ export const ListAccounts = () => {
                                         else {
                                             const response = await accountService.updateAccountStatus(selectedRows, 0)
                                             if (response.status) {
-                                                notifications(response)
+                                                notifications()
+                                                openNotification('Thành công', 'Khóa tài khoản thành công', 'success')
+
+                                            } else {
+                                                openNotification('Thất bại', 'Khóa tài khoản thất bại', 'error')
+
                                             }
                                         }
                                     }}
                                 >
-                                    Khoa
+                                    Khóa
                                 </Button>
                             </div>
                         </>

@@ -12,14 +12,15 @@ import categoryService from "../../../services/categoryService";
 const columns = [
     { title: 'STT', dataIndex: 'stt' },
     {
-        title: 'Anh', dataIndex: 'images', width: 250, render: (images) => {
+        title: 'Ảnh', dataIndex: 'images', width: 100, render: (images) => {
             return <>
                 <div className="Img__TD">
 
                     <Image.PreviewGroup>
                         {
                             images.map(img => {
-                                return <Image width={250} src={`http://127.0.0.1:8000/${img.img}`} />
+                                return <Image width={150} height={100} style={{ objectFit: 'cover' }} src={`http://127.0.0.1:8000/${img.img}`} />
+
                             })
                         }
 
@@ -29,14 +30,14 @@ const columns = [
             </>
         }
     },
-    { title: 'Ten', dataIndex: 'name' },
-    { title: 'Loai', dataIndex: 'category' },
-    { title: 'Mo ta', dataIndex: 'description' },
-    { title: 'Gia', dataIndex: 'price' },
-    { title: 'Giam gia (%)', dataIndex: 'discount' },
-    { title: 'Da ban', dataIndex: 'sold' },
-    { title: 'Diem danh gia', dataIndex: 'rating' },
-    { title: 'Trang thai', dataIndex: 'status' },
+    { title: 'Tên', dataIndex: 'name' },
+    { title: 'Loại', dataIndex: 'category' },
+    { title: 'Mô tả', dataIndex: 'description' },
+    { title: 'Giá', dataIndex: 'price' },
+    { title: 'Giảm giá (%)', dataIndex: 'discount' },
+    { title: 'Đã bán', dataIndex: 'sold' },
+    { title: 'Xếp hạng', dataIndex: 'rating' },
+    { title: 'Trạng thái', dataIndex: 'status' },
 ];
 // const dataSource = Array.from({ length: 10 }).map((_, i) => ({
 //     key: i,
@@ -56,14 +57,31 @@ export const ListFoods = () => {
     const [foods, setFoods] = useState([])
     const [categories, setCategories] = useState([])
     const [selectedRows, setselectedRows] = useState([])
-
     //
-    const { refresh, setRefresh } = useSession();
+    const [categoryId, setCategoryId] = useState(0)
+    const [sortBy, setSortBy] = useState('default')
+    const [status, setStatus] = useState(2)
+    const [name, setName] = useState('')
+    const [page, setPage] = useState({
+        current_page: 1,
+        total: 1,
+        last_page: 1,
+        per_page: 5,
+    })
+    //
+    const { refresh, setRefresh, openNotification } = useSession();
 
     useEffect(() => {
         const loadFoods = async () => {
 
-            const response = await foodService.getFoods();
+            const response = await foodService.getFoods({
+                status: status,
+                name: name,
+                sort_by: sortBy,
+                category_id: categoryId,
+                page: page.current_page,
+                per_page: page.per_page
+            });
             if (response.status) {
                 setFoods(response.data.map((item, idx) => {
                     return {
@@ -71,10 +89,11 @@ export const ListFoods = () => {
                         key: item.id,
                         stt: idx + 1,
                         category: item.category.name,
-                        status: item.status === 1 ? 'On' : 'Off',
+                        status: item.status === 1 ? 'Hiển thị' : 'Đang ẩn',
                         images: item.images,
                     }
                 }))
+                setPage(response.page)
             }
 
         }
@@ -90,8 +109,7 @@ export const ListFoods = () => {
         loadCaregories()
     }, [refresh]);
 
-    const notifications = (response) => {
-        alert(response.message)
+    const notifications = () => {
         setRefresh(!refresh)
         setselectedRows([])
     }
@@ -101,22 +119,24 @@ export const ListFoods = () => {
         <>
             <div className="Filter__Table">
                 <Row>
-                    <h1>Bo loc</h1>
+                    <h1>Bộ lọc</h1>
                 </Row>
 
                 <Row justify='left' align='middle' gutter={[16, 16]}>
                     <Col span={24}>
-                        <Input placeholder="Tu khoa" />
+                        <Input placeholder="Tên" value={name} onChange={e => setName(e.target.value)} />
                     </Col>
                     <Col span={24}>
-                        <Tooltip placement="top" title="loai mon an">
+                        <Tooltip placement="top" title="Loại món ăn">
 
                             <Radio.Group
-                                defaultValue="0"
+                                defaultValue={0}
                                 optionType="button"
                                 buttonStyle="solid"
+                                value={categoryId}
+                                onChange={(e) => setCategoryId(e.target.value)}
                             >
-                                <Radio value='0'>Tat ca</Radio>
+                                <Radio value={0}>Tất cả</Radio>
                                 {
                                     categories.length !== 0 ? <>
                                         {
@@ -130,19 +150,20 @@ export const ListFoods = () => {
                         </Tooltip>
                     </Col>
                     <Col offset={0}>
-                        <Tooltip placement="top" title="sap xep">
+                        <Tooltip placement="top" title="Sắp xếp">
                             <Select
-                                defaultValue="1"
+                                defaultValue="default"
                                 style={{ width: 170 }}
-
+                                value={sortBy}
+                                onChange={e => setSortBy(e)}
                                 options={[
-                                    { value: '1', label: 'Mon an moi' },
-                                    { value: 'sold_desc', label: 'So luong da ban giam dan' },
-                                    { value: 'sold_asc', label: 'So luong da tang dan' },
-                                    { value: 'price_desc', label: 'Gia ban giam dan' },
-                                    { value: 'price_asc', label: 'Gia ban tang dan' },
-                                    { value: 'rating_desc', label: 'Danh gia giam dan' },
-                                    { value: 'rating_asc', label: 'Danh gia tang dan' },
+                                    { value: 'default', label: 'Món mới' },
+                                    { value: 'sold_desc', label: 'Số lượng đã bán giảm dần' },
+                                    { value: 'sold_asc', label: 'Số lượng đã bán tăng dần' },
+                                    { value: 'price_desc', label: 'Giá bán giảm dần' },
+                                    { value: 'price_asc', label: 'Giá bán tăng dần' },
+                                    { value: 'rating_desc', label: 'Đánh giá giảm dần' },
+                                    { value: 'rating_asc', label: 'Đánh giá tăng dần' },
                                 ]}
                             />
 
@@ -150,24 +171,38 @@ export const ListFoods = () => {
                     </Col>
 
                     <Col offset={1}>
-                        <Tooltip placement="top" title="trang thai mon an">
+                        <Tooltip placement="top" title="Trạng thái món ăn">
 
                             <Select
-                                defaultValue="0"
+                                defaultValue={2}
                                 style={{ width: 120 }}
-
+                                value={status}
+                                onChange={e => setStatus(e)}
                                 options={[
-                                    { value: '0', label: 'Tat ca' },
-                                    { value: '1', label: 'Hien thi' },
-                                    { value: '2', label: 'An' },
+                                    { value: 2, label: 'Tất cả' },
+                                    { value: 1, label: 'Hiển thị' },
+                                    { value: 0, label: 'Ẩn' },
 
                                 ]}
                             />
                         </Tooltip>
                     </Col>
                     <Col style={{ marginLeft: 'auto' }}>
-                        <Button color="blue" variant="dashed" style={{ marginRight: 10 }}>Reset</Button>
-                        <Button color="lime" variant="solid">Tim kiem</Button>
+                        <Button color="blue" variant="dashed" style={{ marginRight: 10 }} onClick={() => {
+                            setCategoryId(0)
+                            setSortBy('default')
+                            setName('')
+                            setStatus(2)
+                        }}>Làm mới</Button>
+                        <Button color="lime" variant="solid" onClick={() => {
+                            setPage(page => {
+                                return {
+                                    ...page,
+                                    current_page: 1
+                                }
+                            })
+                            setRefresh(!refresh)
+                        }}>Tìm kiếm</Button>
                     </Col>
 
                 </Row>
@@ -175,7 +210,7 @@ export const ListFoods = () => {
 
             <div className="Title__Page">
 
-                <h1>Danh sach cac mon an</h1>
+                <h1>Danh sách các món ăn</h1>
                 <Button style={styleButton} color="blue" variant="solid"
                     onClick={() => {
                         navigate('/admin/foods/add')
@@ -196,10 +231,16 @@ export const ListFoods = () => {
                 dataSource={foods}
                 pagination={{
                     defaultCurrent: 1,
-                    total: 50,
-                    pageSize: 10,
+                    total: page.total,
+                    pageSize: page.per_page,
                     onChange: (item) => {
-                        console.log('page', item)
+                        setPage(page => {
+                            return {
+                                ...page,
+                                current_page: item
+                            }
+                        })
+                        setRefresh(!refresh)
                     }
                 }}
 
@@ -209,40 +250,50 @@ export const ListFoods = () => {
                             <div className="Footer__Table">
                                 <Button style={styleButton} color="gold" variant="solid"
                                     onClick={() => {
-                                        if (selectedRows.length === 0) alert('0 row selected.')
+                                        if (selectedRows.length === 0) openNotification('Cảnh báo', 'Hãy chọn món ăn', 'warning')
                                         else {
                                             setOpenUpdate(true)
 
                                         }
                                     }}
                                 >
-                                    Chinh sua
+                                    Chỉnh sửa
                                 </Button>
                                 <Button style={styleButton} color="lime" variant="solid"
                                     onClick={async () => {
-                                        if (selectedRows.length === 0) alert('0 row selected.')
+                                        if (selectedRows.length === 0) openNotification('Cảnh báo', 'Hãy chọn món ăn', 'warning')
                                         else {
                                             const response = await foodService.updateFoodStatus(selectedRows, 1);
                                             if (response.status) {
-                                                notifications(response)
+                                                notifications()
+                                                openNotification('Thành công', 'Cập nhật trạng thái thành công', 'success')
+                                            } else {
+                                                openNotification('Thất bại', 'Cập nhật trạng thái thất bại', 'error')
+
                                             }
                                         }
                                     }}
                                 >
-                                    Hien thi
+                                    Hiển thị
                                 </Button>
                                 <Button style={styleButton} color="danger" variant="solid"
                                     onClick={async () => {
-                                        if (selectedRows.length === 0) alert('0 row selected.')
+                                        if (selectedRows.length === 0) openNotification('Cảnh báo', 'Hãy chọn món ăn', 'warning')
+
                                         else {
                                             const response = await foodService.updateFoodStatus(selectedRows, 0);
                                             if (response.status) {
-                                                notifications(response)
+                                                notifications()
+                                                openNotification('Thành công', 'Cập nhật trạng thái thành công', 'success')
+
+                                            } else {
+                                                openNotification('Thất bại', 'Cập nhật trạng thái thất bại', 'error')
+
                                             }
                                         }
                                     }}
                                 >
-                                    An
+                                    Ẩn
                                 </Button>
                             </div>
                         </>

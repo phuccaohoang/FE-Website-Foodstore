@@ -32,7 +32,7 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
     return (
         <>
             <Modal
-                title={<p>Chi tiet don hang</p>}
+                title={<p>Chi tiết đơn hàng</p>}
                 footer={false}
                 open={open}
                 onCancel={onCancel}
@@ -53,33 +53,33 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                         <Col span={24}>
                             <Row gutter={[10, 10]}>
                                 <Col span={8}>
-                                    <Text strong>{order.customer ? order.customer.fullname : null}</Text>
+                                    <Text strong>Tên: {order.customer ? order.customer.fullname : null}</Text>
                                 </Col>
                                 <Col span={8}>
                                     <Text strong>SDT: {order.phone}</Text>
                                 </Col>
                                 <Col span={8}>
-                                    <Text strong>Dia chi: {order.address}</Text>
+                                    <Text strong>Địa chỉ: {order.address}</Text>
                                 </Col>
 
                             </Row>
                             <Row gutter={[10, 10]} style={{ marginTop: '10px' }}>
                                 <Col span={8}>
-                                    <Text strong>Tong don hang: {order.quantity}</Text>
+                                    <Text strong>Tổng số lượng: {order.quantity}</Text>
                                 </Col>
                                 <Col span={8}>
-                                    <Text strong>Giam gia don hang: {order.coupon ? order.coupon.discount : '0.00'} vnd</Text>
+                                    <Text strong>Giảm giá đơn hàng: {order.coupon ? order.coupon.discount : '0.00'} vnd</Text>
                                 </Col>
                                 <Col span={8}>
-                                    <Text strong>Gia van chuyen: {order.delivery_cost} vnd</Text>
+                                    <Text strong>Giá vận chuyển: {order.delivery_cost} vnd</Text>
                                 </Col>
                             </Row>
                             <Row gutter={[10, 10]} style={{ marginTop: '10px' }}>
                                 <Col span={16}>
-                                    <Text strong>Ghi chu: {order.note}</Text>
+                                    <Text strong>Ghi chú: {order.note}</Text>
                                 </Col>
                                 <Col span={8}>
-                                    <Text strong>Trang thai: {order.order_status ? order.order_status.name : ''}</Text>
+                                    <Text strong>Trạng thái: {order.order_status ? order.order_status.name : ''}</Text>
                                 </Col>
 
                             </Row>
@@ -90,11 +90,11 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                                 style={{ width: '100%' }}
                                 columns={[
                                     { title: 'STT', dataIndex: 'stt' },
-                                    { title: 'Mon an', dataIndex: 'name' },
-                                    { title: 'So luong mon an', dataIndex: 'quantity' },
-                                    { title: 'Gia tien (VND)', dataIndex: 'price' },
-                                    { title: 'Giam gia (%)', dataIndex: 'discount' },
-                                    { title: 'Tong tien (VND)', dataIndex: 'total_money' },
+                                    { title: 'Món ăn', dataIndex: 'name' },
+                                    { title: 'Số lượng món ăn', dataIndex: 'quantity' },
+                                    { title: 'Giá tiền (VND)', dataIndex: 'price' },
+                                    { title: 'Giảm giá (%)', dataIndex: 'discount' },
+                                    { title: 'Tổng tiền (VND)', dataIndex: 'total_money' },
                                 ]}
                                 dataSource={order_details}
                                 pagination={false}
@@ -105,7 +105,7 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                                         <>
                                             <Row justify={'end'}>
                                                 <Col>
-                                                    <strong>Tong don hang: <span style={{ fontSize: 20, margin: '0 5px' }}>230.000</span> vnd</strong>
+                                                    <strong>Tổng đơn hàng: <span style={{ fontSize: 20, margin: '0 5px' }}>230.000</span> vnd</strong>
                                                 </Col>
                                             </Row>
                                         </>
@@ -113,16 +113,21 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                                 }}
                             />
                         </Col>
-                        <Col span={24} style={{ display: 'flex', justifyContent: 'right', columnGap: '10px' }}>
-                            < Button style={styleButton} color="gold" variant="solid" onClick={() => { setOpenUpdate(true) }}>
-                                Cap nhat trang thai
-                            </Button>
-                            <Button style={styleButton} color="red" variant="solid"
-                                onClick={() => setOpenCancel(true)}
-                            >
-                                Huy don
-                            </Button>
-                        </Col>
+                        {
+                            (order.order_status_id != 5 && order.order_status_id != 4) ? <>
+                                <Col span={24} style={{ display: 'flex', justifyContent: 'right', columnGap: '10px' }}>
+                                    < Button style={styleButton} color="gold" variant="solid" onClick={() => { setOpenUpdate(true) }}>
+                                        Cập nhật trạng thái
+                                    </Button>
+                                    <Button style={styleButton} color="red" variant="solid"
+                                        onClick={() => setOpenCancel(true)}
+                                    >
+                                        Hủy đơn
+                                    </Button>
+                                </Col>
+                            </> : null
+                        }
+
 
 
                     </Row>
@@ -130,7 +135,7 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
             </Modal >
 
             <ModalUpdateOrder
-                orders={[order.id]} open={openUpdate} onCancel={() => {
+                orders={[order.id]} order_status_id={order.order_status_id} open={openUpdate} onCancel={() => {
                     setOpenUpdate(false)
                     onCancel()
                 }}

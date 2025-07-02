@@ -15,11 +15,13 @@ export const Login = () => {
     const { user, setUser } = useSession()
     const [api, contextHolder] = notification.useNotification()
 
-    const openNotification = (message, description) => {
-        api.open({
+    const openNotification = (message, description, type = 'info') => {
+        api[type]({
             message: message,
             description: description,
             showProgress: true,
+            pauseOnHover: false,
+            placement: 'topLeft'
         })
     }
 
@@ -43,12 +45,13 @@ export const Login = () => {
 
                                 setUser({ ...response2.data })
                             } else {
-                                openNotification('Title notification', 'description1')
-                                console.log(response2)
+                                openNotification('Thất bại', 'Lấy thông tin tài khoản thất bại', 'error')
+
                             }
                         } else {
-                            console.log(response)
-                            openNotification('Title notification', 'description')
+
+                            openNotification('Thất bại', 'Đăng nhập thất bại, kiểm tra tài khoản hoặc mật khẩu', 'error')
+
                         }
                     }}
                     onFinishFailed={onFinishFailed}

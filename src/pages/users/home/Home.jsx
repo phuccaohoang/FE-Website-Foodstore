@@ -26,17 +26,34 @@ const slidesStyle = {
 };
 export const Home = () => {
 
-    const [foods, setFoods] = useState([])
+    const [foodsAll, setFoodsAll] = useState([])
+    const [foodsDiscount, setFoodsDiscount] = useState([])
 
     useEffect(() => {
 
-        const loadFoods = async () => {
-            const response = await foodService.getFoods();
+        const loadFoodsAll = async () => {
+            const response = await foodService.getFoods({
+                per_page: 8,
+                status: 1,
+            });
             if (response.status) {
-                setFoods(response.data)
+                setFoodsAll(response.data)
             }
         }
-        loadFoods()
+        //
+        const loadFoodsDiscount = async () => {
+            const response = await foodService.getFoods({
+                per_page: 4,
+                status: 1,
+                sort_by: 'discount_desc',
+            });
+            if (response.status) {
+                setFoodsDiscount(response.data)
+            }
+        }
+        //
+        loadFoodsAll()
+        loadFoodsDiscount()
     }, [])
 
 
@@ -71,12 +88,17 @@ export const Home = () => {
             </div>
             {/* danh sach */}
             <FoodList
+                title={'Món ăn ưu đãi'}
+                foods={foodsDiscount}
+                openFooter={false}
+
+            />
+            {/* danh sach */}
+            <FoodList
                 title={'Tất cả món ăn'}
-                foods={foods}
+                foods={foodsAll}
                 openFooter={true}
-                onClickFooter={() => {
-                    alert('xem them')
-                }}
+
             />
         </>
     )

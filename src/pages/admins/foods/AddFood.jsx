@@ -4,12 +4,14 @@ import TextArea from "antd/es/input/TextArea"
 import { useEffect, useRef, useState } from "react"
 import categoryService from "../../../services/categoryService"
 import foodService from "../../../services/foodService"
+import { useSession } from "../../../context/SessionContext"
 const { options } = Select
 
 export const AddFood = () => {
 
     const [form] = Form.useForm()
     const [categories, setCategories] = useState([])
+    const { openNotification } = useSession()
 
     useEffect(() => {
         const loadCategories = async () => {
@@ -23,7 +25,7 @@ export const AddFood = () => {
     return (
         <>
             <div className="Title__Page">
-                <h1>Them mon an moi</h1>
+                <h1>Thêm món ăn mới</h1>
             </div>
             <Form
                 form={form}
@@ -49,8 +51,11 @@ export const AddFood = () => {
 
                     const response = await foodService.storeFood(formData)
                     if (response.status) {
-                        alert(response.message)
+                        openNotification('Thành công', 'Thêm món mới thành công', 'success')
                         form.resetFields()
+                    } else {
+                        openNotification('Thất bại', 'Thêm món mới thất bại', 'error')
+
                     }
                 }}
             >
@@ -59,14 +64,14 @@ export const AddFood = () => {
                     <Col span={12}>
                         <Row>
                             <Col span={24}>
-                                <Form.Item label="Ten mon an" name="name" rules={[{ required: true }]} initialValue={null}>
+                                <Form.Item label="Tên" name="name" rules={[{ required: true, message: 'Không được bỏ trống' }]} initialValue={null}>
                                     <Input />
                                 </Form.Item>
                             </Col>
                         </Row>
                         <Row>
                             <Col span={24}>
-                                <Form.Item label="Loai mon an" name="category_id" rules={[{ required: true }]}>
+                                <Form.Item label="Loại món ăn" name="category_id" rules={[{ required: true, message: 'Không được bỏ trống' }]}>
                                     <Select>
                                         {
                                             categories.length !== 0 ? categories.map((item) => {
@@ -79,7 +84,7 @@ export const AddFood = () => {
                         </Row>
                         <Row>
                             <Col span={24}>
-                                <Form.Item label="Gia ban (VND)" name="price" rules={[{ required: true }]} initialValue={10000}>
+                                <Form.Item label="Giá bán (VND)" name="price" rules={[{ required: true, message: 'Không được bỏ trống' }]} initialValue={10000}>
                                     <InputNumber
                                         style={{ width: '100%' }}
                                         defaultValue="10000"
@@ -90,7 +95,7 @@ export const AddFood = () => {
                         </Row>
                         <Row>
                             <Col span={24}>
-                                <Form.Item label="Giam gia (%)" name="discount" rules={[{ required: true }]} initialValue={0}>
+                                <Form.Item label="Giảm giá (%)" name="discount" rules={[{ required: true, message: 'Không được bỏ trống' }]} initialValue={0}>
                                     <InputNumber
                                         style={{ width: '100%' }}
                                         defaultValue={0}
@@ -103,19 +108,19 @@ export const AddFood = () => {
                         </Row>
                         <Row>
                             <Col span={24}>
-                                <Form.Item label="Mo ta" name="description" rules={[{ required: false }]} initialValue={null}>
+                                <Form.Item label="Mô tả" name="description" rules={[{ required: false }]} initialValue={null}>
                                     <TextArea rows={5} placeholder="Mo ta mon an" maxLength={300} />
                                 </Form.Item>
                             </Col>
                         </Row>
                         <Row>
                             <Col span={24}>
-                                <Form.Item label="Trang thai" name="status" rules={[{ required: true }]} initialValue={1}>
+                                <Form.Item label="Trạng thái" name="status" rules={[{ required: true, message: 'Không được bỏ trống' }]} initialValue={1}>
                                     <Select
                                         defaultValue={1}
                                         options={[
-                                            { value: 0, label: 'An' },
-                                            { value: 1, label: 'Hien thi' },
+                                            { value: 0, label: 'Ẩn' },
+                                            { value: 1, label: 'Hiển thị' },
                                         ]}
                                     />
                                 </Form.Item>
@@ -123,14 +128,14 @@ export const AddFood = () => {
                         </Row>
                         <Row>
                             <Col span={24} style={{ textAlign: 'right' }}>
-                                <Button color="blue" variant="dashed" onClick={() => form.resetFields()}>lam moi</Button>
+                                <Button color="blue" variant="dashed" onClick={() => form.resetFields()}>Làm mới</Button>
                                 &nbsp;
-                                <Button color="blue" variant="solid" htmlType="submit">Xac nhan</Button>
+                                <Button color="blue" variant="solid" htmlType="submit">Xác nhận</Button>
                             </Col>
                         </Row>
                     </Col>
                     <Col offset={1} span={11}>
-                        <Form.Item label="Anh mon an" name="images" rules={[{ required: true }]}>
+                        <Form.Item label="Anh mon an" name="images" rules={[{ required: true, message: 'Không được bỏ trống' }]}>
                             <Upload
                                 action=''
                                 listType="picture"

@@ -80,7 +80,7 @@ export const Account = () => {
                                             style={{ overflow: "hidden", width: '100%', height: "300px", textAlign: 'center' }}
                                         >
 
-                                            <img style={{ height: '100%', aspectRatio: '1', borderRadius: '50%' }} src={url} />
+                                            <img style={{ height: '100%', aspectRatio: '1', borderRadius: '50%', objectFit: 'cover' }} src={url} />
                                         </Upload>
                                     </Tooltip>
                                 </Col>

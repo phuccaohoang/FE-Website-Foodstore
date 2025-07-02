@@ -2,11 +2,14 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { Form, Input, Button, message } from 'antd';
 import './register.css';
 import accountService from '../../../services/accountService';
+import { useSession } from '../../../context/SessionContext';
+
 
 const existingUsers = ['test@example.com', 'admin@pizza.vn'];
 
 export const Register = () => {
     const [form] = Form.useForm();
+    const { contextHolder, openNotification } = useSession()
 
     const onFinish = async (values) => {
         const email = values.email.trim().toLowerCase();
@@ -15,7 +18,10 @@ export const Register = () => {
             email: email,
         })
         if (response.status) {
-            alert(response.message)
+            openNotification('Thành công', 'Mật khẩu đã được gửi về mail của bạn', 'success')
+        } else {
+            openNotification('Thất bại', 'Đã có lỗi xảy ra vui lòng thử lại', 'error')
+
         }
         form.resetFields();
     };
@@ -24,6 +30,7 @@ export const Register = () => {
 
         <>
             <div className="register-container">
+                {contextHolder}
                 <Form
                     form={form}
                     name="register"
