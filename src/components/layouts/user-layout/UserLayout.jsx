@@ -21,10 +21,10 @@ export const UserLayout = () => {
     const toggleChat = () => setVisible(!visible);
     //tao link
     const navigate = useNavigate()
-    const { setUser, user, note, contextHolder } = useSession()
+    const { setUser, user, note, contextHolder, openNotification } = useSession()
 
     //mo tat thong bao
-    const [openNotification, setOpenNotification] = useState(false);
+    const [openNotificationUser, setOpenNotificationUser] = useState(false);
     const baseUrl = 'http://127.0.0.1:8000/'
     const url = (user && user.avatar) ? `${baseUrl}${user.avatar}` : avatar
 
@@ -92,7 +92,7 @@ export const UserLayout = () => {
                             }
                             else {
 
-                                setOpenNotification(true)
+                                setOpenNotificationUser(true)
                             }
                         }}>
 
@@ -155,8 +155,12 @@ export const UserLayout = () => {
                                                 onClick: async () => {
                                                     const response = await accountService.logout()
                                                     if (response.status) {
+
                                                         setUser(null)
                                                         navigate('/login')
+                                                    } else {
+                                                        openNotification('Thất bại', 'Đã có lỗi xảy ra vui lòng thử lại.', 'error')
+
                                                     }
                                                 }
                                             },
@@ -247,8 +251,8 @@ export const UserLayout = () => {
                 </Footer>
             </Layout >
 
-            <ModalNotification open={openNotification} onClose={() => {
-                setOpenNotification(false)
+            <ModalNotification open={openNotificationUser} onClose={() => {
+                setOpenNotificationUser(false)
             }} />
         </>
     )

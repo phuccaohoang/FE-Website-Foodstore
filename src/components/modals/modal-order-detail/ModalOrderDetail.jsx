@@ -75,8 +75,11 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                                 </Col>
                             </Row>
                             <Row gutter={[10, 10]} style={{ marginTop: '10px' }}>
-                                <Col span={16}>
+                                <Col span={8}>
                                     <Text strong>Ghi chú: {order.note}</Text>
+                                </Col>
+                                <Col span={8}>
+                                    <Text strong>Tình trạng thanh toán: {order.is_payment ? 'Đã thanh toán' : 'Chưa thanh toán'}</Text>
                                 </Col>
                                 <Col span={8}>
                                     <Text strong>Trạng thái: {order.order_status ? order.order_status.name : ''}</Text>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Row, Col, Card, Typography, Input, Button, Tabs, Divider } from 'antd';
+import { Row, Col, Card, Typography, Input, Button, Tabs, Divider, Result, Modal } from 'antd';
 import { CreditCardOutlined } from '@ant-design/icons';
 import { NavLink, useNavigate } from 'react-router-dom';
 import logo from '../../../assets/logo.jpg';
@@ -14,6 +14,7 @@ export const PayATM = () => {
 
     const { user, setUser, contextHolder, openNotification, payment } = useSession()
     const navigate = useNavigate()
+    const [openMessage, setOpenMessage] = useState(false)
 
     useEffect(() => {
         if (payment.cart_ids.length === 0) {
@@ -22,7 +23,7 @@ export const PayATM = () => {
     }, [])
     return (
         <>
-            {contextHolder}
+
             <div style={{ maxWidth: '800px', margin: '20px  auto' }}>
                 <Card style={{ marginBottom: '20px' }}>
                     <Title style={{ fontSize: '30px' }} level={5}>Thông tin đơn hàng</Title>
@@ -129,7 +130,8 @@ export const PayATM = () => {
                                                         }
 
                                                     })
-                                                    navigate('/my-cart')
+                                                    setOpenMessage(true)
+
 
                                                 }
                                                 else {
@@ -148,6 +150,28 @@ export const PayATM = () => {
                     </Tabs>
                 </Card>
             </div>
+
+            <Modal
+                footer={false}
+                open={openMessage}
+                onCancel={() => {
+                    setOpenMessage(false)
+                    navigate('/my-cart')
+                }}
+                centered={true}
+                width={800}
+            >
+                <Result
+                    status="success"
+                    title="Đơn hàng đã đặt thành công!"
+                    extra={[
+                        <Button type="primary" key="console" style={{ padding: '20px 30px', fontSize: '20px' }} onClick={() => navigate('/my-order')}>
+                            Xem đơn hàng
+                        </Button>,
+                        <Button key="buy" style={{ padding: '20px 30px', fontSize: '20px', marginLeft: 20 }} onClick={() => navigate('/explore')}>Mua tiếp</Button>,
+                    ]}
+                />
+            </Modal>
         </>
     );
 };

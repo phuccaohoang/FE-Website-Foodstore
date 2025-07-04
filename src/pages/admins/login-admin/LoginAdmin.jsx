@@ -4,7 +4,7 @@ import accountService from '../../../services/accountService';
 import { useSession } from '../../../context/SessionContext';
 
 export const LoginAdmin = () => {
-    const { user, setUser } = useSession()
+    const { user, setUser, openNotification } = useSession()
 
 
     return (
@@ -12,15 +12,23 @@ export const LoginAdmin = () => {
             <Form
                 name="basic"
                 layout="vertical"
-                className="lrf-form Form__Input" // log in- register-for got from
+                className="lrf-form Form__Input"
                 initialValues={{ remember: true }}
                 onFinish={async (value) => {
                     const response = await accountService.login(value.email, value.password, 1)
                     if (response.status) {
                         const response2 = await accountService.me()
                         if (response2.status) {
+                            openNotification('Thành công', 'Đăng nhập thành công.', 'success')
                             setUser({ ...response2.data })
+                        } else {
+                            openNotification('Thất bại', 'Lấy dữ liệu thất bại.', 'error')
+
+
                         }
+                    } else {
+                        openNotification('Thất bại', 'Đăng nhập thất bại.', 'error')
+
                     }
                 }}
 

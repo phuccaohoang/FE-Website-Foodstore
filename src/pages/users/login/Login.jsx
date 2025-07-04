@@ -12,22 +12,13 @@ const onFinishFailed = errorInfo => {
 };
 
 export const Login = () => {
-    const { user, setUser } = useSession()
-    const [api, contextHolder] = notification.useNotification()
+    const { user, setUser, openNotification, setLoading } = useSession()
 
-    const openNotification = (message, description, type = 'info') => {
-        api[type]({
-            message: message,
-            description: description,
-            showProgress: true,
-            pauseOnHover: false,
-            placement: 'topLeft'
-        })
-    }
+
+
 
     return (
         <>
-            {contextHolder}
             <div className="login-container">
                 <Form
                     name="basic"
@@ -37,11 +28,12 @@ export const Login = () => {
                     onFinish={async (value) => {
 
 
-
+                        setLoading(true)
                         const response = await accountService.login(value.email, value.password)
                         if (response.status) {
                             const response2 = await accountService.me()
                             if (response2.status) {
+                                openNotification('Thành công', 'Đăng nhập thành công.', 'success')
 
                                 setUser({ ...response2.data })
                             } else {
@@ -53,6 +45,7 @@ export const Login = () => {
                             openNotification('Thất bại', 'Đăng nhập thất bại, kiểm tra tài khoản hoặc mật khẩu', 'error')
 
                         }
+                        setLoading(false)
                     }}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"

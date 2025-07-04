@@ -20,7 +20,7 @@ export const Account = () => {
 
     return (
         <>
-            {contextHolder}
+
             <Card style={{ margin: '10px 0', width: '' }}>
                 <Tabs defaultActiveKey="1" tabBarGutter={32}>
                     <TabPane tab="Thông tin cá nhân" key="1">
@@ -39,10 +39,10 @@ export const Account = () => {
                                             },
                                         }
                                     })
-                                    openNotification('success', 'description')
+                                    openNotification('Thành công', 'Cập nhật tài khoản thành công.', 'success')
                                 }
                                 else {
-                                    openNotification('error', 'description')
+                                    openNotification('Thất bại', 'Cập nhật tài khoản thất bại.', 'error')
 
                                 }
                             }}
@@ -67,13 +67,10 @@ export const Account = () => {
                                                 formData.append('image', value.file.originFileObj)
                                                 const response = await accountService.updateAvatar(formData);
                                                 if (response.status) {
-                                                    // alert(response.message)
-                                                    openNotification('success', 'description')
-
                                                     navigate(0)
                                                 }
                                                 else {
-                                                    openNotification('error', 'description')
+                                                    openNotification('Thất bại', 'Cập nhật ảnh thất bại.', 'error')
 
                                                 }
                                             }}

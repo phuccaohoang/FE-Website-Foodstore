@@ -25,9 +25,26 @@ export const ListOrders = () => {
 
     const { refresh, setRefresh } = useSession()
 
+    //
+    const [orderStatusId, setOrderStatusId] = useState(0)
+    const [fullname, setFullname] = useState('')
+    const [sortBy, setSortBy] = useState('default')
+    const [page, setPage] = useState({
+        current_page: 1,
+        total: 1,
+        last_page: 1,
+        per_page: 1,
+    })
+
     useEffect(() => {
         const loadOrders = async () => {
-            const response = await orderService.getOrders()
+            const response = await orderService.getOrders({
+                order_status_id: orderStatusId,
+                fullname: fullname,
+                sort_by: sortBy,
+                per_page: page.per_page,
+                page: page.current_page
+            })
             if (response.status) {
                 setOrders(response.data.map((item, idx) => {
                     let discount = item.coupon ? item.coupon.discount : 0;
@@ -38,9 +55,14 @@ export const ListOrders = () => {
                         fullname: item.customer.fullname,
                         status: item.order_status.name,
                         discount: discount,
-                        total_money: Number(item.total_amount) - Number(discount)
+                        is_payment: item.is_payment ? 'Đã thanh toán' : 'Chưa thanh toán',
+                        total_money: Number(item.total_amount) - Number(discount),
+                        created_at: item.created_at.slice(0, 10)
                     }
                 }))
+                setPage(response.page)
+
+
             }
         }
         //
@@ -51,23 +73,25 @@ export const ListOrders = () => {
         <>
             <div className="Filter__Table">
                 <Row>
-                    <h1>Bo loc</h1>
+                    <h1>Bộ lọc</h1>
                 </Row>
 
                 <Row justify='left' align='middle' gutter={[16, 16]}>
                     <Col span={24}>
-                        <Input placeholder="Tu khoa" />
+                        <Input placeholder="Tên khách hàng" value={fullname} onChange={e => setFullname(e.target.value)} />
                     </Col>
 
                     <Col offset={0}>
-                        <Tooltip placement="top" title="sap xep theo tong don hang">
+                        <Tooltip placement="top" title="Sắp xếp theo tổng đơn hàng">
                             <Select
-                                defaultValue="1"
+                                value={sortBy}
+                                onChange={item => setSortBy(item)}
                                 style={{ width: 220 }}
 
                                 options={[
-                                    { value: '1', label: 'Tong don hang giam dan' },
-                                    { value: '2', label: 'Tong don hang tang dan' },
+                                    { value: 'default', label: 'Mới nhất' },
+                                    { value: 'total_amount_desc', label: 'Tổng đơn hàng giảm dần' },
+                                    { value: 'total_amount_asc', label: 'Tổng đơn hàng tăng dần' },
                                 ]}
                             />
 
@@ -75,34 +99,47 @@ export const ListOrders = () => {
                     </Col>
 
                     <Col offset={1}>
-                        <Tooltip placement="top" title="trang thai don hang">
+                        <Tooltip placement="top" title="Trạng thái đơn hàng">
 
                             <Select
-                                defaultValue="0"
+                                defaultValue={0}
                                 style={{ width: 120 }}
-
+                                value={orderStatusId}
+                                onChange={value => setOrderStatusId(value)}
                                 options={[
-                                    { value: '0', label: 'Tat ca' },
-                                    { value: '1', label: 'Chua duyet' },
-                                    { value: '2', label: 'Da duyet' },
-                                    { value: '3', label: 'Dang giao' },
-                                    { value: '4', label: 'Da giao' },
-                                    { value: '5', label: 'Da huy' },
+                                    { value: 0, label: 'Tất cả' },
+                                    { value: 1, label: 'Chưa duyệt' },
+                                    { value: 2, label: 'Đã duyệt' },
+                                    { value: 3, label: 'Đang giao' },
+                                    { value: 4, label: 'Đã giao' },
+                                    { value: 5, label: 'Đã hủy' },
 
                                 ]}
                             />
                         </Tooltip>
                     </Col>
                     <Col style={{ marginLeft: 'auto' }}>
-                        <Button color="blue" variant="dashed" style={{ marginRight: 10 }}>Reset</Button>
-                        <Button color="lime" variant="solid">Tim kiem</Button>
+                        <Button color="blue" variant="dashed" style={{ marginRight: 10 }} onClick={() => {
+                            setFullname('')
+                            setOrderStatusId(0)
+                            setSortBy('default')
+                        }}>Làm mới</Button>
+                        <Button color="lime" variant="solid" onClick={() => {
+                            setPage(page => {
+                                return {
+                                    ...page,
+                                    current_page: 1
+                                }
+                            })
+                            setRefresh(!refresh)
+                        }}>Tìm kiếm</Button>
                     </Col>
 
                 </Row>
             </div >
 
             <div className="Title__Page">
-                <h1>Danh sach cac don hang</h1>
+                <h1>Danh sách đơn hàng</h1>
             </div>
             <Table
                 // rowSelection={{
@@ -114,18 +151,20 @@ export const ListOrders = () => {
                 // }}
                 columns={[
                     { title: 'STT', dataIndex: 'stt' },
-                    { title: 'Ten khach hang', dataIndex: 'fullname' },
+                    { title: 'Tên khách hàng', dataIndex: 'fullname' },
                     { title: 'SDT', dataIndex: 'phone' },
-                    { title: 'Dia chi nhan hang', dataIndex: 'address' },
-                    { title: 'Ghi chu', dataIndex: 'note' },
-                    { title: 'Tong don hang', dataIndex: 'total_amount' },
-                    { title: 'So luong mon an', dataIndex: 'quantity' },
-                    { title: 'Gia van chuyen', dataIndex: 'delivery_cost' },
-                    { title: 'Giam gia', dataIndex: 'discount' },
-                    { title: 'Tong tien phai tra', dataIndex: 'total_money' },
-                    { title: 'Trang thai', dataIndex: 'status' },
+                    { title: 'Địa chỉ', dataIndex: 'address' },
+                    { title: 'Ghi chú', dataIndex: 'note' },
+                    { title: 'Tổng đơn hàng', dataIndex: 'total_amount' },
+                    { title: 'Số lượng món ăn', dataIndex: 'quantity' },
+                    { title: 'Giá vận chuyển', dataIndex: 'delivery_cost' },
+                    { title: 'Giảm giá', dataIndex: 'discount' },
+                    { title: 'Tổng tiền phải trả', dataIndex: 'total_money' },
+                    { title: 'Thanh toán', dataIndex: 'is_payment' },
+                    { title: 'Trạng thái', dataIndex: 'status' },
+                    { title: 'Ngày đặt', dataIndex: 'created_at' },
                     {
-                        title: 'Chuc nang', dataIndex: 'id',
+                        title: 'Chức năng', dataIndex: 'id',
                         render: (item, record) => {
                             return (
                                 <>
@@ -133,7 +172,7 @@ export const ListOrders = () => {
                                         setOrder(record)
                                         setOpenOrderDetail(true)
                                     }}>
-                                        Xem chi tiet
+                                        Xem chi tiết
                                     </Button>
                                 </>
                             )
@@ -143,10 +182,16 @@ export const ListOrders = () => {
                 dataSource={orders}
                 pagination={{
                     defaultCurrent: 1,
-                    total: 50,
-                    pageSize: 10,
+                    total: page.total,
+                    pageSize: page.per_page,
                     onChange: (item) => {
-                        console.log('page', item)
+                        setPage(page => {
+                            return {
+                                ...page,
+                                current_page: item
+                            }
+                        })
+                        setRefresh(!refresh)
                     }
                 }}
 

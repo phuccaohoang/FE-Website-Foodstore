@@ -26,7 +26,7 @@ export const SessionProvider = ({ children }) => {
             description: description,
             showProgress: true,
             pauseOnHover: false,
-            placement: 'topLeft'
+            placement: 'top'
         })
     }
 
@@ -53,7 +53,9 @@ export const SessionProvider = ({ children }) => {
         contextHolder,
         openNotification,
         note,
-        setNote
+        setNote,
+        loading,
+        setLoading,
     }
     return (
         <SessionContext.Provider value={contextValue}>

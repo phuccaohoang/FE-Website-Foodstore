@@ -114,7 +114,7 @@ export const FoodCard = ({ food }) => {
                     food.rating ? <>
                         <Rate allowHalf disabled defaultValue={food.rating} style={{ fontSize: 16 }} />
                     </> : <>
-                        <span style={{ fontSize: 16 }}>Chua co danh gia</span>
+                        <span style={{ fontSize: 16 }}>Chưa có đánh giá</span>
                     </>
                 }
                 <span style={{ color: '#555', fontSize: 16 }}>Đã bán {food.sold}</span>
@@ -137,7 +137,7 @@ export const FoodCard = ({ food }) => {
 
                             const response = await cartService.storeCart(food.id, 1)
                             if (response.status) {
-                                openNotification('Thành công', 'Thêm món ăn vào giỏ thành công', 'success')
+                                openNotification('Thành công', 'Thêm món ăn vào giỏ thành công.', 'success')
                                 setUser(user => {
                                     return {
                                         ...user,
@@ -145,7 +145,8 @@ export const FoodCard = ({ food }) => {
                                     }
                                 })
                             } else {
-                                openNotification('Thông báo', 'Đã có trong giỏ')
+                                openNotification('Thông báo', "Sản phẩm đã có trong giỏ hãy vào giỏ chỉnh sửa.", 'info')
+
 
                             }
                         }

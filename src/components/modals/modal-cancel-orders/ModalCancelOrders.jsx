@@ -97,17 +97,17 @@ export const ModalCancelOrder = ({ orders, open, onCancel, type = 'admin' }) => 
                                     if (text = text.trim()) {
                                         const response = await orderService.cancelOrder(orders, text)
                                         if (response.status) {
-                                            openNotification('success', 'description')
+                                            openNotification('Thành công', 'Hủy đơn thành công', 'success')
                                             setRefresh(!refresh)
                                             onCancel()
                                         }
                                         else {
-                                            openNotification('error', 'description')
+                                            openNotification('Thất bại', 'Hủy đơn thất bại', 'error')
 
                                         }
                                     }
                                     else {
-                                        openNotification('warning', 'description')
+                                        openNotification('Cảnh báo', 'Không bỏ trống.', 'warning')
 
                                     }
 

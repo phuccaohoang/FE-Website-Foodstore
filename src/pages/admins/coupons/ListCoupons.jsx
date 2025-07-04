@@ -9,14 +9,14 @@ import { useSession } from "../../../context/SessionContext";
 
 const columns = [
     { title: 'STT', dataIndex: 'stt' },
-    { title: 'Ten', dataIndex: 'name' },
-    { title: 'Mo ta', dataIndex: 'description' },
-    { title: 'Don hang toi thieu', dataIndex: 'min_order_value' },
-    { title: 'Giam gia (vnd)', dataIndex: 'discount' },
-    { title: 'So luong', dataIndex: 'quantity' },
-    { title: 'Ngay het han', dataIndex: 'expire_date' },
-    { title: 'Khach hang ap dung', dataIndex: 'is_public' },
-    { title: 'Trang thai', dataIndex: 'status' },
+    { title: 'Tên', dataIndex: 'name' },
+    { title: 'Mô tả', dataIndex: 'description' },
+    { title: 'Đơn hàng tối thiểu', dataIndex: 'min_order_value' },
+    { title: 'Giảm giá (vnd)', dataIndex: 'discount' },
+    { title: 'Số lượng', dataIndex: 'quantity' },
+    { title: 'Ngày hết hạn', dataIndex: 'expire_date' },
+    { title: 'Khách hàng áp dụng', dataIndex: 'is_public' },
+    { title: 'Trạng thái', dataIndex: 'status' },
 ];
 // const dataSource = Array.from({ length: 10 }).map((_, i) => ({
 //     key: i,
@@ -35,11 +35,25 @@ export const ListCoupons = () => {
     const [coupons, setCoupons] = useState([])
 
     const [selectedRows, setSelectedRows] = useState([])
-    const { refresh, setRefresh } = useSession()
+    const { refresh, setRefresh, openNotification } = useSession()
+
+    const [sortBy, setSortBy] = useState('default')
+    const [status, setStatus] = useState(2)
+    const [page, setPage] = useState({
+        current_page: 1,
+        total: 1,
+        last_page: 1,
+        per_page: 5,
+    })
 
     useEffect(() => {
         const loadCoupons = async () => {
-            const response = await couponService.getCoupons()
+            const response = await couponService.getCoupons({
+                sort_by: sortBy,
+                status: status,
+                page: page.current_page,
+                per_page: page.per_page
+            })
 
             if (response.status) {
                 setCoupons(response.data.map((item, idx) => {
@@ -47,10 +61,11 @@ export const ListCoupons = () => {
                         ...item,
                         key: item.id,
                         stt: idx + 1,
-                        is_public: item.is_public === 1 ? 'All' : 'Limit',
-                        status: item.status === 1 ? 'On' : 'Off'
+                        is_public: item.is_public === 1 ? 'Tất cả' : 'Giới hạn',
+                        status: item.status === 1 ? 'Hoạt động' : 'Đang khóa'
                     }
                 }))
+                setPage(response.page)
             }
         }
         //
@@ -61,53 +76,46 @@ export const ListCoupons = () => {
         <>
             <div className="Filter__Table">
                 <Row>
-                    <h1>Bo loc</h1>
+                    <h1>Bộ lọc</h1>
                 </Row>
 
                 <Row justify='left' align='middle' gutter={[16, 16]}>
                     <Col offset={0}>
-                        <Tooltip placement="top" title="sap xep theo don hang toi thieu">
+                        <Tooltip placement="top" title="Sắp xếp theo giá trị đơn hàng">
 
                             <Select
-                                defaultValue="1"
                                 style={{ width: 220 }}
-
+                                value={sortBy}
+                                onChange={item => setSortBy(item)}
                                 options={[
-                                    { value: '1', label: 'Don hang toi thieu giam dan' },
-                                    { value: '2', label: 'Don hang toi thieu tang dan' },
+                                    { value: "default", label: 'Mới nhất' },
+                                    { value: "min_order_value_desc", label: 'Đơn hàng tối thiểu giảm dần' },
+                                    { value: "min_order_value_asc", label: 'Đơn hàng tối thiểu tăng dần' },
+                                    { value: "discount_asc", label: 'Giảm giá tăng dần' },
+                                    { value: "discount_desc", label: 'Giảm giá giảm dần' },
+                                    { value: "quantity_desc", label: 'Số lượng phiếu giảm dần' },
+                                    { value: "quantity_asc", label: 'Số lượng phiếu tăng dần' },
+                                    { value: "expire_date_desc", label: 'Ngày hết hạn giảm dần' },
+                                    { value: "expire_date_asc", label: 'Ngày hết hạn tăng dần' },
 
                                 ]}
                             />
                         </Tooltip>
                     </Col>
 
+
                     <Col offset={1}>
-                        <Tooltip placement="top" title="Khach hang ap dung">
+                        <Tooltip placement="top" title="Trạng thái phiếu giảm giá">
 
                             <Select
-                                defaultValue="0"
+                                defaultValue={2}
                                 style={{ width: 120 }}
-
+                                value={status}
+                                onChange={item => setStatus(item)}
                                 options={[
-                                    { value: '0', label: 'Tat ca' },
-                                    { value: '1', label: 'Moi nguoi' },
-                                    { value: '2', label: 'Gioi han' },
-
-                                ]}
-                            />
-                        </Tooltip>
-                    </Col>
-                    <Col offset={1}>
-                        <Tooltip placement="top" title="trang thai phieu giam gia">
-
-                            <Select
-                                defaultValue="0"
-                                style={{ width: 120 }}
-
-                                options={[
-                                    { value: '0', label: 'Tat ca' },
-                                    { value: '1', label: 'Hoat dong' },
-                                    { value: '2', label: 'Dang khoa' },
+                                    { value: 2, label: 'Tất cả' },
+                                    { value: 1, label: 'Hoạt động' },
+                                    { value: 0, label: 'Đang khóa' },
 
                                 ]}
                             />
@@ -116,15 +124,28 @@ export const ListCoupons = () => {
 
 
                     <Col style={{ marginLeft: 'auto' }}>
-                        <Button color="blue" variant="dashed" style={{ marginRight: 10 }}>Reset</Button>
-                        <Button color="lime" variant="solid">Tim kiem</Button>
+                        <Button color="blue" variant="dashed" style={{ marginRight: 10 }}
+                            onClick={() => {
+                                setSortBy('default')
+                                setStatus(2)
+                            }}
+                        >Làm mới</Button>
+                        <Button color="lime" variant="solid" onClick={() => {
+                            setPage(page => {
+                                return {
+                                    ...page,
+                                    current_page: 1
+                                }
+                            })
+                            setRefresh(!refresh)
+                        }}>Tìm kiếm</Button>
                     </Col>
 
                 </Row>
             </div >
             <div className="Title__Page">
 
-                <h1>Danh sach phieu giam gia</h1>
+                <h1>Danh sách phiếu giảm giá</h1>
                 <Button style={styleButton} color="blue" variant="solid"
                     onClick={() => {
                         navigate('/admin/coupons/add')
@@ -145,10 +166,16 @@ export const ListCoupons = () => {
                 dataSource={coupons}
                 pagination={{
                     defaultCurrent: 1,
-                    total: 50,
-                    pageSize: 10,
+                    total: page.total,
+                    pageSize: page.per_page,
                     onChange: (item) => {
-                        console.log('page', item)
+                        setPage(page => {
+                            return {
+                                ...page,
+                                current_page: item
+                            }
+                        })
+                        setRefresh(!refresh)
                     }
                 }}
 
@@ -159,18 +186,21 @@ export const ListCoupons = () => {
 
                                 <Button style={styleButton} color="danger" variant="solid"
                                     onClick={async () => {
-                                        if (selectedRows.length === 0) alert('0 row selected.')
+                                        if (selectedRows.length === 0) openNotification('Cảnh báo', 'Hãy chọn phiếu giảm giá muốn khóa', 'warning')
                                         else {
                                             const response = await couponService.updateCouponStatus(selectedRows);
                                             if (response.status) {
                                                 setSelectedRows([])
                                                 setRefresh(!refresh)
-                                                alert(response.message)
+                                                openNotification('Thành công', 'Khóa phiếu giảm giá thành công', 'success')
+                                            } else {
+                                                openNotification('Thất bại', 'Khóa phiếu giảm giá thât bại', 'error')
+
                                             }
                                         }
                                     }}
                                 >
-                                    Khoa
+                                    Khóa
                                 </Button>
                             </div>
                         </>

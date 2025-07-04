@@ -26,7 +26,7 @@ export const ForgotPassword = () => {
 
     return (
         <div className="forgot-container">
-            {contextHolder}
+
             <Form
                 form={form}
                 name="forgot-password"

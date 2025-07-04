@@ -5,12 +5,15 @@ import { useEffect, useRef, useState } from "react"
 import customerService from "../../../services/customerService"
 import dayjs from 'dayjs';
 import couponService from "../../../services/couponService"
+import { useSession } from "../../../context/SessionContext"
 
 export const AddCoupon = () => {
 
     const [isLimit, setIsLimit] = useState(1)
     const [form] = Form.useForm()
     const [customers, setCustomers] = useState([])
+
+    const { openNotification } = useSession()
     const currentDate = new Date();
     const getDate = () => {
         const result = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${currentDate.getDate()}`
@@ -36,7 +39,7 @@ export const AddCoupon = () => {
     return (
         <>
             <div className="Title__Page">
-                <h1>Them phieu giam gia</h1>
+                <h1>Thêm phiếu giảm giá</h1>
             </div>
             <Form
                 form={form}
@@ -54,8 +57,11 @@ export const AddCoupon = () => {
                     }
                     const response = await couponService.storeCoupon(data)
                     if (response.status) {
-                        alert(response.message)
+                        openNotification('Thành công', 'Thêm phiếu giảm thành công', 'success')
                         form.resetFields()
+                    } else {
+                        openNotification('Thất bại', 'Thêm phiếu giảm thất bại', 'error')
+
                     }
                 }}
             >
@@ -64,21 +70,21 @@ export const AddCoupon = () => {
                     <Col span={12}>
                         <Row>
                             <Col span={24}>
-                                <Form.Item label="Ten phieu" name="name" rules={[{ required: true }]}>
+                                <Form.Item label="Tên phiếu" name="name" rules={[{ required: true }]}>
                                     <Input type="text" />
                                 </Form.Item>
                             </Col>
                         </Row>
                         <Row>
                             <Col span={24}>
-                                <Form.Item label="Mo ta" name="description" rules={[{ required: true }]}>
-                                    <TextArea rows={5} placeholder="Mo ta mon an" maxLength={300} />
+                                <Form.Item label="Mô tả" name="description" rules={[{ required: true }]}>
+                                    <TextArea rows={5} placeholder="Mô tả" maxLength={300} />
                                 </Form.Item>
                             </Col>
                         </Row>
                         <Row>
                             <Col span={24}>
-                                <Form.Item label="Don hang toi thieu (VND)" name="min_order_value" rules={[{ required: true }]} initialValue={50000}>
+                                <Form.Item label="Đơn hàng tối thiếu (VND)" name="min_order_value" rules={[{ required: true }]} initialValue={50000}>
                                     <InputNumber
                                         style={{ width: '100%' }}
                                         defaultValue="50000"
@@ -89,7 +95,7 @@ export const AddCoupon = () => {
                         </Row>
                         <Row>
                             <Col span={24}>
-                                <Form.Item label="Giam gia (VND)" name="discount" rules={[{ required: true }]} initialValue={30000}>
+                                <Form.Item label="Giảm giá (VND)" name="discount" rules={[{ required: true }]} initialValue={30000}>
                                     <InputNumber
                                         style={{ width: '100%' }}
                                         defaultValue="30000"
@@ -100,7 +106,7 @@ export const AddCoupon = () => {
                         </Row>
                         <Row>
                             <Col span={24}>
-                                <Form.Item label="So luong" name="quantity" rules={[{ required: true }]} initialValue={1}>
+                                <Form.Item label="Số lượng" name="quantity" rules={[{ required: true }]} initialValue={1}>
                                     <InputNumber
                                         style={{ width: '100%' }}
                                         defaultValue="1"
@@ -113,7 +119,7 @@ export const AddCoupon = () => {
                         </Row>
                         <Row>
                             <Col span={24}>
-                                <Form.Item label="Ngay het han" name="expire_date" rules={[{ required: true }]}>
+                                <Form.Item label="Ngày hết hạn" name="expire_date" rules={[{ required: true }]}>
                                     <DatePicker minDate={dayjs(getDate(), 'YYYY-MM-DD')} />
                                 </Form.Item>
                             </Col>
@@ -129,11 +135,11 @@ export const AddCoupon = () => {
                                         block
                                         options={[
                                             {
-                                                label: 'Tat ca',
+                                                label: 'Tất cả',
                                                 value: 1
                                             },
                                             {
-                                                label: 'Gioi han',
+                                                label: 'Giới hạn',
                                                 value: 0
                                             }
                                         ]}
@@ -143,12 +149,12 @@ export const AddCoupon = () => {
                             </Col>
 
                             <Col span={24}>
-                                <Form.Item label="Khach hang ap dung" name="customers" rules={[{ required: (isLimit ? false : true) }]} initialValue={[]}>
+                                <Form.Item label="Khách hàng áp dụng" name="customers" rules={[{ required: (isLimit ? false : true) }]} initialValue={[]}>
                                     <Select
                                         disabled={isLimit == 1 ? true : false}
                                         mode="multiple"
                                         size={'large'}
-                                        placeholder="Please select"
+                                        placeholder="Hãy chọn"
                                         defaultValue={[]}
 
                                         style={{ width: '100%', }}
@@ -164,9 +170,9 @@ export const AddCoupon = () => {
 
                         <Row>
                             <Col span={24} style={{ textAlign: 'right' }}>
-                                <Button color="blue" variant="dashed">lam moi</Button>
+                                <Button color="blue" variant="dashed">Làm mới</Button>
                                 &nbsp;
-                                <Button htmlType="submit" color="blue" variant="solid">Xac nhan</Button>
+                                <Button htmlType="submit" color="blue" variant="solid">Xác nhận</Button>
                             </Col>
                         </Row>
                     </Col>

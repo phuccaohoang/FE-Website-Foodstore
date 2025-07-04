@@ -6,13 +6,13 @@ import reviewService from "../../../services/reviewService"
 
 export const ModalReview = ({ orderDetailId, open, onCancel }) => {
 
-    const { refresh, setRefresh } = useSession()
+    const { refresh, setRefresh, openNotification } = useSession()
     const [form] = Form.useForm()
 
     return (
         <>
             <Modal
-                title={<p>Danh gia</p>}
+                title={<p>Đánh giá</p>}
                 footer={false}
                 open={open}
                 onCancel={onCancel}
@@ -32,27 +32,30 @@ export const ModalReview = ({ orderDetailId, open, onCancel }) => {
                         console.log('review', item)
                         const response = await reviewService.storeReview(orderDetailId, item.text, item.rating)
                         if (response.status) {
-                            alert(response.message)
+                            openNotification('Thành công', 'Đánh giá thành công', 'success')
                             setRefresh(!refresh)
                             form.resetFields()
                             onCancel()
+                        } else {
+                            openNotification('Thất bại', 'Đánh giá thất bại', 'error')
+
                         }
                     }}
                 >
                     <Row  >
 
                         <Col span={24}>
-                            <Form.Item label="Diem" name="rating" rules={[{ required: true }]} initialValue={5}>
+                            <Form.Item label="Xếp hạng" name="rating" rules={[{ required: true }]} initialValue={5}>
                                 <Rate defaultValue={5} />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
-                            <Form.Item label="Danh gia" name="text" >
-                                <TextArea rows={5} placeholder="Phan hoi" maxLength={300} />
+                            <Form.Item label="Đánh giá" name="text" >
+                                <TextArea rows={5} placeholder="" maxLength={300} />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
-                            <Button htmlType="submit" color="blue" variant="solid" style={{ width: '100%' }}>Xac nhan</Button>
+                            <Button htmlType="submit" color="blue" variant="solid" style={{ width: '100%' }}>Xác nhận</Button>
                         </Col>
 
 

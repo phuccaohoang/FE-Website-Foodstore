@@ -20,11 +20,27 @@ export const ListReviews = () => {
     const [reviews, setReviews] = useState([])
     const [reviewId, setReviewId] = useState(null)
     const [selectedRows, setSelectedRows] = useState([])
-    const { refresh, setRefresh } = useSession()
+    const { refresh, setRefresh, openNotification } = useSession()
+    //
+    const [sortBy, setSortBy] = useState('default')
+    const [status, setStatus] = useState(2)
+    const [isFeedback, setIsfeedback] = useState(2)
+    const [page, setPage] = useState({
+        current_page: 1,
+        total: 1,
+        last_page: 1,
+        per_page: 5,
+    })
 
     useEffect(() => {
         const loadReviews = async () => {
-            const response = await reviewService.getReviews();
+            const response = await reviewService.getReviews({
+                is_feedback: isFeedback,
+                status: status,
+                sort_by: sortBy,
+                per_page: page.per_page,
+                page: page.current_page
+            });
             if (response.status) {
                 setReviews(response.data.map((item, idx) => {
                     return {
@@ -36,6 +52,8 @@ export const ListReviews = () => {
                         status: item.status === 1 ? 'On' : 'Off',
                     }
                 }))
+                setPage(response.page)
+
             }
         }
         loadReviews()
@@ -46,20 +64,21 @@ export const ListReviews = () => {
         <>
             <div className="Filter__Table">
                 <Row>
-                    <h1>Bo loc</h1>
+                    <h1>Bộ lọc</h1>
                 </Row>
 
                 <Row justify='left' align='middle' gutter={[16, 16]}>
 
                     <Col offset={0}>
-                        <Tooltip placement="top" title="sap xep theo diem">
+                        <Tooltip placement="top" title="Sắp xếp theo xếp hạng">
                             <Select
-                                defaultValue="1"
                                 style={{ width: 220 }}
-
+                                value={sortBy}
+                                onChange={value => setSortBy(value)}
                                 options={[
-                                    { value: '1', label: 'Diem giam dan' },
-                                    { value: '2', label: 'Diem tang dan' },
+                                    { value: 'default', label: 'Mới nhất' },
+                                    { value: 'rating_desc', label: 'Xếp hạng giảm dần' },
+                                    { value: 'rating_asc', label: 'Xếp hạng tăng dần' },
                                 ]}
                             />
 
@@ -67,45 +86,57 @@ export const ListReviews = () => {
                     </Col>
 
                     <Col offset={1}>
-                        <Tooltip placement="top" title="tinh trang phan hoi">
+                        <Tooltip placement="top" title="Tình trạng phản hồi">
 
                             <Select
-                                defaultValue="0"
                                 style={{ width: 150 }}
-
+                                value={isFeedback}
+                                onChange={value => setIsfeedback(value)}
                                 options={[
-                                    { value: '0', label: 'Tat ca' },
-                                    { value: '1', label: 'Da phan hoi' },
-                                    { value: '2', label: 'Chua phan hoi' },
+                                    { value: 2, label: 'Tất cả' },
+                                    { value: 1, label: 'Đã phản hồi' },
+                                    { value: 0, label: 'Chưa phản hồi' },
                                 ]}
                             />
                         </Tooltip>
                     </Col>
                     <Col offset={1}>
-                        <Tooltip placement="top" title="trang thai danh gia">
+                        <Tooltip placement="top" title="Trạng thái đánh giá">
 
                             <Select
-                                defaultValue="0"
                                 style={{ width: 150 }}
-
+                                value={status}
+                                onChange={value => setStatus(value)}
                                 options={[
-                                    { value: '0', label: 'Tat ca' },
-                                    { value: '1', label: 'Hien thi' },
-                                    { value: '2', label: 'An' },
+                                    { value: 2, label: 'Tất cả' },
+                                    { value: 1, label: 'Hiển thị' },
+                                    { value: 0, label: 'Bị ẩn' },
                                 ]}
                             />
                         </Tooltip>
                     </Col>
                     <Col style={{ marginLeft: 'auto' }}>
-                        <Button color="blue" variant="dashed" style={{ marginRight: 10 }}>Reset</Button>
-                        <Button color="lime" variant="solid">Tim kiem</Button>
+                        <Button color="blue" variant="dashed" style={{ marginRight: 10 }} onClick={() => {
+                            setSortBy('default')
+                            setStatus(2)
+                            setIsfeedback(2)
+                        }}>Làm mới</Button>
+                        <Button color="lime" variant="solid" onClick={() => {
+                            setPage(page => {
+                                return {
+                                    ...page,
+                                    current_page: 1
+                                }
+                            })
+                            setRefresh(!refresh)
+                        }}>Tìm kiếm</Button>
                     </Col>
 
                 </Row>
             </div >
 
             <div className="Title__Page">
-                <h1>Danh sach danh gia</h1>
+                <h1>Danh sách đánh giá</h1>
             </div>
             <Table
                 rowSelection={{
@@ -117,13 +148,13 @@ export const ListReviews = () => {
                 }}
                 columns={[
                     { title: 'STT', dataIndex: 'stt' },
-                    { title: 'Ten khach hang', dataIndex: 'fullname' },
-                    { title: 'Mon an', dataIndex: 'food' },
-                    { title: 'Diem danh gia', dataIndex: 'rating' },
-                    { title: 'Noi dung', dataIndex: 'text' },
-                    { title: 'Trang thai', dataIndex: 'status' },
+                    { title: 'Tên khách hàng', dataIndex: 'fullname' },
+                    { title: 'Món ăn', dataIndex: 'food' },
+                    { title: 'Xếp hạng', dataIndex: 'rating' },
+                    { title: 'Nội dung', dataIndex: 'text' },
+                    { title: 'Trạng thái', dataIndex: 'status' },
                     {
-                        title: 'Chuc nang', dataIndex: 'feedbacks',
+                        title: 'Chức năng', dataIndex: 'feedbacks',
                         render: (item, record) => {
                             return (
                                 item.length !== 0 ? <>
@@ -131,12 +162,15 @@ export const ListReviews = () => {
                                         onClick={async () => {
                                             const response = await feedbackService.deleteFeedback({ id: item[0].id });
                                             if (response) {
-                                                alert(response.message)
+                                                openNotification('Thành công', 'Xóa phản hồi thành công.', 'success')
                                                 setRefresh(!refresh)
+                                            } else {
+                                                openNotification('Thất bại', 'Xóa phản hồi thất bại.', 'error')
+
                                             }
                                         }}
                                     >
-                                        Xoa phan hoi
+                                        Xóa phản hồi
                                     </Button>
                                 </> : <>
                                     <Button style={styleButton} color="lime" variant="dashed"
@@ -145,7 +179,7 @@ export const ListReviews = () => {
                                             setOpenModal(true)
                                         }}
                                     >
-                                        Phan hoi
+                                        Phản hồi
                                     </Button>
                                 </>
                             )
@@ -158,7 +192,7 @@ export const ListReviews = () => {
                     expandedRowRender: item => {
                         return (
                             <>
-                                <p><strong>Phan hoi:</strong> {item.feedbacks.length !== 0 ? item.feedbacks[0].text : "chua co phan hoi."} </p>
+                                <p><strong>Phản hồi:</strong> {item.feedbacks.length !== 0 ? item.feedbacks[0].text : "chua co phan hoi."} </p>
                             </>
                         )
                     },
@@ -167,10 +201,16 @@ export const ListReviews = () => {
                 dataSource={reviews}
                 pagination={{
                     defaultCurrent: 1,
-                    total: 50,
-                    pageSize: 10,
+                    total: page.total,
+                    pageSize: page.per_page,
                     onChange: (item) => {
-                        console.log('page', item)
+                        setPage(page => {
+                            return {
+                                ...page,
+                                current_page: item
+                            }
+                        })
+                        setRefresh(!refresh)
                     }
                 }}
 
@@ -183,14 +223,19 @@ export const ListReviews = () => {
                                         if (selectedRows.length > 0) {
                                             const response = await reviewService.disableReviews(selectedRows)
                                             if (response.status) {
-                                                alert(response.message)
+                                                openNotification('Thành công', 'Ẩn đánh giá thành công.', 'success')
+
                                                 setSelectedRows([])
                                                 setRefresh(!refresh)
+                                            }
+                                            else {
+                                                openNotification('Thất bại', 'Ẩn đánh giá thất bại.', 'error')
+
                                             }
                                         }
                                     }}
                                 >
-                                    An danh gia
+                                    Ẩn đánh giá
                                 </Button>
 
                             </div>

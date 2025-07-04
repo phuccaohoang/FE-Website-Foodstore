@@ -33,11 +33,11 @@ export const AdminLayout = () => {
     // antd <--
 
     const navigate = useNavigate()
-    const { user, setUser, contextHolder } = useSession()
+    const { user, setUser, openNotification } = useSession()
 
     return (
         <>
-            {contextHolder}
+
             <Layout className='Prevent__Select' style={{ minHeight: '100vh' }}>
                 <Sider
                     width={270}
@@ -177,6 +177,10 @@ export const AdminLayout = () => {
                                             if (response.status) {
                                                 setUser(null)
                                                 navigate('/admin/login')
+                                            }
+                                            else {
+                                                openNotification('Thất bại', 'Đã có lỗi xảy ra vui lòng thử lại.', 'error')
+
                                             }
                                         }
                                     },

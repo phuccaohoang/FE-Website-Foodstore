@@ -108,7 +108,7 @@ export const Dashboard = () => {
                 type: 'text',
                 data: [],
                 style: {
-                    text: `Đơn hàng ${orders.length !== 0 ? null : 'chưa có'}`,
+                    text: `Đơn hàng ${orders.length !== 0 ? '' : 'chưa có'}`,
                     x: '50%',
                     y: '50%',
                     textAlign: 'center',

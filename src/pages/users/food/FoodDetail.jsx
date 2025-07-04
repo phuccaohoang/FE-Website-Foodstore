@@ -62,14 +62,14 @@ export const FoodDetail = () => {
 
     const [quantity, setQuantity] = useState(1);
 
-    const { user, setUser, contextHolder, openNotification } = useSession()
+    const { user, setUser, openNotification } = useSession()
     const navigate = useNavigate()
 
     const handleAddToCart = async () => {
         if (user) {
             const response = await cartService.storeCart(food.id, quantity)
             if (response.status) {
-                openNotification('success', "description")
+                openNotification('Thành công', "Thêm vào giỏ thành công.", 'success')
                 setUser(user => {
                     return {
                         ...user,
@@ -77,7 +77,7 @@ export const FoodDetail = () => {
                     }
                 })
             } else {
-                openNotification('error', "description")
+                openNotification('Thông báo', "Sản phẩm đã có trong giỏ hãy vào giỏ chỉnh sửa.", 'info')
             }
         } else {
             navigate('/login')
@@ -121,7 +121,7 @@ export const FoodDetail = () => {
 
     return (
         <>
-            {contextHolder}
+
             {
                 food !== null ?
                     <>

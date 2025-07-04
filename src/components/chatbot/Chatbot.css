@@ -1,0 +1,6 @@
+.Chat__Bot .Chatbot__Body .Message_Chatbot {
+    font-size: 20;
+    padding: 10px 20px;
+    border-radius: 14;
+    margin-bottom: 10px;
+}

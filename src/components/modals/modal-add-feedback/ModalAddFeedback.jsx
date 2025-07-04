@@ -7,13 +7,13 @@ import { useSession } from "../../../context/SessionContext"
 
 export const ModalAddFeedback = ({ reviewId, open, onCancel }) => {
 
-    const { refresh, setRefresh } = useSession()
+    const { refresh, setRefresh, openNotification } = useSession()
     const [form] = Form.useForm()
 
     return (
         <>
             <Modal
-                title={<p>Phan hoi danh gia</p>}
+                title={<p>Phản hồi đánh giá</p>}
                 footer={false}
                 open={open}
                 onCancel={onCancel}
@@ -32,22 +32,26 @@ export const ModalAddFeedback = ({ reviewId, open, onCancel }) => {
                     onFinish={async (item) => {
                         const response = await feedbackService.storeFeedback(reviewId, item.text)
                         if (response.status) {
-                            alert('Da phan hoi danh gia')
+                            openNotification('Thành công', 'Phản hồi thành công.', 'success')
+
                             setRefresh(!refresh)
                             form.resetFields()
                             onCancel()
+                        } else {
+                            openNotification('Thất bại', 'Phản hồi thất bại.', 'error')
+
                         }
                     }}
                 >
                     <Row  >
 
                         <Col span={24}>
-                            <Form.Item label="Phan hoi" name="text" rules={[{ required: true }]}>
-                                <TextArea rows={5} placeholder="Phan hoi" maxLength={300} />
+                            <Form.Item label="Phản hồi" name="text" rules={[{ required: true }]}>
+                                <TextArea rows={5} placeholder="Phản hồi" maxLength={300} />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
-                            <Button htmlType="submit" color="blue" variant="solid" style={{ width: '100%' }}>Xac nhan</Button>
+                            <Button htmlType="submit" color="blue" variant="solid" style={{ width: '100%' }}>Xác nhận</Button>
                         </Col>
 
 
