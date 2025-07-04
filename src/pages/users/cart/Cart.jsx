@@ -25,12 +25,14 @@ export const Cart = () => {
 
     const [selectedRows, setSelectedRows] = useState([])
     const [carts, setCarts] = useState([])
-    const { user, setUser, refresh, setRefresh, setPayment, contextHolder, openNotification } = useSession()
+    const { user, setUser, refresh, setRefresh, setPayment, setLoading, openNotification } = useSession()
 
 
 
     useEffect(() => {
         const loadCart = async () => {
+            setLoading(true)
+
             const response = await cartService.getCart()
             if (response.status) {
                 setCarts(response.data.map((item, idx) => {
@@ -44,6 +46,8 @@ export const Cart = () => {
                     }
                 }))
             }
+            setLoading(false)
+
         }
         //
         loadCart()
@@ -83,6 +87,7 @@ export const Cart = () => {
                         title: 'Số lượng', dataIndex: 'quantity', render: (item, record) => {
                             return <>
                                 <InputNumber defaultValue={item} min={1} max={10} style={{ width: 60 }} onChange={async (value) => {
+                                    setLoading(true)
 
                                     const response = await cartService.updateCart(record.id, value)
                                     if (response.status) {
@@ -93,6 +98,8 @@ export const Cart = () => {
                                         openNotification('Thất bại', 'Cập nhật số lượng thất bại', 'error')
 
                                     }
+                                    setLoading(false)
+
                                 }}
                                 />
 
@@ -114,6 +121,8 @@ export const Cart = () => {
                                             openNotification('Cảnh báo', 'Hãy chọn món ăn.', 'warning')
                                         }
                                         else {
+                                            setLoading(true)
+
                                             const response = await cartService.deleteCarts({ list_id: selectedRows })
                                             if (response.status) {
                                                 openNotification('Thành công', 'Xóa khỏi giỏ thành công', 'success')
@@ -131,6 +140,8 @@ export const Cart = () => {
                                                 setSelectedRows([])
 
                                             }
+                                            setLoading(false)
+
                                         }
                                     }}
                                 >

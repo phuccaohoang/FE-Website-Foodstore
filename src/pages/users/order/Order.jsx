@@ -21,7 +21,7 @@ export const Order = () => {
 
     const [orders, setOrders] = useState([]);
     const [orderStatus, setOrderStatus] = useState([]);
-    const { refresh, setRefresh } = useSession()
+    const { refresh, setLoading } = useSession()
     const [openCancel, setOpenCancel] = useState(false)
     const [openReview, setOpenReview] = useState(false)
     const [orderId, setOrderId] = useState(null)
@@ -126,6 +126,8 @@ export const Order = () => {
     useEffect(() => {
 
         const loadOrders = async () => {
+            setLoading(true)
+
             const response = await orderService.getOrders({ order_status_id: filterStatus })
             if (response.status) {
 
@@ -149,6 +151,8 @@ export const Order = () => {
                     }
                 }))
             }
+            setLoading(false)
+
         }
         //
         loadOrders()

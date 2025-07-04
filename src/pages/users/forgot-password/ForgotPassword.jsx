@@ -6,10 +6,11 @@ import { useSession } from '../../../context/SessionContext';
 
 export const ForgotPassword = () => {
     const [form] = Form.useForm();
-    const { contextHolder, openNotification } = useSession()
+    const { setLoading, openNotification } = useSession()
 
     const onFinish = async (values) => {
         const email = values.email.trim().toLowerCase();
+        setLoading(true)
 
         const response = await accountService.forgotPassword({
             email: email,
@@ -20,6 +21,8 @@ export const ForgotPassword = () => {
             openNotification('Thất bại', 'Đã có lỗi xảy ra vui lòng thử lại', 'error')
 
         }
+        setLoading(false)
+
         form.resetFields();
     };
     const navigate = useNavigate()

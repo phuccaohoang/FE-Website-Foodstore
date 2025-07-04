@@ -25,7 +25,7 @@ const styleButton = {
 
 export const StatisticsFoods = () => {
 
-    const { refresh, setRefresh } = useSession()
+    const { refresh, setRefresh, setLoading } = useSession()
     const [foods, setFoods] = useState([])
     const [date, setDate] = useState({
         start_date: null,
@@ -33,6 +33,8 @@ export const StatisticsFoods = () => {
     })
     useEffect(() => {
         const loadStatisticsFoods = async () => {
+            setLoading(true)
+
             const response = await orderService.getStatisticsFoods(date)
             if (response.status) {
                 setFoods(response.data.map((item, idx) => {
@@ -42,9 +44,8 @@ export const StatisticsFoods = () => {
                         total_quantity: item.total_quantity
                     }
                 }))
-            } else {
+            } setLoading(false)
 
-            }
         }
         //
         loadStatisticsFoods()

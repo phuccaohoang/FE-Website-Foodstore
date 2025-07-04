@@ -28,7 +28,7 @@ export const ModalCancelOrder = ({ orders, open, onCancel, type = 'admin' }) => 
     const [disabled, setDisabled] = useState(true)
     const [note, setNote] = useState(reasonCancel[0].value)
     const [textArea, setTextArea] = useState('')
-    const { refresh, setRefresh, openNotification } = useSession()
+    const { refresh, setRefresh, openNotification, setLoading } = useSession()
 
     return (
         <>
@@ -39,6 +39,8 @@ export const ModalCancelOrder = ({ orders, open, onCancel, type = 'admin' }) => 
                 onCancel={onCancel}
                 centered={true}
                 width={400}
+
+
             >
                 <Form
                     name="wrap"
@@ -95,6 +97,8 @@ export const ModalCancelOrder = ({ orders, open, onCancel, type = 'admin' }) => 
                                     }
 
                                     if (text = text.trim()) {
+                                        setLoading(true)
+
                                         const response = await orderService.cancelOrder(orders, text)
                                         if (response.status) {
                                             openNotification('Thành công', 'Hủy đơn thành công', 'success')
@@ -105,6 +109,8 @@ export const ModalCancelOrder = ({ orders, open, onCancel, type = 'admin' }) => 
                                             openNotification('Thất bại', 'Hủy đơn thất bại', 'error')
 
                                         }
+                                        setLoading(false)
+
                                     }
                                     else {
                                         openNotification('Cảnh báo', 'Không bỏ trống.', 'warning')

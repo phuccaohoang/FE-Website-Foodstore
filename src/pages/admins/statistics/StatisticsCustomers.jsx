@@ -26,7 +26,7 @@ const styleButton = {
 
 export const StatisticsCustomers = () => {
 
-    const { refresh, setRefresh } = useSession()
+    const { refresh, setRefresh, setLoading } = useSession()
     const [customers, setCustomers] = useState([])
     const [date, setDate] = useState({
         start_date: null,
@@ -34,6 +34,8 @@ export const StatisticsCustomers = () => {
     })
     useEffect(() => {
         const loadStatisticsCustomers = async () => {
+            setLoading(true)
+
             const response = await orderService.getStatisticsCustomers(date)
             if (response.status) {
                 setCustomers(response.data.map((item, idx) => {
@@ -44,9 +46,8 @@ export const StatisticsCustomers = () => {
                         total_quantity_orders: item.total_quantity_orders,
                     }
                 }))
-            } else {
+            } setLoading(false)
 
-            }
         }
         //
         loadStatisticsCustomers()

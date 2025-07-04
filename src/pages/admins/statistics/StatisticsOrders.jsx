@@ -24,7 +24,7 @@ const styleButton = {
 }
 
 export const StatisticsOrders = () => {
-    const { refresh, setRefresh } = useSession()
+    const { refresh, setRefresh, setLoading } = useSession()
     const [orders, setOrders] = useState([])
     const [date, setDate] = useState({
         start_date: null,
@@ -32,6 +32,8 @@ export const StatisticsOrders = () => {
     })
     useEffect(() => {
         const loadStatisticsOrders = async () => {
+            setLoading(true)
+
             const response = await orderService.getStatisticsOrders(date)
             if (response.status) {
                 setOrders(response.data.map((item, idx) => {
@@ -41,9 +43,8 @@ export const StatisticsOrders = () => {
                         total_orders: item.total_orders
                     }
                 }))
-            } else {
+            } setLoading(false)
 
-            }
         }
         //
         loadStatisticsOrders()

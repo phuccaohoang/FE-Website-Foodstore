@@ -38,7 +38,7 @@ export const ListAccounts = () => {
     const [status, setStatus] = useState(3)
     const [fullname, setFullname] = useState('')
 
-    const { refresh, setRefresh, openNotification } = useSession()
+    const { refresh, setRefresh, openNotification, setLoading } = useSession()
 
     const [page, setPage] = useState({
         current_page: 1,
@@ -49,6 +49,8 @@ export const ListAccounts = () => {
 
     useEffect(() => {
         const loadAccounts = async () => {
+            setLoading(true)
+
             const response = await accountService.getAccounts({
                 fullname: fullname,
                 status: status,
@@ -67,6 +69,8 @@ export const ListAccounts = () => {
                 }))
                 setPage(response.page)
             }
+            setLoading(false)
+
         }
         //
         loadAccounts()

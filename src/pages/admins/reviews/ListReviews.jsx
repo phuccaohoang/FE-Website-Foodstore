@@ -20,7 +20,7 @@ export const ListReviews = () => {
     const [reviews, setReviews] = useState([])
     const [reviewId, setReviewId] = useState(null)
     const [selectedRows, setSelectedRows] = useState([])
-    const { refresh, setRefresh, openNotification } = useSession()
+    const { refresh, setRefresh, openNotification, setLoading } = useSession()
     //
     const [sortBy, setSortBy] = useState('default')
     const [status, setStatus] = useState(2)
@@ -34,6 +34,8 @@ export const ListReviews = () => {
 
     useEffect(() => {
         const loadReviews = async () => {
+            setLoading(true)
+
             const response = await reviewService.getReviews({
                 is_feedback: isFeedback,
                 status: status,
@@ -55,6 +57,8 @@ export const ListReviews = () => {
                 setPage(response.page)
 
             }
+            setLoading(false)
+
         }
         loadReviews()
     }, [refresh])
@@ -160,6 +164,8 @@ export const ListReviews = () => {
                                 item.length !== 0 ? <>
                                     <Button style={styleButton} color="red" variant="dashed"
                                         onClick={async () => {
+                                            setLoading(true)
+
                                             const response = await feedbackService.deleteFeedback({ id: item[0].id });
                                             if (response) {
                                                 openNotification('Thành công', 'Xóa phản hồi thành công.', 'success')
@@ -168,6 +174,8 @@ export const ListReviews = () => {
                                                 openNotification('Thất bại', 'Xóa phản hồi thất bại.', 'error')
 
                                             }
+                                            setLoading(false)
+
                                         }}
                                     >
                                         Xóa phản hồi

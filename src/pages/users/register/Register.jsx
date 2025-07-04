@@ -9,10 +9,11 @@ const existingUsers = ['test@example.com', 'admin@pizza.vn'];
 
 export const Register = () => {
     const [form] = Form.useForm();
-    const { contextHolder, openNotification } = useSession()
+    const { contextHolder, openNotification, setLoading } = useSession()
 
     const onFinish = async (values) => {
         const email = values.email.trim().toLowerCase();
+        setLoading(true)
         const response = await accountService.register({
             ...values,
             email: email,
@@ -23,6 +24,8 @@ export const Register = () => {
             openNotification('Thất bại', 'Đã có lỗi xảy ra vui lòng thử lại', 'error')
 
         }
+        setLoading(false)
+
         form.resetFields();
     };
     const navigate = useNavigate()

@@ -69,10 +69,11 @@ export const ListFoods = () => {
         per_page: 5,
     })
     //
-    const { refresh, setRefresh, openNotification } = useSession();
+    const { refresh, setRefresh, openNotification, setLoading } = useSession();
 
     useEffect(() => {
         const loadFoods = async () => {
+            setLoading(true)
 
             const response = await foodService.getFoods({
                 status: status,
@@ -95,6 +96,8 @@ export const ListFoods = () => {
                 }))
                 setPage(response.page)
             }
+            setLoading(false)
+
 
         }
         const loadCaregories = async () => {

@@ -15,7 +15,7 @@ const { Option } = Select;
 
 export const Payment = () => {
 
-    const { user, setUser, payment, setPayment, contextHolder, openNotification } = useSession()
+    const { user, setUser, payment, setPayment, setLoading, openNotification } = useSession()
     const [coupons, setCoupons] = useState([])
     const [carts, setCarts] = useState([])
     const [discount, setDiscount] = useState(0)
@@ -77,6 +77,8 @@ export const Payment = () => {
                                     }
                                 })
                                 if (value.pay_method === 'cod') {
+                                    setLoading(true)
+
                                     const response = await orderService.storeOrder({
                                         phone: value.phone,
                                         address: value.address,
@@ -100,6 +102,8 @@ export const Payment = () => {
                                         openNotification('Thất bại', 'Thêm đơn hàng thất bại, đã có lỗi xảy ra vui lòng thử lại sau.', 'error')
 
                                     }
+                                    setLoading(false)
+
                                 }
                                 else {
                                     navigate('/pay-atm')

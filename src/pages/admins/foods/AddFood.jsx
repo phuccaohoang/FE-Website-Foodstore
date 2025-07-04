@@ -11,7 +11,7 @@ export const AddFood = () => {
 
     const [form] = Form.useForm()
     const [categories, setCategories] = useState([])
-    const { openNotification } = useSession()
+    const { openNotification, setLoading } = useSession()
 
     useEffect(() => {
         const loadCategories = async () => {
@@ -48,6 +48,7 @@ export const AddFood = () => {
                     values.images.fileList.forEach(file => {
                         formData.append('images[]', file.originFileObj)
                     });
+                    setLoading(true)
 
                     const response = await foodService.storeFood(formData)
                     if (response.status) {
@@ -57,6 +58,8 @@ export const AddFood = () => {
                         openNotification('Thất bại', 'Thêm món mới thất bại', 'error')
 
                     }
+                    setLoading(false)
+
                 }}
             >
                 <Row gutter={[16, 16]}>

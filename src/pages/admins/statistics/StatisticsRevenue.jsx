@@ -27,7 +27,7 @@ const styleButton = {
 
 export const StatisticsRevenue = () => {
 
-    const { refresh, setRefresh } = useSession()
+    const { refresh, setRefresh, setLoading } = useSession()
     const [revenue, setRevenue] = useState([])
     const [date, setDate] = useState({
         start_date: null,
@@ -36,6 +36,8 @@ export const StatisticsRevenue = () => {
 
     useEffect(() => {
         const loadStatisticsRevenue = async () => {
+            setLoading(true)
+
             const response = await orderService.getStatisticsRevenue(date)
             if (response.status) {
                 setRevenue(response.data.map((item, idx) => {
@@ -47,9 +49,8 @@ export const StatisticsRevenue = () => {
                         total_orders: item.total_orders,
                     }
                 }))
-            } else {
+            } setLoading(true)
 
-            }
         }
         loadStatisticsRevenue()
     }, [refresh])

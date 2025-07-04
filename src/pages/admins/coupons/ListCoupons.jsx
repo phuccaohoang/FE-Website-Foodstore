@@ -35,7 +35,7 @@ export const ListCoupons = () => {
     const [coupons, setCoupons] = useState([])
 
     const [selectedRows, setSelectedRows] = useState([])
-    const { refresh, setRefresh, openNotification } = useSession()
+    const { refresh, setRefresh, openNotification, setLoading } = useSession()
 
     const [sortBy, setSortBy] = useState('default')
     const [status, setStatus] = useState(2)
@@ -48,6 +48,8 @@ export const ListCoupons = () => {
 
     useEffect(() => {
         const loadCoupons = async () => {
+            setLoading(true)
+
             const response = await couponService.getCoupons({
                 sort_by: sortBy,
                 status: status,
@@ -67,6 +69,8 @@ export const ListCoupons = () => {
                 }))
                 setPage(response.page)
             }
+            setLoading(false)
+
         }
         //
         loadCoupons()

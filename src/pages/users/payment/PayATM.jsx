@@ -109,37 +109,42 @@ export const PayATM = () => {
                                             ]
 
                                             for (const item of CardATM) {
-                                                if (item.cardNumber !== cardNumber || item.cardName !== cardName) {
-                                                    openNotification('Thất bại', 'Thanh toán không thành công', 'error')
+                                                if (item.cardNumber == cardNumber && item.cardName == cardName) {
+                                                    setLoading(true)
+
+                                                    const response = await orderService.storeOrder({
+                                                        phone: payment.phone,
+                                                        address: payment.address,
+                                                        delivery_cost: payment.delivery_cost,
+                                                        note: payment.note,
+                                                        coupon_id: payment.coupon_id,
+                                                        cart_ids: payment.cart_ids,
+                                                        is_payment: 1,
+                                                    })
+                                                    if (response.status) {
+                                                        setUser(user => {
+                                                            return {
+                                                                ...user,
+                                                                has_carts: user.has_carts - payment.cart_ids.length
+                                                            }
+
+                                                        })
+                                                        setOpenMessage(true)
+
+
+                                                    }
+                                                    else {
+                                                        openNotification('Thất bại', 'Thanh toán không thành công', 'error')
+
+
+                                                    }
+                                                    setLoading(false)
                                                     return
                                                 }
-                                                const response = await orderService.storeOrder({
-                                                    phone: payment.phone,
-                                                    address: payment.address,
-                                                    delivery_cost: payment.delivery_cost,
-                                                    note: payment.note,
-                                                    coupon_id: payment.coupon_id,
-                                                    cart_ids: payment.cart_ids,
-                                                    is_payment: 1,
-                                                })
-                                                if (response.status) {
-                                                    setUser(user => {
-                                                        return {
-                                                            ...user,
-                                                            has_carts: user.has_carts - payment.cart_ids.length
-                                                        }
 
-                                                    })
-                                                    setOpenMessage(true)
-
-
-                                                }
-                                                else {
-                                                    openNotification('Thất bại', 'Thanh toán không thành công', 'error')
-
-
-                                                }
                                             }
+                                            openNotification('Thất bại', 'Thông tin không chính xác.', 'error')
+
                                         }}
                                     >
                                         Thanh toán

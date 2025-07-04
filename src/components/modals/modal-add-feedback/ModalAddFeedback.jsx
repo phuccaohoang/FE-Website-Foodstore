@@ -7,7 +7,7 @@ import { useSession } from "../../../context/SessionContext"
 
 export const ModalAddFeedback = ({ reviewId, open, onCancel }) => {
 
-    const { refresh, setRefresh, openNotification } = useSession()
+    const { refresh, setRefresh, openNotification, setLoading } = useSession()
     const [form] = Form.useForm()
 
     return (
@@ -19,6 +19,7 @@ export const ModalAddFeedback = ({ reviewId, open, onCancel }) => {
                 onCancel={onCancel}
                 centered={true}
                 width={500}
+
             >
                 <Form
                     name="wrap"
@@ -30,6 +31,8 @@ export const ModalAddFeedback = ({ reviewId, open, onCancel }) => {
                     colon={false}
                     style={{ width: '100%', marginTop: '20px' }}
                     onFinish={async (item) => {
+                        setLoading(true)
+
                         const response = await feedbackService.storeFeedback(reviewId, item.text)
                         if (response.status) {
                             openNotification('Thành công', 'Phản hồi thành công.', 'success')
@@ -41,6 +44,8 @@ export const ModalAddFeedback = ({ reviewId, open, onCancel }) => {
                             openNotification('Thất bại', 'Phản hồi thất bại.', 'error')
 
                         }
+                        setLoading(false)
+
                     }}
                 >
                     <Row  >

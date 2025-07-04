@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import foodService from '../../../services/foodService';
 import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import categoryService from '../../../services/categoryService';
+import { useSession } from '../../../context/SessionContext';
 
 
 
@@ -24,11 +25,14 @@ export const Explore = () => {
     const [searchName, setSearchName] = useState('')
     const [sortBy, setSortBy] = useState('default')
     //
-    const [search, setSearch] = useState(true)
+
+    const { setLoading, refresh, setRefresh } = useSession()
 
     useEffect(() => {
 
         const loadFoods = async () => {
+            setLoading(true)
+
             const response = await foodService.getFoods({
                 name: searchName,
                 category_id: categoryId,
@@ -41,10 +45,12 @@ export const Explore = () => {
                 setFoods(response.data)
                 setPage(response.page)
             }
+            setLoading(false)
+
         }
 
         loadFoods()
-    }, [search])
+    }, [refresh])
 
     useEffect(() => {
         const loadCategories = async () => {
@@ -152,7 +158,7 @@ export const Explore = () => {
                                             ...page,
                                             current_page: 1,
                                         })
-                                        setSearch(!search)
+                                        setRefresh(!refresh)
                                     }}
                                 >
                                     <SearchOutlined />
@@ -180,7 +186,7 @@ export const Explore = () => {
                                 ...page,
                                 current_page: value
                             })
-                            setSearch(!search)
+                            setRefresh(!refresh)
                         }
                     }
                 }

@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const { TabPane } = Tabs;
 
 export const Account = () => {
-    const { user, setUser, contextHolder, openNotification } = useSession()
+    const { user, setUser, contextHolder, openNotification, setLoading } = useSession()
     const [form] = Form.useForm()
     const navigate = useNavigate()
 
@@ -27,6 +27,7 @@ export const Account = () => {
                         <Form
                             layout="vertical"
                             onFinish={async (value) => {
+                                setLoading(true)
                                 const response = await accountService.updateCustomer(value.address, value.phone, value.fullname)
                                 if (response.status) {
                                     setUser(item => {
@@ -45,6 +46,8 @@ export const Account = () => {
                                     openNotification('Thất bại', 'Cập nhật tài khoản thất bại.', 'error')
 
                                 }
+                                setLoading(false)
+
                             }}
                             initialValues={{
                                 phone: user.phone,
@@ -63,9 +66,13 @@ export const Account = () => {
                                             multiple={false}
                                             maxCount={1}
                                             onChange={async (value) => {
+                                                setLoading(true)
+
                                                 const formData = new FormData()
                                                 formData.append('image', value.file.originFileObj)
                                                 const response = await accountService.updateAvatar(formData);
+                                                setLoading(false)
+
                                                 if (response.status) {
                                                     navigate(0)
                                                 }
@@ -125,20 +132,23 @@ export const Account = () => {
                     <TabPane tab="Đổi mật khẩu" key="2">
                         <Form layout="vertical" onFinish={async (values) => {
                             if (values.newPassword !== values.confirmPassword) {
-                                openNotification('warning', 'description')
+                                openNotification('Cảnh báo', 'Mật khẩu không khớp.', 'warning')
 
                                 return;
                             }
+                            setLoading(true)
                             const response = await accountService.updatePassword(values.newPassword, values.oldPassword)
                             if (response.status) {
-                                openNotification('success', 'description')
+                                openNotification('Thành công', 'Cập nhật thành công.', 'success')
 
                                 form.resetFields()
                             }
                             else {
-                                openNotification('error', 'description')
+                                openNotification('Thất bại', 'Đã có lỗi xảy ra vui lòng thử lại.', 'error')
 
                             }
+                            setLoading(false)
+
                         }}
                             className='Form__Account'
                             form={form}

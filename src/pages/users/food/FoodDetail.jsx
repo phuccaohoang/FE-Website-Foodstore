@@ -25,15 +25,21 @@ import dayjs from 'dayjs';
 export const FoodDetail = () => {
     // chi tiet
     const [food, setFood] = useState(null)
+    const { setLoading } = useSession()
 
     const { slug } = useParams()
     useEffect(() => {
+
         const loadFood = async () => {
+            setLoading(true)
+
             const response = await foodService.getFood(slug)
             if (response.status) {
                 setFood(response.data[0])
                 setReviews(response.data[0].reviews)
             }
+            setLoading(false)
+
         }
         loadFood();
     }, [slug])
@@ -67,6 +73,8 @@ export const FoodDetail = () => {
 
     const handleAddToCart = async () => {
         if (user) {
+            setLoading(true)
+
             const response = await cartService.storeCart(food.id, quantity)
             if (response.status) {
                 openNotification('Thành công', "Thêm vào giỏ thành công.", 'success')
@@ -79,6 +87,8 @@ export const FoodDetail = () => {
             } else {
                 openNotification('Thông báo', "Sản phẩm đã có trong giỏ hãy vào giỏ chỉnh sửa.", 'info')
             }
+            setLoading(false)
+
         } else {
             navigate('/login')
         }

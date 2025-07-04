@@ -12,7 +12,7 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
     const isItem = foods.length == 1 ? true : false
     const [categories, setCategories] = useState([])
     const [form] = Form.useForm()
-    const { refresh, setRefresh, openNotification } = useSession()
+    const { refresh, setRefresh, openNotification, setLoading } = useSession()
 
     useEffect(() => {
         const loadCaregories = async () => {
@@ -44,6 +44,8 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                 onCancel={onCancel}
                 centered={false}
                 width={1000}
+
+
             >
                 <Form
                     form={form}
@@ -97,6 +99,8 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                                     });
                                 }
                                 formData.append('id', foods[0])
+                                setLoading(true)
+
                                 const response = await foodService.updateFood(formData)
                                 if (response.status) {
                                     notification()
@@ -106,6 +110,8 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                                     openNotification('Thất bại', 'Cập nhật món ăn thất bại', 'error')
 
                                 }
+                                setLoading(false)
+
                             }
                         }
                         form.resetFields()

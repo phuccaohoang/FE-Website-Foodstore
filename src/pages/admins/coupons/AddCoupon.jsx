@@ -22,6 +22,8 @@ export const AddCoupon = () => {
 
     useEffect(() => {
         const loadCustomers = async () => {
+            setLoading(true)
+
             const response = await customerService.getCustomers()
             if (response.status) {
                 setCustomers(response.data.map((item) => {
@@ -31,6 +33,8 @@ export const AddCoupon = () => {
                     }
                 }))
             }
+            setLoading(false)
+
         }
         //
         loadCustomers()

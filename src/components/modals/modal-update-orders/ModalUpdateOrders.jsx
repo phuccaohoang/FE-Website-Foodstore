@@ -9,7 +9,7 @@ import orderService from "../../../services/orderService"
 
 export const ModalUpdateOrder = ({ open, onCancel, orders, order_status_id }) => {
     const [orderStatus, setOrderStatus] = useState([])
-    const { refresh, setRefresh, openNotification } = useSession()
+    const { refresh, setRefresh, openNotification, setLoading } = useSession()
     // const [statusId, setStatusId] = useState(order_status_id)
 
     useEffect(() => {
@@ -33,6 +33,7 @@ export const ModalUpdateOrder = ({ open, onCancel, orders, order_status_id }) =>
                 onCancel={onCancel}
                 centered={true}
                 width={400}
+
             >
                 <Form
                     name="wrap"
@@ -43,6 +44,8 @@ export const ModalUpdateOrder = ({ open, onCancel, orders, order_status_id }) =>
                     colon={false}
                     style={{ width: '100%', marginTop: '20px' }}
                     onFinish={async (item) => {
+                        setLoading(true)
+
                         const response = await orderService.updateOrderStatus(orders, item.order_status_id)
                         if (response.status) {
                             openNotification('Thành công', 'Cập nhật trạng thái giao hàng thành công', 'success')
@@ -52,6 +55,8 @@ export const ModalUpdateOrder = ({ open, onCancel, orders, order_status_id }) =>
                             openNotification('Thất bại', 'Cập nhật trạng thái giao hàng thất bại', 'error')
 
                         }
+                        setLoading(false)
+
                     }}
                 >
                     <Row  >

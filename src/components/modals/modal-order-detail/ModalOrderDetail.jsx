@@ -6,6 +6,7 @@ import TextArea from "antd/es/input/TextArea"
 import { ModalUpdateOrder } from "../modal-update-orders/ModalUpdateOrders"
 import { ModalCancelOrder } from "../modal-cancel-orders/ModalCancelOrders"
 import { useState } from "react"
+import { ModalInvoicePDF } from "../modal-invoice-pdf/ModalInvoicePDF"
 
 const styleButton = {
     padding: '10px 15px',
@@ -16,6 +17,7 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
 
     const [openUpdate, setOpenUpdate] = useState(false)
     const [openCancel, setOpenCancel] = useState(false)
+    const [openInvoicePDF, setOpenInvoicePDF] = useState(false)
 
     const list = order.order_details;
     let order_details = list ? list.map((item, idx) => {
@@ -23,11 +25,12 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
             ...item,
             name: item.food.name,
             stt: idx + 1,
-            total_money: (1 - (Number(item.discount) / 100)) * item.price * item.quantity
+            total_money: (1 - (Number(item.discount) / 100)) * item.price * item.quantity,
 
         }
     }) : [];
 
+    console.log('order', order)
 
     return (
         <>
@@ -38,6 +41,8 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                 onCancel={onCancel}
                 centered={false}
                 width={1000}
+                style={{ zIndex: 1000 }}
+
             >
                 <Form
                     name="wrap"
@@ -108,7 +113,7 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                                         <>
                                             <Row justify={'end'}>
                                                 <Col>
-                                                    <strong>Tổng đơn hàng: <span style={{ fontSize: 20, margin: '0 5px' }}>230.000</span> vnd</strong>
+                                                    <strong>Tổng đơn hàng: <span style={{ fontSize: 20, margin: '0 5px' }}>{order.total_money_order}</span> vnd</strong>
                                                 </Col>
                                             </Row>
                                         </>
@@ -116,9 +121,9 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                                 }}
                             />
                         </Col>
-                        {
-                            (order.order_status_id != 5 && order.order_status_id != 4) ? <>
-                                <Col span={24} style={{ display: 'flex', justifyContent: 'right', columnGap: '10px' }}>
+                        <Col span={24} style={{ display: 'flex', justifyContent: 'right', columnGap: '10px' }}>
+                            {
+                                (order.order_status_id != 5 && order.order_status_id != 4) ? <>
                                     < Button style={styleButton} color="gold" variant="solid" onClick={() => { setOpenUpdate(true) }}>
                                         Cập nhật trạng thái
                                     </Button>
@@ -127,9 +132,14 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                                     >
                                         Hủy đơn
                                     </Button>
-                                </Col>
-                            </> : null
-                        }
+                                </> : null
+                            }
+                            <Button style={styleButton} color="blue" variant="solid"
+                                onClick={() => setOpenInvoicePDF(true)}
+                            >
+                                In hóa đơn
+                            </Button>
+                        </Col>
 
 
 
@@ -151,6 +161,11 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                 }}
 
             />
+
+            <ModalInvoicePDF order={order} open={openInvoicePDF} cancel={() => {
+
+                setOpenInvoicePDF(false)
+            }} />
         </>
     )
 }

@@ -6,7 +6,7 @@ import reviewService from "../../../services/reviewService"
 
 export const ModalReview = ({ orderDetailId, open, onCancel }) => {
 
-    const { refresh, setRefresh, openNotification } = useSession()
+    const { refresh, setRefresh, openNotification, setLoading } = useSession()
     const [form] = Form.useForm()
 
     return (
@@ -18,6 +18,8 @@ export const ModalReview = ({ orderDetailId, open, onCancel }) => {
                 onCancel={onCancel}
                 centered={true}
                 width={500}
+
+
             >
                 <Form
                     name="wrap"
@@ -30,6 +32,8 @@ export const ModalReview = ({ orderDetailId, open, onCancel }) => {
                     style={{ width: '100%', marginTop: '20px' }}
                     onFinish={async (item) => {
                         console.log('review', item)
+                        setLoading(true)
+
                         const response = await reviewService.storeReview(orderDetailId, item.text, item.rating)
                         if (response.status) {
                             openNotification('Thành công', 'Đánh giá thành công', 'success')
@@ -40,6 +44,8 @@ export const ModalReview = ({ orderDetailId, open, onCancel }) => {
                             openNotification('Thất bại', 'Đánh giá thất bại', 'error')
 
                         }
+                        setLoading(false)
+
                     }}
                 >
                     <Row  >

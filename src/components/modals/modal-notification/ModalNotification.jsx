@@ -38,6 +38,8 @@ export const ModalNotification = ({ open, onClose }) => {
                 onCancel={onClose}
                 footer={null}
                 sytle={{ fontFamily: 'sans-serif' }}
+
+
             >
                 <Tabs defaultActiveKey="1">
                     <TabPane tab="Phiếu giảm giá" key="1">

@@ -23,7 +23,7 @@ export const ListOrders = () => {
     const [order, setOrder] = useState({})
     const [selectedRows, setSelectedRows] = useState([])
 
-    const { refresh, setRefresh } = useSession()
+    const { refresh, setRefresh, setLoading } = useSession()
 
     //
     const [orderStatusId, setOrderStatusId] = useState(0)
@@ -33,11 +33,13 @@ export const ListOrders = () => {
         current_page: 1,
         total: 1,
         last_page: 1,
-        per_page: 1,
+        per_page: 5,
     })
 
     useEffect(() => {
         const loadOrders = async () => {
+            setLoading(true)
+
             const response = await orderService.getOrders({
                 order_status_id: orderStatusId,
                 fullname: fullname,
@@ -57,13 +59,16 @@ export const ListOrders = () => {
                         discount: discount,
                         is_payment: item.is_payment ? 'Đã thanh toán' : 'Chưa thanh toán',
                         total_money: Number(item.total_amount) - Number(discount),
-                        created_at: item.created_at.slice(0, 10)
+                        created_at: item.created_at.slice(0, 10),
+                        total_money_order: Number(item.total_amount) + Number(item.delivery_cost) - Number(item.coupon ? item.coupon.discount : 0)
                     }
                 }))
                 setPage(response.page)
 
 
             }
+            setLoading(false)
+
         }
         //
         loadOrders()
