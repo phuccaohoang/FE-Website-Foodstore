@@ -45,7 +45,7 @@ export const FoodCard = ({ food }) => {
     }
     //
 
-    const { user, setUser, contextHolder, openNotification } = useSession()
+    const { user, setUser, setLoading, openNotification } = useSession()
 
     const image = (food.images.length !== 0) ? `http://127.0.0.1:8000/${food.images[0].img}` : NonImg;
 
@@ -134,6 +134,7 @@ export const FoodCard = ({ food }) => {
                         if (!user) {
                             navigate('/login')
                         } else {
+                            setLoading(true)
 
                             const response = await cartService.storeCart(food.id, 1)
                             if (response.status) {
@@ -149,6 +150,8 @@ export const FoodCard = ({ food }) => {
 
 
                             }
+                            setLoading(false)
+
                         }
                     }}
                 >

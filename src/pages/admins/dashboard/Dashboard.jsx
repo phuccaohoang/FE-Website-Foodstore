@@ -16,17 +16,22 @@ export const Dashboard = () => {
     })
 
     const today = new Date();
+
+    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1)
     // Hàm format yyyy-mm-dd
-    const formatDate = (date) => date.toISOString().slice(0, 10);
+    const formatDate = (date) => {
+        date.setDate(date.getDate() + 1)
+        return date.toISOString().slice(0, 10);
+    }
     // Ngày đầu tháng đã format
-    const startDate = formatDate(new Date(today.getFullYear(), today.getMonth(), 1));
+    const startDate = formatDate(monthStart);
     // Ngày hiện tại đã format
     const endDate = formatDate(today);
     const date = {
         start_date: startDate,
         end_date: endDate
     }
-
+    console.log('date', date)
     useEffect(() => {
         const loadStatisticsFoods = async () => {
             const response = await orderService.getStatisticsFoods(date)

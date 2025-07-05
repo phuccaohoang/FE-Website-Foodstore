@@ -49,7 +49,7 @@ export const StatisticsRevenue = () => {
                         total_orders: item.total_orders,
                     }
                 }))
-            } setLoading(true)
+            } setLoading(false)
 
         }
         loadStatisticsRevenue()

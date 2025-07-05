@@ -13,7 +13,7 @@ export const AddCoupon = () => {
     const [form] = Form.useForm()
     const [customers, setCustomers] = useState([])
 
-    const { openNotification } = useSession()
+    const { openNotification, setLoading } = useSession()
     const currentDate = new Date();
     const getDate = () => {
         const result = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${currentDate.getDate()}`
@@ -59,6 +59,7 @@ export const AddCoupon = () => {
                         ...values,
                         expire_date: `${values.expire_date.$y}-${values.expire_date.$M + 1}-${values.expire_date.$D}`
                     }
+                    setLoading(true)
                     const response = await couponService.storeCoupon(data)
                     if (response.status) {
                         openNotification('Thành công', 'Thêm phiếu giảm thành công', 'success')
@@ -67,6 +68,8 @@ export const AddCoupon = () => {
                         openNotification('Thất bại', 'Thêm phiếu giảm thất bại', 'error')
 
                     }
+                    setLoading(false)
+
                 }}
             >
                 <Row gutter={[16, 16]}>
