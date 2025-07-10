@@ -135,9 +135,9 @@ export const Explore = () => {
                                         { value: 'default', label: 'Mới nhất' },
                                         { value: 'price_asc', label: 'Giá Thấp đến Cao' },
                                         { value: 'price_desc', label: 'Giá Cao đến Thấp' },
-                                        { value: 'discount_desc', label: 'Giam Giá' },
-                                        { value: 'rating_desc', label: 'Xep Hang Mon An' },
-                                        { value: 'sold_desc', label: 'So Luong Da Ban' },
+                                        { value: 'discount_desc', label: 'Giảm Giá' },
+                                        { value: 'rating_desc', label: 'Xếp Hạng Món Ăn' },
+                                        { value: 'sold_desc', label: 'Số Lượng Đã Bán' },
                                     ]}
                                 />
                             </Col>

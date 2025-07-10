@@ -3,15 +3,16 @@ import { Table, Button, Row, Col, Input, Tooltip, Select } from "antd"
 import accountService from "../../../services/accountService";
 import { useSession } from "../../../context/SessionContext";
 
-
+import NoAvatar from '../../../assets/avatar.jpg';
 
 
 const columns = [
     { title: 'STT', dataIndex: 'stt' },
     {
         title: 'Ảnh đại diện', dataIndex: 'avatar', render: (item) => {
+            const img = item ? `http://127.0.0.1:8000/${item}` : NoAvatar
             return <>
-                <img style={{ width: 150 }} src={`http://127.0.0.1:8000/${item}`} alt={item} />
+                <img style={{ width: 150 }} src={img} alt={item} />
             </>
         }
     },
@@ -120,7 +121,7 @@ export const ListAccounts = () => {
                         }}>Làm mới</Button>
                         <Button color="lime" variant="solid" onClick={() => {
                             setRefresh(!refresh)
-                            console.log(status, fullname, page)
+                            setSelectedRows([])
                         }}>Tìm kiếm</Button>
                     </Col>
 

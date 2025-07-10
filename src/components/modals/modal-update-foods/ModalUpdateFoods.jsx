@@ -194,7 +194,8 @@ export const ModalUpdateFoods = ({ open, onCancel, foods }) => {
                                     offset={1} span={11}>
                                     <Form.Item label="Hình ảnh" name="images"   >
                                         <Upload
-                                            action=''
+                                            className="Upload__Images"
+
                                             listType="picture"
                                             maxCount={4}
                                             multiple

@@ -9,10 +9,30 @@ import foodService from "../../../services/foodService";
 import { useSession } from "../../../context/SessionContext";
 import categoryService from "../../../services/categoryService";
 
+import NoImg from '../../../assets/mon1.png';
+
+
 const columns = [
     { title: 'STT', dataIndex: 'stt' },
     {
         title: 'Ảnh', dataIndex: 'images', width: 100, render: (images) => {
+            if (images.length == 0) {
+                return <>
+                    <div className="Img__TD">
+
+                        <Image.PreviewGroup>
+                            {
+                                images.map(img => {
+                                    return <Image width={150} height={100} style={{ objectFit: 'cover' }} src={NoImg} />
+
+                                })
+                            }
+
+                        </Image.PreviewGroup>
+                    </div>
+
+                </>
+            }
             return <>
                 <div className="Img__TD">
 
@@ -33,19 +53,12 @@ const columns = [
     { title: 'Tên', dataIndex: 'name' },
     { title: 'Loại', dataIndex: 'category' },
     { title: 'Mô tả', dataIndex: 'description' },
-    { title: 'Giá', dataIndex: 'price' },
+    { title: 'Giá', dataIndex: 'price', render: (value) => Number(value).toLocaleString('vi-VN') },
     { title: 'Giảm giá (%)', dataIndex: 'discount' },
     { title: 'Đã bán', dataIndex: 'sold' },
     { title: 'Xếp hạng', dataIndex: 'rating' },
     { title: 'Trạng thái', dataIndex: 'status' },
 ];
-// const dataSource = Array.from({ length: 10 }).map((_, i) => ({
-//     key: i,
-//     name: `Edward King ${i}`,
-//     age: 32,
-//     address: `London, Park Lane no. ${i}`,
-// }));
-
 const styleButton = {
     padding: '10px 15px',
 }
@@ -204,6 +217,7 @@ export const ListFoods = () => {
                                     current_page: 1
                                 }
                             })
+                            setselectedRows([])
                             setRefresh(!refresh)
                         }}>Tìm kiếm</Button>
                     </Col>

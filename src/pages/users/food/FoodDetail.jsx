@@ -184,11 +184,11 @@ export const FoodDetail = () => {
                                         <Row className="Food__Price">
                                             {
                                                 food.discount > 0 ? <>
-                                                    <Text delete style={{ margin: 0, color: 'black', fontSize: '23px' }}>{food.price}</Text>
+                                                    <Text delete style={{ margin: 0, color: 'black', fontSize: '23px' }}>{Number(food.price).toLocaleString('vi-VN')}</Text>
 
-                                                    <Text style={{ margin: 0 }}>{(100 - food.discount) / 100 * food.price} VNĐ</Text>
+                                                    <Text style={{ margin: 0 }}>{((100 - food.discount) / 100 * food.price).toLocaleString('vi-VN')} VNĐ</Text>
                                                 </> : <>
-                                                    <Text style={{ margin: 0 }}>{food.price} VNĐ</Text>
+                                                    <Text style={{ margin: 0 }}>{Number(food.price).toLocaleString('vi-VN')} VNĐ</Text>
 
                                                 </>
                                             }

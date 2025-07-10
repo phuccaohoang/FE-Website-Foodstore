@@ -218,18 +218,18 @@ export const Payment = () => {
                         <Title level={6}>Đơn Hàng Của Bạn</Title>
                         <div style={{ marginBottom: 16 }}>
                             <div>
-                                <Text style={{ fontSize: 20 }}>Tổng Đơn Hàng: </Text><Text strong style={{ fontSize: 20 }}>{totalMoney} VND</Text>
+                                <Text style={{ fontSize: 20 }}>Tổng Đơn Hàng: </Text><Text strong style={{ fontSize: 20 }}>{Number(totalMoney).toLocaleString('vi-VN')} VND</Text>
                             </div>
                             <div>
-                                <Text style={{ fontSize: 20 }}>Phiếu Giảm Giá: </Text ><Text style={{ fontSize: 20 }} type="">{discount} VND</Text>
+                                <Text style={{ fontSize: 20 }}>Phiếu Giảm Giá: </Text ><Text style={{ fontSize: 20 }} type="">{Number(discount).toLocaleString('vi-VN')} VND</Text>
                             </div>
                             <div>
-                                <Text style={{ fontSize: 20 }}>Phí Giao Hàng: </Text><Text style={{ fontSize: 20 }}>{deliveryCost} VND</Text>
+                                <Text style={{ fontSize: 20 }}>Phí Giao Hàng: </Text><Text style={{ fontSize: 20 }}>{Number(deliveryCost).toLocaleString('vi-VN')} VND</Text>
                             </div>
                             <Divider />
                             <div >
                                 <Text strong style={{ color: 'red', fontSize: 25 }}>Tổng Tiền Phải Trả: </Text>
-                                <Text strong style={{ color: 'red', fontSize: 25 }}>{totalMoney + deliveryCost - discount} VND</Text>
+                                <Text strong style={{ color: 'red', fontSize: 25 }}>{(totalMoney + deliveryCost - discount).toLocaleString('vi-VN')} VND</Text>
                             </div>
                         </div>
 
@@ -238,7 +238,7 @@ export const Payment = () => {
                                 const img = item.food.images.length !== 0 ? `http://127.0.0.1:8000/${item.food.images[0].img}` : NoImg
                                 return <>
                                     <div>
-                                        <Text style={{ fontSize: 20 }}>{item.quantity} x <strong>{item.food.name}</strong> - <span>{(100 - Number(item.food.discount)) / 100 * Number(item.food.price) * item.quantity} VND</span></Text>
+                                        <Text style={{ fontSize: 20 }}>{item.quantity} x <strong>{item.food.name}</strong> - <span>{((100 - Number(item.food.discount)) / 100 * Number(item.food.price) * item.quantity).toLocaleString('vi-VN')} VND</span></Text>
                                         <div style={{ fontSize: 18 }}>
                                             <p>{item.food.description}</p>
                                         </div>

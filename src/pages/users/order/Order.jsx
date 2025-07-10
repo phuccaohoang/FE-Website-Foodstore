@@ -2,7 +2,6 @@ import './order.css'
 import { Table, Tag, Button, Card, Typography, Image, Popconfirm, Select, Space, message, Divider, Row } from "antd";
 import { EyeOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from 'react';
-import mon from '../../../assets/mon2.jpg'
 import orderService from '../../../services/orderService';
 import { useSession } from '../../../context/SessionContext';
 import orderStatusService from '../../../services/orderStatusService';
@@ -55,7 +54,9 @@ export const Order = () => {
             title: "Tổng đơn hàng",
             dataIndex: "total_amount",
             width: 150,
-
+            render: (value) => {
+                return Number(value).toLocaleString('vi-VN')
+            }
         },
         {
             title: "Số lượng",
@@ -67,13 +68,17 @@ export const Order = () => {
             title: "Phí vận chuyển",
             dataIndex: "delivery_cost",
             width: 150,
-
+            render: (value) => {
+                return Number(value).toLocaleString('vi-VN')
+            }
         },
         {
             title: "Phiếu giảm giá",
             dataIndex: "coupon_value",
             width: 150,
-
+            render: (value) => {
+                return Number(value).toLocaleString('vi-VN')
+            }
         },
         {
             title: "Ghi chú",
@@ -198,16 +203,16 @@ export const Order = () => {
                     rowClassName={''}
                     expandable={{
                         expandedRowRender: (value) => {
+                            console.log('value', value)
                             const dataSource = () => {
                                 return value.order_details.map((item, idx) => {
                                     return {
                                         ...item,
                                         stt: idx + 1,
                                         food: item.food.name,
+                                        price: Number(item.food.price).toLocaleString('vi-VN'),
                                         order_status_id: value.order_status_id,
-                                        total_amount: value.total_amount,
-                                        delivery_cost: value.delivery_cost,
-                                        coupon_value: value.coupon_value,
+
                                     }
                                 })
                             }
@@ -219,12 +224,12 @@ export const Order = () => {
                                     size='small'
                                     // scroll={{ x: 'max-content' }}
 
-                                    footer={(record) => {
+                                    footer={() => {
 
-                                        const total_money = Number(record[0].total_amount) + Number(record[0].delivery_cost) - Number(record[0].coupon_value)
+                                        const total_money = Number(value.total_amount) + Number(value.delivery_cost) - Number(value.coupon_value)
                                         return <>
                                             <strong style={{ display: 'flex', justifyContent: 'right', alignItems: 'end' }}>
-                                                Tổng đơn hàng: <span style={{ fontSize: '20px', margin: '0 10px' }}> {total_money} </span> VND
+                                                Tổng đơn hàng: <span style={{ fontSize: '20px', margin: '0 10px' }}> {Number(total_money).toLocaleString('vi-VN')} </span> VND
                                             </strong>
                                             <Divider />
                                         </>

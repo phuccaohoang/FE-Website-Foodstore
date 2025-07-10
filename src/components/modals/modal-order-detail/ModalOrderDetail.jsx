@@ -73,10 +73,10 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                                     <Text strong>Tổng số lượng: {order.quantity}</Text>
                                 </Col>
                                 <Col span={8}>
-                                    <Text strong>Giảm giá đơn hàng: {order.coupon ? order.coupon.discount : '0.00'} vnd</Text>
+                                    <Text strong>Giảm giá đơn hàng: {order.coupon ? Number(order.coupon.discount).toLocaleString('vi-VN') : '0.00'} vnd</Text>
                                 </Col>
                                 <Col span={8}>
-                                    <Text strong>Giá vận chuyển: {order.delivery_cost} vnd</Text>
+                                    <Text strong>Giá vận chuyển: {Number(order.delivery_cost).toLocaleString('vi-VN')} vnd</Text>
                                 </Col>
                             </Row>
                             <Row gutter={[10, 10]} style={{ marginTop: '10px' }}>
@@ -100,9 +100,9 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                                     { title: 'STT', dataIndex: 'stt' },
                                     { title: 'Món ăn', dataIndex: 'name' },
                                     { title: 'Số lượng món ăn', dataIndex: 'quantity' },
-                                    { title: 'Giá tiền (VND)', dataIndex: 'price' },
+                                    { title: 'Giá tiền (VND)', dataIndex: 'price', render: (value) => Number(value).toLocaleString('vi-VN') },
                                     { title: 'Giảm giá (%)', dataIndex: 'discount' },
-                                    { title: 'Tổng tiền (VND)', dataIndex: 'total_money' },
+                                    { title: 'Tổng tiền (VND)', dataIndex: 'total_money', render: (value) => Number(value).toLocaleString('vi-VN') },
                                 ]}
                                 dataSource={order_details}
                                 pagination={false}
@@ -113,7 +113,7 @@ export const ModalOrderDetail = ({ order, open, onCancel }) => {
                                         <>
                                             <Row justify={'end'}>
                                                 <Col>
-                                                    <strong>Tổng đơn hàng: <span style={{ fontSize: 20, margin: '0 5px' }}>{order.total_money_order}</span> vnd</strong>
+                                                    <strong>Tổng đơn hàng: <span style={{ fontSize: 20, margin: '0 5px' }}>{Number(order.total_money_order).toLocaleString('vi-VN')}</span> vnd</strong>
                                                 </Col>
                                             </Row>
                                         </>

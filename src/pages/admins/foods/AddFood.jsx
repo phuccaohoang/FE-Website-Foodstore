@@ -13,6 +13,10 @@ export const AddFood = () => {
     const [categories, setCategories] = useState([])
     const { openNotification, setLoading } = useSession()
 
+    //
+    const [fileList, setFileList] = useState([]);
+    //
+
     useEffect(() => {
         const loadCategories = async () => {
             const response = await categoryService.getCategories()
@@ -138,13 +142,12 @@ export const AddFood = () => {
                         </Row>
                     </Col>
                     <Col offset={1} span={11}>
-                        <Form.Item label="Anh mon an" name="images" rules={[{ required: true, message: 'Không được bỏ trống' }]}>
+                        <Form.Item label="Ảnh" name="images" rules={[{ required: true, message: 'Không được bỏ trống' }]}>
                             <Upload
-                                action=''
+                                className="Upload__Images"
                                 listType="picture"
                                 maxCount={5}
                                 multiple
-
                             >
                                 <Button icon={<UploadOutlined />}>Upload</Button>
                             </Upload>

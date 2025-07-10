@@ -11,8 +11,8 @@ const columns = [
     { title: 'STT', dataIndex: 'stt' },
     { title: 'Tên', dataIndex: 'name' },
     { title: 'Mô tả', dataIndex: 'description' },
-    { title: 'Đơn hàng tối thiểu', dataIndex: 'min_order_value' },
-    { title: 'Giảm giá (vnd)', dataIndex: 'discount' },
+    { title: 'Đơn hàng tối thiểu', dataIndex: 'min_order_value', render: (value) => Number(value).toLocaleString('vi-VN') },
+    { title: 'Giảm giá (vnd)', dataIndex: 'discount', render: (value) => Number(value).toLocaleString('vi-VN') },
     { title: 'Số lượng', dataIndex: 'quantity' },
     { title: 'Ngày hết hạn', dataIndex: 'expire_date' },
     { title: 'Khách hàng áp dụng', dataIndex: 'is_public' },
@@ -141,6 +141,7 @@ export const ListCoupons = () => {
                                     current_page: 1
                                 }
                             })
+                            setSelectedRows([])
                             setRefresh(!refresh)
                         }}>Tìm kiếm</Button>
                     </Col>

@@ -11,7 +11,7 @@ const columns = [
 
     { title: 'Tên khách hàng', dataIndex: 'fullname' },
     { title: 'Tổng đơn hàng đã mua', dataIndex: 'total_quantity_orders' },
-    { title: 'Tổng tiền đơn hàng đã mua', dataIndex: 'total_money_orders' },
+    { title: 'Tổng tiền đơn hàng đã mua', dataIndex: 'total_money_orders', render: (value) => Number(value).toLocaleString('vi-VN') },
 ];
 // const dataSource = Array.from({ length: 10 }).map((_, i) => ({
 //     key: i,

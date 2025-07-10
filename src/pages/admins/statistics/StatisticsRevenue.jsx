@@ -12,7 +12,7 @@ const columns = [
     { title: 'Tháng', dataIndex: 'month' },
     { title: 'Năm', dataIndex: 'year' },
     { title: 'Tổng đơn hàng', dataIndex: 'total_orders' },
-    { title: 'Doanh thu', dataIndex: 'total_revenue' },
+    { title: 'Doanh thu', dataIndex: 'total_revenue', render: (value) => Number(value).toLocaleString('vi-VN') },
 ];
 // const dataSource = Array.from({ length: 10 }).map((_, i) => ({
 //     key: i,

@@ -75,7 +75,7 @@ const InvoicePDF = ({ order, datetime }) => (
                         <Text>Khách hàng: {order.customer.fullname}</Text>
                         <Text>Địa chỉ: {order.address}</Text>
                         <Text>SDT: {order.phone}</Text>
-                        <Text>Giá vận chuyển: {order.delivery_cost} VND</Text>
+                        <Text>Giá vận chuyển: {Number(order.delivery_cost).toLocaleString('vi-VN')} VND</Text>
                         <Text>Ghi chú: {order.note}</Text>
                         <Text>Ngày đặt: {order.created_at}</Text>
                         <Text>Ngày in: {datetime}</Text>
@@ -86,7 +86,7 @@ const InvoicePDF = ({ order, datetime }) => (
                         {/* Header */}
                         <View style={styles.row}>
                             <Text style={[styles.cellBase, styles.colStt, styles.header]}>STT</Text>
-                            <Text style={[styles.cellBase, styles.colTen, styles.header]}>Tên SP</Text>
+                            <Text style={[styles.cellBase, styles.colTen, styles.header]}>Tên Món</Text>
                             <Text style={[styles.cellBase, styles.colSL, styles.header]}>Số lượng</Text>
                             <Text style={[styles.cellBase, styles.colGia, styles.header]}>Đơn giá (VND)</Text>
                             <Text style={[styles.cellBase, styles.colTT, styles.header]}>Thành tiền (VND)</Text>
@@ -100,8 +100,8 @@ const InvoicePDF = ({ order, datetime }) => (
                                     <Text style={[styles.cellBase, styles.colStt]}>{idx + 1}</Text>
                                     <Text style={[styles.cellBase, styles.colTen]}>{item.food.name}</Text>
                                     <Text style={[styles.cellBase, styles.colSL]}>{item.quantity}</Text>
-                                    <Text style={[styles.cellBase, styles.colGia]}>{price}</Text>
-                                    <Text style={[styles.cellBase, styles.colTT]}>{price * item.quantity}</Text>
+                                    <Text style={[styles.cellBase, styles.colGia]}>{Number(price).toLocaleString('vi-VN')}</Text>
+                                    <Text style={[styles.cellBase, styles.colTT]}>{Number(price * item.quantity).toLocaleString('vi-VN')}</Text>
                                 </View>
                             })
                         }
@@ -116,7 +116,7 @@ const InvoicePDF = ({ order, datetime }) => (
                             fontWeight: 'bold',
                         }}
                     >
-                        Tổng: {order.total_money_order} VND
+                        Tổng: {Number(order.total_money_order).toLocaleString('vi-VN')} VND
                     </Text>
                 </Page >
                 : null

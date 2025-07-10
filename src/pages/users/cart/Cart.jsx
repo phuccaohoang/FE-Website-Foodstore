@@ -42,7 +42,7 @@ export const Cart = () => {
                         key: item.id,
                         food: item.food.name,
                         images: item.food.images,
-                        total_price: ((100 - Number(item.food.discount)) / 100) * Number(item.food.price) * Number(item.quantity),
+                        total_price: (((100 - Number(item.food.discount)) / 100) * Number(item.food.price) * Number(item.quantity)).toLocaleString('vi-VN'),
                     }
                 }))
             }

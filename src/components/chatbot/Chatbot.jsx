@@ -1,13 +1,10 @@
 import React, { use, useEffect, useRef, useState } from 'react';
-import { Card, Button, Select, Input, Typography, Skeleton } from 'antd';
-import { SendOutlined, CloseOutlined } from '@ant-design/icons';
+import { Button, Input, Skeleton } from 'antd';
+import { SendOutlined, } from '@ant-design/icons';
 import axios from 'axios';
 import { useSession } from '../../context/SessionContext';
 import foodService from '../../services/foodService';
 import './Chatbot.css'
-const { Text } = Typography;
-const { Option } = Select;
-
 
 const styleMessage = {
     fontSize: 23,
@@ -38,7 +35,7 @@ export const Chatbot = ({ visible, }) => {
             const res = await foodService.getFoods({
                 status: 1,
                 sort_by: 'discount_desc',
-                per_page: 20,
+                per_page: 25,
 
             })
             if (res.status) {
@@ -56,20 +53,18 @@ export const Chatbot = ({ visible, }) => {
         if (body) {
 
             body.scrollTop = body.scrollHeight
-            console.log('scroll', body.scrollTop, body.scrollHeight)
+
         }
     }, [messages])
 
 
 
     const callChatbotAI = async (request) => {
-        const token = "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";
+        const token = "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";
         HistoryMessages.current.push(request)
         if (HistoryMessages.current.length == 4) {
             HistoryMessages.current = HistoryMessages.current.slice(1)
         }
-        console.log('info', InfoSystem.current)
-        console.log('history', HistoryMessages.current)
         try {
             setLoading(true)
             const res = await axios.post(

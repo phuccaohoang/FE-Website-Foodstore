@@ -51,7 +51,7 @@ export const ListReviews = () => {
                         stt: idx + 1,
                         fullname: item.customer.fullname,
                         food: item.food.name,
-                        status: item.status === 1 ? 'On' : 'Off',
+                        status: item.status === 1 ? 'Hiển thị' : 'Bị ẩn',
                     }
                 }))
                 setPage(response.page)
@@ -132,6 +132,7 @@ export const ListReviews = () => {
                                     current_page: 1
                                 }
                             })
+                            setSelectedRows([])
                             setRefresh(!refresh)
                         }}>Tìm kiếm</Button>
                     </Col>

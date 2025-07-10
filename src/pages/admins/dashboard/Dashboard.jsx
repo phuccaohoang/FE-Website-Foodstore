@@ -174,7 +174,7 @@ export const Dashboard = () => {
                             className="Item__Top"
 
                             title="Doanh thu"
-                            value={revenue.total_revenue}
+                            value={(revenue.total_revenue)}
                             precision={2}
                             valueStyle={{ color: 'gold', fontSize: 32 }}
                             prefix={<DollarCircleOutlined />}
@@ -247,7 +247,8 @@ export const Dashboard = () => {
                             },
                             {
                                 title: 'Tổng giá trị đơn hàng',
-                                dataIndex: 'total_money_orders'
+                                dataIndex: 'total_money_orders',
+                                render: (value) => Number(value).toLocaleString('vi-VN')
                             },
                         ]}
 

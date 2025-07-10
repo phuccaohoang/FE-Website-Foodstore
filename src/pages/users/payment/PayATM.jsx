@@ -41,7 +41,7 @@ export const PayATM = () => {
 
                     <Row style={{ marginBottom: 8, marginBottom: '10px' }}>
                         <Col span={12}><Text style={{ fontSize: '20px' }}>Giá trị đơn hàng:</Text></Col>
-                        <Col span={12}><Text style={{ fontSize: '20px' }} strong>{payment.total_amount} VND</Text></Col>
+                        <Col span={12}><Text style={{ fontSize: '20px' }} strong>{Number(payment.total_amount).toLocaleString('vi-VN')} VND</Text></Col>
                     </Row>
 
 
@@ -54,7 +54,7 @@ export const PayATM = () => {
 
                     <Row style={{ marginBottom: 8, marginBottom: '10px' }}>
                         <Col span={12}><Text style={{ fontSize: '20px' }}>Nội dung:</Text></Col>
-                        <Col span={12}><Text style={{ fontSize: '20px' }}>{user.fullname} thanh toán đơn hàng giá trị {payment.total_amount} VND</Text></Col>
+                        <Col span={12}><Text style={{ fontSize: '20px' }}>{user.fullname} thanh toán đơn hàng giá trị {Number(payment.total_amount).toLocaleString('vi-VN')} VND</Text></Col>
                     </Row>
                 </Card>
 

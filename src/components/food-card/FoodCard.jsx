@@ -91,11 +91,11 @@ export const FoodCard = ({ food }) => {
                 <div style={{ fontWeight: '500', fontSize: '23px' }}>
                     {
                         food.discount > 0 ? <>
-                            <Text delete style={{ fontSize: '20px' }}>{food.price}</Text>
+                            <Text delete style={{ fontSize: '20px' }}>{Number(food.price).toLocaleString('vi-VN')}</Text>
                             &nbsp;
                         </> : null
                     }
-                    <span style={{ color: 'red' }}>{(100 - food.discount) / 100 * food.price}đ</span>
+                    <span style={{ color: 'red' }}>{((100 - food.discount) / 100 * food.price).toLocaleString('vi-VN')}đ</span>
                 </div>
 
             </div>
