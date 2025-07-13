@@ -164,7 +164,6 @@ export const ListOrders = () => {
                     { title: 'Số lượng món ăn', dataIndex: 'quantity' },
                     { title: 'Giá vận chuyển', dataIndex: 'delivery_cost', render: (value) => Number(value).toLocaleString('vi-VN') },
                     { title: 'Giảm giá', dataIndex: 'discount', render: (value) => Number(value).toLocaleString('vi-VN') },
-                    { title: 'Tổng tiền phải trả', dataIndex: 'total_money', render: (value) => Number(value).toLocaleString('vi-VN') },
                     { title: 'Thanh toán', dataIndex: 'is_payment' },
                     { title: 'Trạng thái', dataIndex: 'status' },
                     { title: 'Ngày đặt', dataIndex: 'created_at' },

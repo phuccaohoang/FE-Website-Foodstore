@@ -35,6 +35,8 @@ import { useSession } from './context/SessionContext';
 import { MasterLayout } from './components/layouts/master-layout/MasterLayout';
 
 import './App.css'
+import { ListCategories } from './pages/admins/categories/ListCategories';
+import { AddCategory } from './pages/admins/categories/AddCategory';
 
 function App() {
 
@@ -57,6 +59,10 @@ function App() {
                                 <Route path='foods'>
                                     <Route index element={<ListFoods />} />
                                     <Route path='add' element={<AddFood />} />
+                                </Route>
+                                <Route path='categories'>
+                                    <Route index element={<ListCategories />} />
+                                    <Route path='add' element={<AddCategory />} />
                                 </Route>
                                 <Route path='coupons'>
                                     <Route index element={<ListCoupons />} />

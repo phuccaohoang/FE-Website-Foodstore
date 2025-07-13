@@ -60,7 +60,7 @@ export const Chatbot = ({ visible, }) => {
 
 
     const callChatbotAI = async (request) => {
-        const token = "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";
+        const token = "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";
         HistoryMessages.current.push(request)
         if (HistoryMessages.current.length == 4) {
             HistoryMessages.current = HistoryMessages.current.slice(1)

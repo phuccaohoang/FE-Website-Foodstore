@@ -1,7 +1,8 @@
 import './home.css'
 import { Carousel } from 'antd';
-import bannerimg from '../../../assets/mon1.png'
-import bannerimg2 from '../../../assets/mon2.jpg'
+import bannerimg1 from '../../../assets/banner1.png'
+import bannerimg2 from '../../../assets/banner2.png'
+import bannerimg3 from '../../../assets/banner3.png'
 import { useEffect, useState, useNavigate } from 'react';
 
 //
@@ -72,17 +73,15 @@ export const Home = () => {
                     overflow: "hidden"
                 }} >
                     <div>
-                        <img style={slidesStyle} src={bannerimg} />
+                        <img style={slidesStyle} src={bannerimg1} />
                     </div>
                     <div>
                         <img style={slidesStyle} src={bannerimg2} />
                     </div>
                     <div>
-                        <img style={slidesStyle} src={bannerimg} />
+                        <img style={slidesStyle} src={bannerimg3} />
                     </div>
-                    <div>
-                        <img style={slidesStyle} src={bannerimg2} />
-                    </div>
+
 
                 </Carousel>
             </div>

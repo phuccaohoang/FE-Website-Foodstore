@@ -216,7 +216,7 @@ export const Dashboard = () => {
 
 
             <div className="Title__Page" style={{ marginTop: '20px' }}>
-                <h2 className="">Biểu đồ thống kê số lượng món ăn được mua</h2>
+                <h2 className="">Biểu đồ thống kê số lượng món ăn đã bán</h2>
             </div>
             {
                 foods.length !== 0 ?

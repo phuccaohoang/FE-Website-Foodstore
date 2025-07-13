@@ -114,7 +114,9 @@ export const ListFoods = () => {
 
         }
         const loadCaregories = async () => {
-            const response = await categoryService.getCategories()
+            const response = await categoryService.getCategories({
+                per_page: -1
+            })
             if (response.status) {
                 setCategories(response.data)
             }

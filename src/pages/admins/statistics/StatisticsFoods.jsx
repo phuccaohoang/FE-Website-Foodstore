@@ -27,6 +27,7 @@ export const StatisticsFoods = () => {
 
     const { refresh, setRefresh, setLoading } = useSession()
     const [foods, setFoods] = useState([])
+    const [foodsNotOrder, setFoodsNotOrder] = useState([])
     const [date, setDate] = useState({
         start_date: null,
         end_date: null,
@@ -47,8 +48,24 @@ export const StatisticsFoods = () => {
             } setLoading(false)
 
         }
+        const loadStatisticsFoodsNotOrder = async () => {
+            setLoading(true)
+
+            const response = await orderService.getStatisticsFoodsNotOrder(date)
+            if (response.status) {
+                setFoodsNotOrder(response.data.map((item, idx) => {
+                    return {
+                        stt: idx + 1,
+                        food: item.name,
+                    }
+                }))
+            }
+            setLoading(false)
+
+        }
         //
         loadStatisticsFoods()
+        loadStatisticsFoodsNotOrder()
     }, [refresh])
     return (
         <>
@@ -72,30 +89,55 @@ export const StatisticsFoods = () => {
                 </Col>
             </Row>
 
-            <Table
-                style={{ marginTop: '20px' }}
+            <Row gutter={[16, 16]}>
+                <Col span={12}>
+                    <div className="Title__Page" style={{ marginTop: 20 }}>
+                        <h2>Danh sách món ăn đã bán</h2>
+                    </div>
+                    <Table
+                        style={{ marginTop: '20px' }}
 
-                columns={columns}
-                dataSource={foods}
-                pagination={{
-                    defaultCurrent: 1,
-                    pageSize: 10,
-                    total: foods.length,
-                    onChange: (item) => {
-                        console.log('page', item)
-                    }
-                }}
+                        columns={columns}
+                        dataSource={foods}
+                        pagination={{
+                            defaultCurrent: 1,
+                            pageSize: 6,
+                            total: foods.length,
+                            onChange: (item) => {
+                                console.log('page', item)
+                            }
+                        }}
 
-            // footer={() => {
-            //     return (
-            //         <>
-            //             <div className="Footer__Table">
-            //                 <Button style={styleButton} type="primary">Them</Button>
-            //             </div>
-            //         </>
-            //     )
-            // }}
-            />
+
+                    />
+                </Col>
+                <Col span={12}>
+                    <div className="Title__Page" style={{ marginTop: 20 }}>
+                        <h2>Danh sách món ăn không có đơn hàng</h2>
+                    </div>
+                    <Table
+                        style={{ marginTop: '20px' }}
+
+                        columns={[
+                            { title: 'STT', dataIndex: 'stt' },
+
+                            { title: 'Tên món ăn', dataIndex: 'food' },
+                        ]}
+                        dataSource={foodsNotOrder}
+                        pagination={{
+                            defaultCurrent: 1,
+                            pageSize: 6,
+                            total: foodsNotOrder.length,
+                            onChange: (item) => {
+                                console.log('page', item)
+                            }
+                        }}
+
+
+                    />
+                </Col>
+            </Row>
+
         </>
     )
 }

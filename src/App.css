@@ -10,3 +10,7 @@ span.Upload__Images .ant-upload-list.ant-upload-list-picture .ant-upload-list-it
 .ant-upload-list-item-container .ant-tooltip {
     display: none;
 }
+
+.ant-ribbon-wrapper {
+    height: 100%;
+}

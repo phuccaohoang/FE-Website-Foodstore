@@ -54,7 +54,9 @@ export const Explore = () => {
 
     useEffect(() => {
         const loadCategories = async () => {
-            const response = await categoryService.getCategories()
+            const response = await categoryService.getCategories({
+                per_page: -1
+            })
             if (response.status) {
                 setCategories(response.data)
             }

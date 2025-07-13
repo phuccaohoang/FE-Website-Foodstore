@@ -23,6 +23,9 @@ const orderService = {
     getStatisticsFoods: (params = {}) => {
         return axiosClient.get('/get/statistics-foods', { params })
     },
+    getStatisticsFoodsNotOrder: (params = {}) => {
+        return axiosClient.get('/get/statistics-foods-not-order', { params })
+    },
     getStatisticsOrders: (params = {}) => {
         return axiosClient.get('/get/statistics-orders', { params })
     },

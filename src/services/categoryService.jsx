@@ -1,10 +1,15 @@
 import axiosClient from "./axiosClient";
 
 const categoryService = {
-    getCategories: () => {
-        return axiosClient.get('/get/categories')
+    getCategories: (params = {}) => {
+        return axiosClient.get('/get/categories', { params })
     },
-
+    updateCategory: (data) => {
+        return axiosClient.put('/update/category', data)
+    },
+    storeCategory: (data) => {
+        return axiosClient.post('/store/category', data)
+    },
 }
 
 

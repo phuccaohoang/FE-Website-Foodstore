@@ -77,6 +77,14 @@ export const AdminLayout = () => {
                                 }
                             },
                             {
+                                key: 11,
+                                icon: <ProductOutlined />,
+                                label: 'Loại món ăn',
+                                onClick: () => {
+                                    navigate('/admin/categories')
+                                }
+                            },
+                            {
                                 key: 4,
                                 icon: <GiftOutlined />,
                                 label: 'Phiếu giảm giá',
