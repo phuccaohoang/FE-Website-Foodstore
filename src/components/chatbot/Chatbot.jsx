@@ -6,6 +6,9 @@ import { useSession } from '../../context/SessionContext';
 import foodService from '../../services/foodService';
 import './Chatbot.css'
 
+const apikey = import.meta.env.VITE_KEY_OPENROUTER;
+
+
 const styleMessage = {
     fontSize: 23,
     borderRadius: '24px',
@@ -60,30 +63,38 @@ export const Chatbot = ({ visible, }) => {
 
 
     const callChatbotAI = async (request) => {
-        const token = "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";
+        const token = apikey;
         HistoryMessages.current.push(request)
-        if (HistoryMessages.current.length == 4) {
-            HistoryMessages.current = HistoryMessages.current.slice(1)
+        if (HistoryMessages.current.length >= 6) {
+            HistoryMessages.current = HistoryMessages.current.slice(2)
         }
         try {
             setLoading(true)
             const res = await axios.post(
                 'https://openrouter.ai/api/v1/chat/completions',
                 {
-                    "model": "mistralai/mixtral-8x7b-instruct",
-                    // "model": "openrouter/cypher-alpha:free",
+                    "model": "google/gemma-3-27b-it:free",
+                    "temperature": 0.2,
+                    "top_p": 0.9,
                     "messages": [
 
                         {
-                            "role": 'system',
-                            "content": `
-                                Luôn trả lời bằng tiếng việt, tự xưng là Trợ lý Foodstore.
-                                Nhiệm vụ của bạn là tư vấn cho khách hàng các món ăn có trong foodstore, dữ liệu: ${InfoSystem.current}.
-                                Để đặt món hãy sử dụng chức năng của Foodstore thêm vào giỏ hàng và bắt buộc sau đó vào giỏ hàng chọn thanh toán để có thể đặt món thành công, lưu ý chỉ hướng dẫn.
-                                Khi tư vấn đừng tải hết dữ liệu chỉ tải 1 vài dữ liệu phù hợp yêu cầu (tối đa 4), tập trung trả lời yêu cầu mới nhất một cách ngắn ngọn.
-                            
+                            role: 'system',
+                            content: `
+                                Bạn là Trợ lý Foodstore. Luôn trả lời bằng tiếng Việt.
+
+                                Nhiệm vụ của bạn là tư vấn món ăn dựa trên dữ liệu sau: ${InfoSystem.current}
+
+                                Chỉ gợi ý món phù hợp với yêu cầu của khách. Không hiển thị toàn bộ dữ liệu. Trả lời ngắn gọn, rõ ràng, tập trung vào yêu cầu mới nhất.
+
+                                Khi hướng dẫn đặt món: hãy nói rõ rằng khách cần dùng chức năng "Thêm vào giỏ hàng", sau đó vào giỏ và chọn "Thanh toán" để hoàn tất đặt món. Chỉ hướng dẫn, không thực hiện thay người dùng.
+
+                                Tuyệt đối không tự tạo hoặc bịa ra món ăn không có trong dữ liệu. Chỉ trả lời dựa trên dữ liệu được cung cấp.
+
+                                Nếu không tìm thấy món phù hợp, lịch sự mời khách liên hệ qua phần "Liên hệ" trên website để được hỗ trợ thêm.
                             `
                         },
+
                         ...HistoryMessages.current,
 
 
@@ -107,9 +118,15 @@ export const Chatbot = ({ visible, }) => {
                     }
                 ]
             })
+            HistoryMessages.current.push({
+                role: 'assistant',
+                content: reply
+            })
+            if (HistoryMessages.current.length >= 6) {
+                HistoryMessages.current = HistoryMessages.current.slice(2)
+            }
 
         } catch (error) {
-            console.log('error', error)
             setMessages(prev => {
                 return [
                     ...prev,
